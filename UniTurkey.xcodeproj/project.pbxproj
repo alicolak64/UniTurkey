@@ -42,6 +42,7 @@
 		E63F3D112BC21FCC0094A0D2 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E63F3D032BC21FCC0094A0D2 /* HomeViewController.swift */; };
 		E63F3D122BC21FCC0094A0D2 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E63F3D042BC21FCC0094A0D2 /* HomeViewModel.swift */; };
 		E63F3D162BC228BC0094A0D2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E63F3D152BC228BC0094A0D2 /* LaunchScreen.storyboard */; };
+		E690A0262BC34DFC003B2F83 /* ResponseUniversities.swift in Sources */ = {isa = PBXBuildFile; fileRef = E690A0252BC34DFC003B2F83 /* ResponseUniversities.swift */; };
 		E6B249D72BC25A39009112EB /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6B249D62BC25A39009112EB /* UIView+Extension.swift */; };
 		E6B249D92BC25C98009112EB /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6B249D82BC25C98009112EB /* UIImage+Extension.swift */; };
 		E6B249DB2BC25D7D009112EB /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6B249DA2BC25D7D009112EB /* UIViewController+Extension.swift */; };
@@ -106,6 +107,7 @@
 		E63F3D032BC21FCC0094A0D2 /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		E63F3D042BC21FCC0094A0D2 /* HomeViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
 		E63F3D152BC228BC0094A0D2 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		E690A0252BC34DFC003B2F83 /* ResponseUniversities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponseUniversities.swift; sourceTree = "<group>"; };
 		E6B249D62BC25A39009112EB /* UIView+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+Extension.swift"; sourceTree = "<group>"; };
 		E6B249D82BC25C98009112EB /* UIImage+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
 		E6B249DA2BC25D7D009112EB /* UIViewController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extension.swift"; sourceTree = "<group>"; };
@@ -325,6 +327,7 @@
 		E63F3CF92BC21FCC0094A0D2 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				E690A0252BC34DFC003B2F83 /* ResponseUniversities.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -516,6 +519,7 @@
 				E63F3CC52BC21DCE0094A0D2 /* AppDelegate.swift in Sources */,
 				E63F3D102BC21FCC0094A0D2 /* HomeRouter.swift in Sources */,
 				E6B249DD2BC26598009112EB /* CollectionExtension.swift in Sources */,
+				E690A0262BC34DFC003B2F83 /* ResponseUniversities.swift in Sources */,
 				E63F3D112BC21FCC0094A0D2 /* HomeViewController.swift in Sources */,
 				E63F3D082BC21FCC0094A0D2 /* Imageable.swift in Sources */,
 				E6B249DF2BC266B6009112EB /* String+Extension.swift in Sources */,
