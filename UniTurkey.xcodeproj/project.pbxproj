@@ -45,6 +45,8 @@
 		E6B249D72BC25A39009112EB /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6B249D62BC25A39009112EB /* UIView+Extension.swift */; };
 		E6B249D92BC25C98009112EB /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6B249D82BC25C98009112EB /* UIImage+Extension.swift */; };
 		E6B249DB2BC25D7D009112EB /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6B249DA2BC25D7D009112EB /* UIViewController+Extension.swift */; };
+		E6B249DD2BC26598009112EB /* CollectionExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6B249DC2BC26598009112EB /* CollectionExtension.swift */; };
+		E6B249DF2BC266B6009112EB /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6B249DE2BC266B6009112EB /* String+Extension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -107,6 +109,8 @@
 		E6B249D62BC25A39009112EB /* UIView+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+Extension.swift"; sourceTree = "<group>"; };
 		E6B249D82BC25C98009112EB /* UIImage+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
 		E6B249DA2BC25D7D009112EB /* UIViewController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extension.swift"; sourceTree = "<group>"; };
+		E6B249DC2BC26598009112EB /* CollectionExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionExtension.swift; sourceTree = "<group>"; };
+		E6B249DE2BC266B6009112EB /* String+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -336,6 +340,8 @@
 				E6B249D62BC25A39009112EB /* UIView+Extension.swift */,
 				E6B249D82BC25C98009112EB /* UIImage+Extension.swift */,
 				E6B249DA2BC25D7D009112EB /* UIViewController+Extension.swift */,
+				E6B249DC2BC26598009112EB /* CollectionExtension.swift */,
+				E6B249DE2BC266B6009112EB /* String+Extension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -509,8 +515,10 @@
 				E63F3CF02BC21E500094A0D2 /* ColorText.swift in Sources */,
 				E63F3CC52BC21DCE0094A0D2 /* AppDelegate.swift in Sources */,
 				E63F3D102BC21FCC0094A0D2 /* HomeRouter.swift in Sources */,
+				E6B249DD2BC26598009112EB /* CollectionExtension.swift in Sources */,
 				E63F3D112BC21FCC0094A0D2 /* HomeViewController.swift in Sources */,
 				E63F3D082BC21FCC0094A0D2 /* Imageable.swift in Sources */,
+				E6B249DF2BC266B6009112EB /* String+Extension.swift in Sources */,
 				E63F3CDF2BC21E210094A0D2 /* BaseRouter.swift in Sources */,
 				E63F3CDE2BC21E210094A0D2 /* BaseNavigationController.swift in Sources */,
 				E63F3CE82BC21E210094A0D2 /* Navigator.swift in Sources */,
