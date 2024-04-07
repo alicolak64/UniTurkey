@@ -12,6 +12,7 @@ final class HomeViewController: BaseViewController<HomeViewModel> {
     lazy var titleLabel: UILabel = {
         let label = BaseLabel()
         label.textAlignment = .center
+        label.font = UIFont.systemFont(ofSize: 24, weight: .bold)
         return label
     }()
     
