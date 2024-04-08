@@ -42,7 +42,11 @@
 		E63F3D112BC21FCC0094A0D2 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E63F3D032BC21FCC0094A0D2 /* HomeViewController.swift */; };
 		E63F3D122BC21FCC0094A0D2 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E63F3D042BC21FCC0094A0D2 /* HomeViewModel.swift */; };
 		E63F3D162BC228BC0094A0D2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E63F3D152BC228BC0094A0D2 /* LaunchScreen.storyboard */; };
-		E690A0262BC34DFC003B2F83 /* ResponseUniversities.swift in Sources */ = {isa = PBXBuildFile; fileRef = E690A0252BC34DFC003B2F83 /* ResponseUniversities.swift */; };
+		E690A0282BC35591003B2F83 /* UniversityService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E690A0272BC35591003B2F83 /* UniversityService.swift */; };
+		E690A02A2BC35B67003B2F83 /* UniversityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E690A0292BC35B67003B2F83 /* UniversityManager.swift */; };
+		E690A02D2BC36198003B2F83 /* NetworkConstant.swift in Sources */ = {isa = PBXBuildFile; fileRef = E690A02C2BC36198003B2F83 /* NetworkConstant.swift */; };
+		E690A02F2BC363D8003B2F83 /* AppConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = E690A02E2BC363D7003B2F83 /* AppConstants.swift */; };
+		E690A0312BC367E9003B2F83 /* UniversityResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E690A0302BC367E9003B2F83 /* UniversityResponse.swift */; };
 		E6B249D72BC25A39009112EB /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6B249D62BC25A39009112EB /* UIView+Extension.swift */; };
 		E6B249D92BC25C98009112EB /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6B249D82BC25C98009112EB /* UIImage+Extension.swift */; };
 		E6B249DB2BC25D7D009112EB /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6B249DA2BC25D7D009112EB /* UIViewController+Extension.swift */; };
@@ -107,7 +111,11 @@
 		E63F3D032BC21FCC0094A0D2 /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		E63F3D042BC21FCC0094A0D2 /* HomeViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
 		E63F3D152BC228BC0094A0D2 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
-		E690A0252BC34DFC003B2F83 /* ResponseUniversities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponseUniversities.swift; sourceTree = "<group>"; };
+		E690A0272BC35591003B2F83 /* UniversityService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UniversityService.swift; sourceTree = "<group>"; };
+		E690A0292BC35B67003B2F83 /* UniversityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UniversityManager.swift; sourceTree = "<group>"; };
+		E690A02C2BC36198003B2F83 /* NetworkConstant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkConstant.swift; sourceTree = "<group>"; };
+		E690A02E2BC363D7003B2F83 /* AppConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConstants.swift; sourceTree = "<group>"; };
+		E690A0302BC367E9003B2F83 /* UniversityResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UniversityResponse.swift; sourceTree = "<group>"; };
 		E6B249D62BC25A39009112EB /* UIView+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+Extension.swift"; sourceTree = "<group>"; };
 		E6B249D82BC25C98009112EB /* UIImage+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
 		E6B249DA2BC25D7D009112EB /* UIViewController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extension.swift"; sourceTree = "<group>"; };
@@ -291,6 +299,7 @@
 			children = (
 				E63F3CEE2BC21E500094A0D2 /* Assets.xcassets */,
 				E63F3CED2BC21E500094A0D2 /* Colors */,
+				E690A02B2BC3617B003B2F83 /* Constants */,
 				E606993F2BC21B460062333F /* Info.plist */,
 			);
 			path = Resources;
@@ -320,6 +329,8 @@
 		E63F3CF82BC21FCC0094A0D2 /* Network */ = {
 			isa = PBXGroup;
 			children = (
+				E690A0272BC35591003B2F83 /* UniversityService.swift */,
+				E690A0292BC35B67003B2F83 /* UniversityManager.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -327,7 +338,7 @@
 		E63F3CF92BC21FCC0094A0D2 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				E690A0252BC34DFC003B2F83 /* ResponseUniversities.swift */,
+				E690A0302BC367E9003B2F83 /* UniversityResponse.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -381,6 +392,15 @@
 				E63F3D002BC21FCC0094A0D2 /* Detail */,
 			);
 			path = Scenes;
+			sourceTree = "<group>";
+		};
+		E690A02B2BC3617B003B2F83 /* Constants */ = {
+			isa = PBXGroup;
+			children = (
+				E690A02E2BC363D7003B2F83 /* AppConstants.swift */,
+				E690A02C2BC36198003B2F83 /* NetworkConstant.swift */,
+			);
+			path = Constants;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -516,20 +536,22 @@
 				E63F3CC62BC21DCE0094A0D2 /* AppRouter.swift in Sources */,
 				E63F3CE52BC21E210094A0D2 /* BaseLabel.swift in Sources */,
 				E63F3CF02BC21E500094A0D2 /* ColorText.swift in Sources */,
+				E690A02A2BC35B67003B2F83 /* UniversityManager.swift in Sources */,
 				E63F3CC52BC21DCE0094A0D2 /* AppDelegate.swift in Sources */,
 				E63F3D102BC21FCC0094A0D2 /* HomeRouter.swift in Sources */,
 				E6B249DD2BC26598009112EB /* CollectionExtension.swift in Sources */,
-				E690A0262BC34DFC003B2F83 /* ResponseUniversities.swift in Sources */,
 				E63F3D112BC21FCC0094A0D2 /* HomeViewController.swift in Sources */,
 				E63F3D082BC21FCC0094A0D2 /* Imageable.swift in Sources */,
 				E6B249DF2BC266B6009112EB /* String+Extension.swift in Sources */,
 				E63F3CDF2BC21E210094A0D2 /* BaseRouter.swift in Sources */,
 				E63F3CDE2BC21E210094A0D2 /* BaseNavigationController.swift in Sources */,
+				E690A02D2BC36198003B2F83 /* NetworkConstant.swift in Sources */,
 				E63F3CE82BC21E210094A0D2 /* Navigator.swift in Sources */,
 				E63F3CC72BC21DCE0094A0D2 /* AppContainer.swift in Sources */,
 				E63F3CE42BC21E210094A0D2 /* BaseCollectionViewCell.swift in Sources */,
 				E6B249DB2BC25D7D009112EB /* UIViewController+Extension.swift in Sources */,
 				E63F3D0B2BC21FCC0094A0D2 /* UIApplication+Extension.swift in Sources */,
+				E690A02F2BC363D8003B2F83 /* AppConstants.swift in Sources */,
 				E63F3CE12BC21E210094A0D2 /* BaseViewModel.swift in Sources */,
 				E63F3CE62BC21E210094A0D2 /* BaseTableView.swift in Sources */,
 				E63F3CF12BC21E500094A0D2 /* Palette.swift in Sources */,
@@ -538,6 +560,7 @@
 				E63F3D0C2BC21FCC0094A0D2 /* UICollectionView+Extension.swift in Sources */,
 				E63F3D092BC21FCC0094A0D2 /* ReusableView.swift in Sources */,
 				E63F3CE02BC21E210094A0D2 /* BaseViewController.swift in Sources */,
+				E690A0282BC35591003B2F83 /* UniversityService.swift in Sources */,
 				E63F3CE32BC21E210094A0D2 /* BaseCollectionView.swift in Sources */,
 				E63F3CEF2BC21E500094A0D2 /* ColorBackground.swift in Sources */,
 				E63F3D0E2BC21FCC0094A0D2 /* UIDevice+Extension.swift in Sources */,
@@ -546,6 +569,7 @@
 				E63F3D0D2BC21FCC0094A0D2 /* UIColor+Extension.swift in Sources */,
 				E6B249D92BC25C98009112EB /* UIImage+Extension.swift in Sources */,
 				E63F3CDD2BC21E210094A0D2 /* Typealias.swift in Sources */,
+				E690A0312BC367E9003B2F83 /* UniversityResponse.swift in Sources */,
 				E6B249D72BC25A39009112EB /* UIView+Extension.swift in Sources */,
 				E63F3D122BC21FCC0094A0D2 /* HomeViewModel.swift in Sources */,
 				E63F3D0A2BC21FCC0094A0D2 /* Symbolable.swift in Sources */,

@@ -30,6 +30,14 @@ final class HomeViewController: BaseViewController<HomeViewModel> {
         
         view.addSubview(titleLabel)
         
+        UniversityManager.shared.fetchUniversities(page: 1) { result in
+            switch result {
+            case .success(let universities):
+                print(universities)
+            case .failure(let error):
+                print(error)
+            }
+        }
         
         NSLayoutConstraint.activate([
             titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
