@@ -1,5 +1,5 @@
 //
-//  ResponseUniversities.swift
+//  UniversityResponse.swift
 //  UniTurkey
 //
 //  Created by Ali Çolak on 8.04.2024.
@@ -8,7 +8,7 @@
 import Foundation
 
 // MARK: - Response University
-struct ResponseUniversity: Codable {
+struct UniversityResponse: Codable {
     let name : String
     let phone: String
     let fax: String
@@ -23,17 +23,17 @@ struct ResponseUniversity: Codable {
         case fax = "fax"
         case website = "website"
         case email = "email"
-        case address = "address"
+        case address = "adress"
         case rector = "rector"
     }
     
 }
 
 // MARK: - Response University Province
-struct ResponseUniversityProvince: Codable {
+struct UniversityProvinceResponse: Codable {
     let id: Int
     let province: String
-    let universities: [ResponseUniversity]
+    let universities: [UniversityResponse]
 
     private enum CodingKeys: String, CodingKey {
         case id = "id"
@@ -44,21 +44,22 @@ struct ResponseUniversityProvince: Codable {
 
 
 // MARK: - Response Universities Page
-struct ResponseUniversitiesPage: Codable {
+struct UniversitiesPageResponse: Codable {
     let currentPage: Int
     let totalPages: Int
-    let totalItems: Int
-    let itemPerPage: Int
+    let totalProvinces: Int
+    let provincePerPage: Int
     let pageSize: Int
-    let provinces: [ResponseUniversityProvince]
+    let provinces: [UniversityProvinceResponse]
     
     private enum CodingKeys: String, CodingKey {
         case currentPage = "currentPage"
-        case totalPages = "totalPages"
-        case totalItems = "total"
-        case itemPerPage = "itemPerPage"
+        case totalPages = "totalPage"
+        case totalProvinces = "total"
+        case provincePerPage = "itemPerPage"
         case pageSize = "pageSize"
         case provinces = "data"
     }
 }
+
 
