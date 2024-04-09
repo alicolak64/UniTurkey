@@ -15,7 +15,7 @@ extension UIApplication {
             return ""
         }
     }()
-
+    
     static let appBuild: String = {
         if let appBuild = Bundle.main.object(forInfoDictionaryKey: kCFBundleVersionKey as String) as? String {
             return appBuild
@@ -23,7 +23,7 @@ extension UIApplication {
             return ""
         }
     }()
-
+    
     static func appVersionAndBuild() -> String {
         let releaseVersion = "v. " + appVersion
         let buildVersion = " b. " + appBuild

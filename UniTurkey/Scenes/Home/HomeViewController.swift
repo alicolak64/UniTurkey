@@ -7,56 +7,51 @@
 
 import UIKit
 
-final class HomeViewController: BaseViewController<HomeViewModel> {
+// MARK: - HomeViewController
+final class HomeViewController: UIViewController {
     
-    lazy var titleLabel: UILabel = {
-        let label = BaseLabel()
-        label.textAlignment = .center
-        label.font = UIFont.systemFont(ofSize: 24, weight: .bold)
-        return label
-    }()
+    // MARK: - Dependency Properties
+    private let viewModel: HomeViewModel
+    private let router: HomeRouter
+    
+    // MARK: - Properties
+    private var lastScrollTime: Date?
+    
+    // MARK: - Initializers
+    init(viewModel: HomeViewModel, router: HomeRouter) {
+        self.viewModel = viewModel
+        self.router = router
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        viewModel.delegate = self
-        viewModel.getTitle()
+        configureUI()
     }
     
-    override func prepare() {
-        super.prepare()
-        
-        view.backgroundColor = .gray
-        
-        view.addSubview(titleLabel)
-        
-        UniversityManager.shared.fetchUniversities(page: 1) { result in
-            switch result {
-            case .success(let universities):
-                print(universities)
-            case .failure(let error):
-                print(error)
-            }
-        }
-        
-        NSLayoutConstraint.activate([
-            titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            titleLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor)
-        ])
-        
+    // MARK: - Configure UI
+    private func configureUI() {
+        view.backgroundColor = .red
     }
     
 }
 
 // MARK: - ViewModel Delegate
-extension HomeViewController: HomeViewModelDelegate {
+extension HomeViewController : HomeViewModelDelegate {
+    
+    func handleOutput(_ output: HomeViewModelOutput) {
         
-    func didUpdateTitle(title: String) {
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
-            self.titleLabel.text = title
-        }
     }
+    
+    func navigate(to route: HomeRoute) {
+        
+    }
+    
     
 }
 

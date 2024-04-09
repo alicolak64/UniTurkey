@@ -9,15 +9,15 @@ import UIKit
 
 extension UIDevice {
     static let isIpad = current.userInterfaceIdiom == .pad
-
+    
     static let osVersion: String = {
         UIDevice.current.systemVersion
     }()
-
+    
     static let osName: String = {
         UIDevice.current.systemName
     }()
-
+    
     static let deviceUuid: String = {
         if let uuid = UIDevice.current.identifierForVendor?.uuidString {
             return uuid
@@ -25,7 +25,15 @@ extension UIDevice {
             return ""
         }
     }()
-
+    
+    static let deviceWidth: CGFloat = {
+        UIScreen.main.bounds.width
+    }()
+    
+    static let deviceHeight: CGFloat = {
+        UIScreen.main.bounds.height
+    }()
+    
     static let hasNotch: Bool = {
         if #available(iOS 11.0, *) {
             if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
@@ -35,7 +43,7 @@ extension UIDevice {
         }
         return false
     }()
-
+    
     static let modelName: String = {
         var systemInfo = utsname()
         uname(&systemInfo)
@@ -44,7 +52,7 @@ extension UIDevice {
             guard let value = element.value as? Int8, value != 0 else { return identifier }
             return identifier + String(UnicodeScalar(UInt8(value)))
         }
-
+        
         // swiftlint:disable:this cyclomatic_complexity
         func mapToDevice(identifier: String) -> String {
             #if os(iOS)

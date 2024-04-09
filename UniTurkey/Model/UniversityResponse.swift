@@ -34,7 +34,7 @@ struct UniversityProvinceResponse: Codable {
     let id: Int
     let province: String
     let universities: [UniversityResponse]
-
+    
     private enum CodingKeys: String, CodingKey {
         case id = "id"
         case province = "province"

@@ -8,7 +8,7 @@
 import Foundation
 
 // MARK: - University Manager
-final class UniversityManager : UniversityService {
+final class UniversityManager: UniversityService {
     
     // MARK: - Properties(Singleton)
     static let shared = UniversityManager()
@@ -19,7 +19,7 @@ final class UniversityManager : UniversityService {
     // MARK: - Fetch Universities
     func fetchUniversities(page: Int, completion: @escaping (Result<UniversitiesPageResponse, ServiceError>) -> Void) {
         
-        guard let url = URL(string: "\(NetworkConstant.baseURL)\(NetworkConstant.page)\(page)\(NetworkConstant.json)") else {
+        guard let url = URL(string: "\(Constants.Network.baseURL)\(Constants.Network.page)\(page)\(Constants.Network.json)") else {
             completion(.failure(.invalidURLError))
             return
         }

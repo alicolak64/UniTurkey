@@ -16,8 +16,8 @@ final class AppRouter {
     }
     
     func start() {
-        let homeViewController = HomeRouter().create()
-        let navigationController = BaseNavigationController(rootViewController: homeViewController)
+        let homeViewController = HomeBuilder().build()
+        let navigationController = UINavigationController(rootViewController: homeViewController)
         window.rootViewController = navigationController
         window.makeKeyAndVisible()
     }

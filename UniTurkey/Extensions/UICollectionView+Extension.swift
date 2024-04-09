@@ -29,7 +29,7 @@ extension UICollectionView {
     func registerHeader<T: UICollectionReusableView>(_: T.Type) where T: ReusableView {
         register(T.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: T.identifier)
     }
-
+    
     func registerFooter<T: UICollectionReusableView>(_: T.Type) where T: ReusableView {
         register(T.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: T.identifier)
     }
