@@ -34,6 +34,7 @@ protocol HomeViewModelDelegate: AnyObject {
 // MARK: - Protocol
 protocol HomeViewModelProtocol: HomeViewModelDataSource {
     var  delegate: HomeViewModelDelegate? { get set }
+    func fetchTitle()
     func fetchUniversities()
     func selectUniversity(id: Int, at index: Int)
 }
@@ -45,8 +46,8 @@ final class HomeViewModel {
     private let service: UniversityService
     
     var title: String?
-    var totalPages: Int = 0
-    var currentPage: Int = 1
+    var totalPages: Int = 1
+    var currentPage: Int = 0
     var provinces: [UniversityProvinceResponse] = []
     var loading: Bool = false
     var error: Error?
@@ -60,20 +61,25 @@ final class HomeViewModel {
 // MARK: - ViewModel Protocol
 extension HomeViewModel: HomeViewModelProtocol {
     
+    func fetchTitle() {
+        notify(.updateTitle(Constants.Text.homeTitleText))
+    }
+    
     func fetchUniversities() {
-        
-        guard currentPage < totalPages else { return }
-        
-        service.fetchUniversities(page: currentPage) { [weak self] result in
+        guard currentPage < totalPages && !loading else {  return }
+        notify(.updateLoading(true))
+        service.fetchUniversities(page: currentPage + 1) { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success(let response):
+                self.notify(.updateLoading(false))
                 self.currentPage = response.currentPage
                 self.totalPages = response.totalPages
                 self.provinces.append(contentsOf: response.provinces)
                 let presentations = self.provinces.map { UniversityProvinceRepresentation(province: $0) }
                 self.notify(.updateProvinces(presentations))
             case .failure(let error):
+                self.notify(.updateLoading(false))
                 self.notify(.updateError(error))
             }
         }
@@ -87,6 +93,16 @@ extension HomeViewModel: HomeViewModelProtocol {
     }
     
     private func notify(_ output: HomeViewModelOutput) {
+        switch output {
+        case .updateTitle(let title):
+            self.title = title
+        case .updateProvinces(_):
+            break
+        case .updateLoading(let loading):
+            self.loading = loading
+        case .updateError(let error):
+            self.error = error
+        }
         delegate?.handleOutput(output)
     }
     
