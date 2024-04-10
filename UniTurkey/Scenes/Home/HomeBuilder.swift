@@ -20,7 +20,6 @@ final class HomeBuilder: HomeBuildable {
         let viewController = HomeViewController(viewModel: viewModel, router: router)
         guard let navigationController = viewController.navigationController else { return viewController }
         router.navigationController = navigationController
-        viewModel.delegate = viewController
         return viewController
     }
     
