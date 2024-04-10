@@ -26,4 +26,30 @@ extension UIView {
         addConstraints(constraints)
     }
     
+    func addBorder(width: CGFloat, color: UIColor){
+        layer.borderWidth = width
+        layer.borderColor = color.cgColor
+    }
+    
+    func addCornerRadius(radius: CGFloat){
+        layer.cornerRadius = radius
+        layer.masksToBounds = true
+    }
+    
+    func addRoundedBorder(width: CGFloat, color: UIColor){
+        addBorder(width: width, color: color)
+        addCornerRadius(radius: 10)
+    }
+    
+    func addShadow(color: UIColor, opacity: Float, offset: CGSize, radius: CGFloat){
+        layer.shadowColor = color.cgColor
+        layer.shadowOpacity = opacity
+        layer.shadowOffset = offset
+        layer.shadowRadius = radius
+    }
+    
+    func addShadow(){
+        addShadow(color: .black, opacity: 0.5, offset: .zero, radius: 10)
+    }
+    
 }
