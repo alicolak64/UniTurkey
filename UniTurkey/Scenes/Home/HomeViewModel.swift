@@ -37,14 +37,17 @@ protocol HomeViewModelProtocol: HomeViewModelDataSource {
     func fetchTitle()
     func fetchUniversities()
     func selectUniversity(id: Int, at index: Int)
+    func didTryAgain()
 }
 
 // MARK: - ViewModel
 final class HomeViewModel {
     
+    // MARK: - Dependency Properties
     weak var delegate: HomeViewModelDelegate?
     private let service: UniversityService
     
+    // MARK: - Data Source Properties
     var title: String?
     var totalPages: Int = 1
     var currentPage: Int = 0
@@ -52,6 +55,7 @@ final class HomeViewModel {
     var loading: Bool = false
     var error: Error?
     
+    // MARK: - Init
     init (service: UniversityService) {
         self.service = service
     }
@@ -61,6 +65,7 @@ final class HomeViewModel {
 // MARK: - ViewModel Protocol
 extension HomeViewModel: HomeViewModelProtocol {
     
+    // MARK: - Notify
     func fetchTitle() {
         notify(.updateTitle(Constants.Text.homeTitleText))
     }
@@ -90,6 +95,16 @@ extension HomeViewModel: HomeViewModelProtocol {
         guard let province = provinces.first(where: { $0.id == id }) else { return }
         guard let university = province.universities[safe: index] else { return }
         delegate?.navigate(to: .detail(university))
+    }
+    
+    func didTryAgain() {
+        // clear all data and fetch again
+        currentPage = 0
+        totalPages = 1
+        loading = false
+        error = nil
+        provinces = []
+        fetchUniversities()
     }
     
     private func notify(_ output: HomeViewModelOutput) {

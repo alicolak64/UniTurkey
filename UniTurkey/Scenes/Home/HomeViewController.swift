@@ -56,20 +56,12 @@ final class HomeViewController: UIViewController {
         return view
     }()
     
-    private lazy var errorView : UIView = {
-        let view = UIView()
-        view.backgroundColor = Constants.Color.backgroundColor
+    private lazy var errorView: ErrorView = {
+        let view = ErrorView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.isHidden = true
+        view.delegate = self
         return view
-    }()
-    
-    private lazy var errorLabel: UILabel = {
-        let label = UILabel()
-        label.font = Constants.Font.bodyFont
-        label.textColor = Constants.Color.blackColor
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
     }()
     
     private lazy var tableView: UITableView = {
@@ -113,7 +105,6 @@ final class HomeViewController: UIViewController {
         viewModel.fetchUniversities()
         // tableview setup
         tableViewSetup()
-        
     }
     
     private func tableViewSetup() {
@@ -127,7 +118,6 @@ final class HomeViewController: UIViewController {
         view.backgroundColor = Constants.Color.backgroundColor
         configureNavigationBar()
         view.addSubviews([loadingView,errorView,tableView,paginationLoadingView])
-        errorView.addSubviews([errorLabel])
     }
     
     private func configureNavigationBar() {
@@ -142,18 +132,15 @@ final class HomeViewController: UIViewController {
             loadingView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             loadingView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             
-            errorView.topAnchor.constraint(equalTo: view.topAnchor),
-            errorView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            errorView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            errorView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            errorView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 50),
+            errorView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            errorView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            errorView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             
-            errorLabel.centerXAnchor.constraint(equalTo: errorView.centerXAnchor),
-            errorLabel.centerYAnchor.constraint(equalTo: errorView.centerYAnchor),
-            
-            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
+            tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             
             paginationLoadingView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             paginationLoadingView.bottomAnchor.constraint(equalTo: tableView.bottomAnchor, constant: -20)
@@ -173,7 +160,6 @@ final class HomeViewController: UIViewController {
     private func stopLoading() {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
-            self.tableView.isHidden = false
             self.loadingView.hideLoading()
         }
     }
@@ -181,8 +167,7 @@ final class HomeViewController: UIViewController {
     private func showError(_ error: Error) {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
-            self.errorLabel.text = error.localizedDescription
-            self.errorView.isHidden = false
+            self.errorView.showError(error: error)
         }
     }
     
@@ -197,6 +182,17 @@ extension HomeViewController {
     
 }
 
+// MARK: - ErrorViewDelegate
+extension HomeViewController: ErrorViewDelegate {
+    
+    func didTapRetryButton() {
+        viewModel.didTryAgain()
+    }
+    
+}
+
+
+// MARK: - TableView Delegate & DataSource
 extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -273,6 +269,7 @@ extension HomeViewController : HomeViewModelDelegate {
             self.provinces = provinces
             DispatchQueue.main.async { [weak self] in
                 guard let self = self else { return }
+                self.tableView.isHidden = false
                 self.tableView.reloadData()
             }
         case .updateLoading(let loading):
