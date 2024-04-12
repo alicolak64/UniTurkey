@@ -16,11 +16,11 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="cap" translatesAutoresizingMaskIntoConstraints="NO" id="CSo-HU-Qtn">
-                                <rect key="frame" x="20" y="189.00000000000003" width="353" height="340.66666666666674"/>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="cap" translatesAutoresizingMaskIntoConstraints="NO" id="CSo-HU-Qtn">
+                                <rect key="frame" x="20" y="248" width="353" height="341"/>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Turkey Universities" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pVR-AO-4NT">
-                                <rect key="frame" x="20" y="530" width="353" height="54"/>
+                                <rect key="frame" x="20" y="589" width="353" height="54"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="54" id="hGp-Lj-E42"/>
                                 </constraints>
@@ -36,9 +36,9 @@
                             <constraint firstItem="CSo-HU-Qtn" firstAttribute="leading" secondItem="BhN-m0-7Rd" secondAttribute="leading" constant="20" id="15h-3V-FuX"/>
                             <constraint firstItem="pVR-AO-4NT" firstAttribute="trailing" secondItem="CSo-HU-Qtn" secondAttribute="trailing" id="3VI-a4-XAi"/>
                             <constraint firstAttribute="trailing" secondItem="CSo-HU-Qtn" secondAttribute="trailing" constant="20" id="Kj0-fj-hyg"/>
-                            <constraint firstItem="pVR-AO-4NT" firstAttribute="top" secondItem="CSo-HU-Qtn" secondAttribute="bottom" constant="0.33333333333325754" id="bOE-15-LQ4"/>
+                            <constraint firstItem="pVR-AO-4NT" firstAttribute="top" secondItem="CSo-HU-Qtn" secondAttribute="bottom" id="bOE-15-LQ4"/>
                             <constraint firstItem="pVR-AO-4NT" firstAttribute="leading" secondItem="CSo-HU-Qtn" secondAttribute="leading" id="o8M-fF-4X7"/>
-                            <constraint firstItem="CSo-HU-Qtn" firstAttribute="top" secondItem="BhN-m0-7Rd" secondAttribute="top" constant="130" id="tKi-BD-VXJ"/>
+                            <constraint firstItem="CSo-HU-Qtn" firstAttribute="centerY" secondItem="BhN-m0-7Rd" secondAttribute="centerY" constant="-20" id="tKi-BD-VXJ"/>
                         </constraints>
                     </view>
                 </viewController>
