@@ -8,6 +8,12 @@
 import UIKit
 
 extension UIDevice {
+    
+    enum Orientation {
+        case portrait
+        case landscape
+    }
+    
     static let isIpad = current.userInterfaceIdiom == .pad
     
     static let osVersion: String = {
@@ -26,13 +32,45 @@ extension UIDevice {
         }
     }()
     
-    static let deviceWidth: CGFloat = {
-        UIScreen.main.bounds.width
+    static let screenHeight: CGFloat = {
+        if orientationType == .portrait {
+            return deviceHeight
+        } else {
+            return deviceWidth
+        }
+    }()
+    
+    static let screenWidth: CGFloat = {
+        if orientationType == .portrait {
+            return deviceHeight
+        } else {
+            return deviceWidth
+        }
     }()
     
     static let deviceHeight: CGFloat = {
         UIScreen.main.bounds.height
     }()
+    
+    static let deviceWidth: CGFloat = {
+        UIScreen.main.bounds.width
+    }()
+        
+    static var orientationType : Orientation {
+        if #available(iOS 13.0, *) {
+            if UIDevice.current.orientation.isLandscape {
+                return .landscape
+            } else {
+                return .portrait
+            }
+        } else {
+            if UIApplication.shared.statusBarOrientation.isLandscape {
+                return .landscape
+            } else {
+                return .portrait
+            }
+        }
+    }
     
     static let hasNotch: Bool = {
         if #available(iOS 11.0, *) {

@@ -9,6 +9,7 @@ import Foundation
 
 extension String {
     
+    // MARK: - Properties
     var capitalizedEachWord: String {
         let words = self.components(separatedBy: " ")
         var capitalizedWords = [String]()

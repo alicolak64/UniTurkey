@@ -27,8 +27,7 @@ enum Constants {
     enum Text {
         static let homeTitleText = "Universities"
         static let notAvaliableText = "Not Avaliable"
-        static let errorText = "An error occurred"
-        static let tryAgainText = "Try Again"
+        static let errorTitleText = "Oops! An Error Occurred"
     }
     
     // MARK: - Color Constant
@@ -67,6 +66,7 @@ enum Constants {
         static let addressIcon = UIImage(systemName: "location.fill")
         static let emailIcon = UIImage(systemName: "envelope.fill")
         static let rectorIcon = UIImage(systemName: "person.fill")
+        static let errorIcon = UIImage(named: "error")
     }
     
 }
