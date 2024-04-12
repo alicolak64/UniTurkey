@@ -7,10 +7,12 @@
 
 import UIKit
 
+// MARK: - Home Buildable
 protocol HomeBuildable {
     func build() -> UIViewController
 }
 
+// MARK: - Home Builder
 final class HomeBuilder: HomeBuildable {
     
     func build() -> UIViewController {
