@@ -7,6 +7,7 @@
 
 import Foundation
 
+// MARK: - String Extension
 extension String {
     
     // MARK: - Properties
@@ -14,12 +15,6 @@ extension String {
         let components = self.components(separatedBy: " ")
         let capitalized = components.map { $0.capitalized }
         return capitalized.joined(separator: " ")
-    }
-    
-    @discardableResult
-    mutating func capitalCase() -> String {
-        self = self.capitalCased
-        return self
     }
     
     var isValidUrl: Bool {
@@ -42,4 +37,34 @@ extension String {
         return self.replacingOccurrences(of: "I", with: "ı")
     }
     
+    // MARK: - Methods
+    @discardableResult
+    mutating func capitalCase() -> String {
+        self = self.capitalCased
+        return self
+    }
+    
+}
+
+// MARK: - API String Extension
+extension String {
+    
+    // MARK: - Properties
+    var apiCapitaledTrimmed: String {
+        return self == Constants.Network.notAvaliableAPIText
+        ? Constants.Text.notAvaliableText
+        : self.englishToTurkish.capitalCased.trimmed
+    }
+    
+    var apiLowercasedTrimmed: String {
+        return self == Constants.Network.notAvaliableAPIText
+        ? Constants.Text.notAvaliableText
+        : self.lowercased().trimmed
+    }
+    
+    var apiTrimmed: String {
+        return self == Constants.Network.notAvaliableAPIText
+        ? Constants.Text.notAvaliableText
+        : self.trimmed
+    }
 }
