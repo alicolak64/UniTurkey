@@ -7,14 +7,18 @@
 
 import UIKit
 
+// MARK: - App Router
 final class AppRouter {
     
+    // MARK: - Properties
     let window: UIWindow
     
+    // MARK: - Initializers
     init() {
         window = UIWindow(frame: UIScreen.main.bounds)
     }
     
+    // MARK: - Start
     func start() {
         let homeViewController = HomeBuilder().build()
         let navigationController = UINavigationController(rootViewController: homeViewController)

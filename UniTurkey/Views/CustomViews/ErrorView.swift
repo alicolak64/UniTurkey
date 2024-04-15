@@ -9,23 +9,27 @@ import UIKit
 
 // MARK: - Error View Protocol
 protocol ErrorViewProtocol {
+    // MARK: - Methods
     func showError(error: Error?)
     func hideError()
 }
 
 // MARK: - Error State
 enum ErrorState {
+    // MARK: - Cases
     case error
     case noError
 }
 
 // MARK: - Error View Output
 enum ErrorViewOutput {
+    // MARK: - Cases
     case retry
 }
 
 // MARK: - Error View Delegate
 protocol ErrorViewDelegate: AnyObject {
+    // MARK: - Methods
     func handleOutput(_ output: ErrorViewOutput)
 }
 
@@ -82,7 +86,7 @@ final class ErrorView: UIView, ErrorViewProtocol {
         }
     }
     
-    // Dependency Properties
+    // MARK: Dependency Properties
     weak var delegate: ErrorViewDelegate?
     
     // MARK: - Initializer
@@ -120,7 +124,13 @@ final class ErrorView: UIView, ErrorViewProtocol {
         
     }
     
-    // MARK: - Error View Protocol
+    // MARK: - Actions
+    @objc private func tryAgainButtonTapped() {
+        hideError()
+        notify(.retry)
+    }
+    
+    // MARK: - Delegate Methods
     func showError(error: Error? = nil) {
         state = .error
         if let error = error {
@@ -135,14 +145,7 @@ final class ErrorView: UIView, ErrorViewProtocol {
         state = .noError
     }
     
-    // MARK: - Actions
-    @objc private func tryAgainButtonTapped() {
-        hideError()
-        notify(.retry)
-    }
-    
     // MARK: - Delegate Notifier
-    
     private func notify(_ output: ErrorViewOutput) {
         delegate?.handleOutput(output)
     }

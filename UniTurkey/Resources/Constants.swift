@@ -7,6 +7,7 @@
 
 import UIKit
 
+// MARK: - Constants
 enum Constants {
     
     // MARK: - UI Constants

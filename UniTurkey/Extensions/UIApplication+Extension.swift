@@ -7,7 +7,9 @@
 
 import UIKit
 
+// MARK: - UIApplication Extension
 extension UIApplication {
+    // MARK: - Properties
     static let appVersion: String = {
         if let appVersion = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String {
             return appVersion

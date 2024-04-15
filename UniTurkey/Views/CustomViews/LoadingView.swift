@@ -9,12 +9,14 @@ import UIKit
 
 // MARK: - Loading View Protocol
 protocol LoadingViewProtocol {
+    // MARK: - Methods
     func showLoading()
     func hideLoading()
 }
 
 // MARK: - Loading State
 enum LoadingState {
+    // MARK: - Cases
     case loading
     case loaded
 }
@@ -33,6 +35,7 @@ final class LoadingView: UIView, LoadingViewProtocol {
     
     // MARK: - Properties
     private var state: LoadingState = .loading {
+        // MARK: - Did Set
         didSet {
             switch state {
             case .loading:
@@ -70,7 +73,7 @@ final class LoadingView: UIView, LoadingViewProtocol {
         
     }
     
-    // MARK: - Loading View Protocol
+    // MARK: - Delegate Methods
     func showLoading() {
         state = .loading
     }

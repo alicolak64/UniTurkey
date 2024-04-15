@@ -9,12 +9,14 @@ import UIKit
 
 // MARK: - Home Buildable
 protocol HomeBuildable {
+    // MARK: - Methods
     func build() -> UIViewController
 }
 
 // MARK: - Home Builder
 final class HomeBuilder: HomeBuildable {
     
+    // MARK: - Methods
     func build() -> UIViewController {
         let service = app.service
         let viewModel = HomeViewModel(service: service)

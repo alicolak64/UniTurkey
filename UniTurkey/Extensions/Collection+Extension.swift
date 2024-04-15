@@ -7,6 +7,7 @@
 
 import Foundation
 
+// MARK: - Collection Extension
 extension Collection {
     
     // MARK: - Properties(Safe Access)

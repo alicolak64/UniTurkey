@@ -9,6 +9,7 @@ import UIKit
 
 // MARK: - Province Table View Cell Protocol
 protocol ProvinceCellProtocol: ReusableView {
+    // MARK: - Methods
     func updateExpandIcon(isExpanded: Bool)
 }
 
@@ -16,6 +17,7 @@ protocol ProvinceCellProtocol: ReusableView {
 // MARK: - Province Table View Cell
 final class ProvinceCell: UITableViewCell,ProvinceCellProtocol {
     
+    // MARK: - Typealias
     typealias Model = UniversityProvinceRepresentation
     
     // MARK: - UI
@@ -59,7 +61,7 @@ final class ProvinceCell: UITableViewCell,ProvinceCellProtocol {
         fatalError("init(coder:) has not been implemented")
     }
     
-    // MARK: Layout Subviews
+    // MARK: Lifecycle
     override func layoutSubviews() {
         super.layoutSubviews()
         let margins = UIEdgeInsets(top: 0, left: 0, bottom: 10, right: 0)

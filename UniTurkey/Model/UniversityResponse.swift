@@ -9,6 +9,7 @@ import Foundation
 
 // MARK: - Response University
 struct UniversityResponse: Codable {
+    // MARK: - Properties
     let name : String
     let phone: String
     let fax: String
@@ -17,6 +18,7 @@ struct UniversityResponse: Codable {
     let address: String
     let rector: String
     
+    // MARK: - Coding Keys
     private enum CodingKeys: String, CodingKey {
         case name = "name"
         case phone = "phone"
@@ -31,10 +33,13 @@ struct UniversityResponse: Codable {
 
 // MARK: - Response University Province
 struct UniversityProvinceResponse: Codable {
+    
+    // MARK: - Properties
     let id: Int
     let province: String
     let universities: [UniversityResponse]
     
+    // MARK: - Coding Keys
     private enum CodingKeys: String, CodingKey {
         case id = "id"
         case province = "province"
@@ -45,6 +50,8 @@ struct UniversityProvinceResponse: Codable {
 
 // MARK: - Response Universities Page
 struct UniversitiesPageResponse: Codable {
+    
+    // MARK: - Properties
     let currentPage: Int
     let totalPages: Int
     let totalProvinces: Int
@@ -52,6 +59,7 @@ struct UniversitiesPageResponse: Codable {
     let pageSize: Int
     let provinces: [UniversityProvinceResponse]
     
+    // MARK: - Coding Keys
     private enum CodingKeys: String, CodingKey {
         case currentPage = "currentPage"
         case totalPages = "totalPage"

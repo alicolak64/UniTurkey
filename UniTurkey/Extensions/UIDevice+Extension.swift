@@ -7,12 +7,17 @@
 
 import UIKit
 
+// MARK: - UIDevice Extension
 extension UIDevice {
     
+    // MARK: - Device Orientation
     enum Orientation {
+        // MARK: - Cases
         case portrait
         case landscape
     }
+    
+    // MARK: - Properties
     
     static let isIpad = current.userInterfaceIdiom == .pad
     
@@ -55,7 +60,7 @@ extension UIDevice {
     static let deviceWidth: CGFloat = {
         UIScreen.main.bounds.width
     }()
-        
+    
     static var orientationType : Orientation {
         if #available(iOS 13.0, *) {
             if UIDevice.current.orientation.isLandscape {
@@ -93,7 +98,7 @@ extension UIDevice {
         
         // swiftlint:disable:this cyclomatic_complexity
         func mapToDevice(identifier: String) -> String {
-            #if os(iOS)
+#if os(iOS)
             switch identifier {
             case "iPod5,1":
                 return "iPod touch (5th generation)"
@@ -256,7 +261,7 @@ extension UIDevice {
             default:
                 return identifier
             }
-            #elseif os(tvOS)
+#elseif os(tvOS)
             switch identifier {
             case "AppleTV5,3":
                 return "Apple TV 4"
@@ -267,7 +272,7 @@ extension UIDevice {
             default:
                 return identifier
             }
-            #endif
+#endif
         }
         
         return mapToDevice(identifier: identifier)

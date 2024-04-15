@@ -7,8 +7,9 @@
 
 import Foundation
 
-// MARK: - Source
+// MARK: - DataSource
 protocol HomeViewModelDataSource {
+    // MARK: - Properties
     var title: String? { get set }
     var totalPages: Int { get set }
     var currentPage: Int { get set  }
@@ -19,6 +20,7 @@ protocol HomeViewModelDataSource {
 
 // MARK: - Output
 enum HomeViewModelOutput {
+    // MARK: - Cases
     case updateTitle(String)
     case updateProvinces([UniversityProvinceRepresentation])
     case updateLoading(Bool)
@@ -27,13 +29,17 @@ enum HomeViewModelOutput {
 
 // MARK: - Delegate
 protocol HomeViewModelDelegate: AnyObject {
+    // MARK: - Methods
     func handleOutput(_ output: HomeViewModelOutput)
     func navigate(to route: HomeRoute)
 }
 
 // MARK: - Protocol
 protocol HomeViewModelProtocol: HomeViewModelDataSource {
+    // MARK: - Properties
     var  delegate: HomeViewModelDelegate? { get set }
+    
+    // MARK: - Methods
     func fetchTitle()
     func fetchUniversities()
     func selectUniversity(id: Int, at index: Int)
@@ -65,7 +71,8 @@ final class HomeViewModel {
 // MARK: - ViewModel Protocol
 extension HomeViewModel: HomeViewModelProtocol {
     
-    // MARK: - Notify
+    // MARK: - Delegate Methods
+    
     func fetchTitle() {
         notify(.updateTitle(Constants.Text.homeTitleText))
     }
@@ -107,6 +114,7 @@ extension HomeViewModel: HomeViewModelProtocol {
         fetchUniversities()
     }
     
+    // MARK: - Delegate Notifier
     private func notify(_ output: HomeViewModelOutput) {
         switch output {
         case .updateTitle(let title):

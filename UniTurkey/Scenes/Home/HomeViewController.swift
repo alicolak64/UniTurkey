@@ -7,7 +7,7 @@
 
 import UIKit
 
-// MARK: - HomeViewController
+// MARK: - Home View Controller
 final class HomeViewController: UIViewController {
     
     // MARK: - Dependency Properties
@@ -108,8 +108,11 @@ final class HomeViewController: UIViewController {
     }
     
     private func tableViewSetup() {
+        // MARK: - TableView Dependencies
         tableView.delegate = self
         tableView.dataSource = self
+        
+        // MARK: - Register Cells
         tableView.register(ProvinceCell.self)
         tableView.register(UniversityCell.self)
     }
@@ -145,7 +148,7 @@ final class HomeViewController: UIViewController {
             
             paginationLoadingView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             paginationLoadingView.bottomAnchor.constraint(equalTo: tableView.bottomAnchor, constant: -20)
-
+            
         ])
     }
     
@@ -177,15 +180,17 @@ final class HomeViewController: UIViewController {
 // MARK: - Actions
 extension HomeViewController {
     
+    // MARK: - Favorite Button Tapped
     @objc private func favoriteButtonTapped() {
         print("Favorite Button Tapped")
     }
     
 }
 
-// MARK: - ErrorViewDelegate
+// MARK: - Error View Delegate
 extension HomeViewController: ErrorViewDelegate {
     
+    // MARK: - Methods
     func handleOutput(_ output: ErrorViewOutput) {
         switch output {
         case .retry:
@@ -196,9 +201,10 @@ extension HomeViewController: ErrorViewDelegate {
 }
 
 
-// MARK: - TableView Delegate & DataSource
+// MARK: - TableView Delegate & DataSource & ScrollView Delegate
 extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     
+    // MARK: - TableView DataSource
     func numberOfSections(in tableView: UITableView) -> Int {
         provinces.count
     }
@@ -214,7 +220,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-                
+        
         if indexPath.row == 0 {
             let cell: ProvinceCell = tableView.dequeueReusableCell(for: indexPath)
             cell.configure(with: provinces[indexPath.section])
@@ -228,6 +234,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         
     }
     
+    // MARK: - TableView Delegate
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         if indexPath.row == 0 {
@@ -253,15 +260,18 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             }
         }
     }
-        
+    
+    // MARK: - ScrollView Delegate
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         
+        // MARK: - Properties
         let contentHeight = scrollView.contentSize.height
         let visibleHeight = scrollView.bounds.height
         let scrollOffset = scrollView.contentOffset.y
         
         let scrollPercentage = (scrollOffset + visibleHeight) / contentHeight
         
+        // MARK: - Infinity Scroll
         if scrollPercentage >= Constants.UI.infinityScrollPercentage && !provinces.isEmpty {
             
             let now = Date()
@@ -275,6 +285,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             
         }
         
+        
     }
     
 }
@@ -282,6 +293,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
 // MARK: - ViewModel Delegate
 extension HomeViewController : HomeViewModelDelegate {
     
+    // MARK: Methods
     func handleOutput(_ output: HomeViewModelOutput) {
         switch output {
         case .updateTitle(let title):
@@ -316,17 +328,20 @@ extension HomeViewController : HomeViewModelDelegate {
     
 }
 
-// MARK: - UniversityCell Delegate
+// MARK: - University Cell Delegate
 extension HomeViewController: UniversityCellDelegate {
     
+    // MARK: Methods
     func handleOutput(_ output: UniversityCellOutput) {
         switch output {
+        case .didSelectExpand(_):
+            print("Expand Button Tapped")
         case .didSelectFavorite(let university):
             didTapFavoriteButton(with: university)
         case .didSelectWebsite(_):
-            print("Website")
+            print("Website Button Tapped")
         case .didSelectPhone(_):
-            print("Phone")
+            print("Phone Button Tapped")
         }
     }
     

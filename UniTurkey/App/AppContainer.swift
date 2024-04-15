@@ -7,10 +7,14 @@
 
 import Foundation
 
+// MARK: - App Container Instance
 let app = AppContainer()
 
+
+// MARK: - App Container
 final class AppContainer {
     
+    // MARK: - Properties
     let router = AppRouter()
     let service = UniversityManager.shared
     

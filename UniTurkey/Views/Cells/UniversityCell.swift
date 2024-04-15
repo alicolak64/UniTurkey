@@ -9,6 +9,8 @@ import UIKit
 
 // MARK: - University Table View Output
 enum UniversityCellOutput {
+    // MARK: - Cases
+    case didSelectExpand(UniversityRepresentation)
     case didSelectFavorite(UniversityRepresentation)
     case didSelectWebsite(UniversityRepresentation)
     case didSelectPhone(String)
@@ -16,23 +18,29 @@ enum UniversityCellOutput {
 
 // MARK: - University Table View Delegate
 protocol UniversityCellDelegate: AnyObject {
+    // MARK: - Methods
     func handleOutput(_ output: UniversityCellOutput)
 }
 
 // MARK: - University Table View Cell Protocol
 protocol UniversityCellProtocol: ReusableView {
+    // MARK: - Properties
     var  delegate: UniversityCellDelegate? { get set }
     var  university: UniversityRepresentation? { get set }
+    
+    // MARK: - Methods
     func updateExpansionFeature(isExpanded: Bool)
 }
 
 // MARK: - University Table View Cell
 final class UniversityCell: UITableViewCell,UniversityCellProtocol {
+    
+    // MARK: - Typealias
+    typealias Model = UniversityRepresentation
 
     // MARK: - Dependency Properties
     weak var delegate: UniversityCellDelegate?
     var university: UniversityRepresentation?
-    typealias Model = UniversityRepresentation
     
     // MARK: - UI
     private lazy var expandIcon: UIImageView = {
@@ -92,7 +100,7 @@ final class UniversityCell: UITableViewCell,UniversityCellProtocol {
             expandIcon.heightAnchor.constraint(equalToConstant: 20),
             
             universityNameLabel.leadingAnchor.constraint(equalTo: expandIcon.trailingAnchor, constant: 10),
-            universityNameLabel.trailingAnchor.constraint(equalTo: favoriteButton.leadingAnchor, constant: -10),
+            universityNameLabel.trailingAnchor.constraint(equalTo: favoriteButton.leadingAnchor, constant: -5),
             universityNameLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             
             favoriteButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
@@ -108,6 +116,11 @@ final class UniversityCell: UITableViewCell,UniversityCellProtocol {
         universityNameLabel.text = model.name
     }
     
+    // MARK: Update Expansion Feature
+    func updateExpansionFeature(isExpanded: Bool) {
+        expandIcon.image = isExpanded ? Constants.Icon.minusIcon : Constants.Icon.plusIcon
+    }
+    
     // MARK: Hit Test
     // Implemented to prevent the touch event from being triggered outside the cell
     // The reason for being outside cell is add UIEdgeInsets to contentView
@@ -117,11 +130,6 @@ final class UniversityCell: UITableViewCell,UniversityCellProtocol {
         return nil
       }
       return super.hitTest(point, with: event)
-    }
-    
-    // MARK: Update Expansion Feature
-    func updateExpansionFeature(isExpanded: Bool) {
-        expandIcon.image = isExpanded ? Constants.Icon.minusIcon : Constants.Icon.plusIcon
     }
     
     // MARK: - Actions
