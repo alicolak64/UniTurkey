@@ -10,23 +10,15 @@ import Foundation
 extension String {
     
     // MARK: - Properties
-    var capitalizedEachWord: String {
-        let words = self.components(separatedBy: " ")
-        var capitalizedWords = [String]()
-        for word in words {
-            if let firstLetter = word.first {
-                let capitalizedWord = String(firstLetter).uppercased() + word.dropFirst()
-                capitalizedWords.append(capitalizedWord)
-            }
-        }
-        return capitalizedWords.joined(separator: " ")
+    var capitalCased: String {
+        let components = self.components(separatedBy: " ")
+        let capitalized = components.map { $0.capitalized }
+        return capitalized.joined(separator: " ")
     }
     
     @discardableResult
-    mutating func capitalizeEachWord() -> String {
-        self = self.components(separatedBy: " ")
-            .map { $0.prefix(1).uppercased() + $0.dropFirst() }
-            .joined(separator: " ")
+    mutating func capitalCase() -> String {
+        self = self.capitalCased
         return self
     }
     
@@ -44,6 +36,10 @@ extension String {
     
     var trimmed: String {
         return trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+    
+    var englishToTurkish: String {
+        return self.replacingOccurrences(of: "I", with: "ı")
     }
     
 }
