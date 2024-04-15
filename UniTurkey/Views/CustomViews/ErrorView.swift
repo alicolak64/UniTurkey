@@ -19,9 +19,14 @@ enum ErrorState {
     case noError
 }
 
+// MARK: - Error View Output
+enum ErrorViewOutput {
+    case retry
+}
+
 // MARK: - Error View Delegate
 protocol ErrorViewDelegate: AnyObject {
-    func didTapRetryButton()
+    func handleOutput(_ output: ErrorViewOutput)
 }
 
 // MARK: - Error View
@@ -130,10 +135,16 @@ final class ErrorView: UIView, ErrorViewProtocol {
         state = .noError
     }
     
-    // MARK: - Actions & Delegate
+    // MARK: - Actions
     @objc private func tryAgainButtonTapped() {
         hideError()
-        delegate?.didTapRetryButton()
+        notify(.retry)
+    }
+    
+    // MARK: - Delegate Notifier
+    
+    private func notify(_ output: ErrorViewOutput) {
+        delegate?.handleOutput(output)
     }
     
 }
