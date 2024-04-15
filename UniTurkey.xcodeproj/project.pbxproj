@@ -40,6 +40,8 @@
 		E6B249DD2BC26598009112EB /* Collection+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6B249DC2BC26598009112EB /* Collection+Extension.swift */; };
 		E6B249DF2BC266B6009112EB /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6B249DE2BC266B6009112EB /* String+Extension.swift */; };
 		E6C9331D2BC4ADE1001BD2EA /* UniversityRepresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6C9331C2BC4ADE1001BD2EA /* UniversityRepresentation.swift */; };
+		E6D642052BC92655000F6FF2 /* ProvinceCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6D642042BC92655000F6FF2 /* ProvinceCell.swift */; };
+		E6E827062BC9F3AB00FEDFC5 /* UniversityCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6E827052BC9F3AB00FEDFC5 /* UniversityCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -97,6 +99,8 @@
 		E6B249DC2BC26598009112EB /* Collection+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Collection+Extension.swift"; sourceTree = "<group>"; };
 		E6B249DE2BC266B6009112EB /* String+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
 		E6C9331C2BC4ADE1001BD2EA /* UniversityRepresentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UniversityRepresentation.swift; sourceTree = "<group>"; };
+		E6D642042BC92655000F6FF2 /* ProvinceCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProvinceCell.swift; sourceTree = "<group>"; };
+		E6E827052BC9F3AB00FEDFC5 /* UniversityCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UniversityCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -290,6 +294,8 @@
 		E6A673302BC5FE8900B96352 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
+				E6D642042BC92655000F6FF2 /* ProvinceCell.swift */,
+				E6E827052BC9F3AB00FEDFC5 /* UniversityCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -440,7 +446,9 @@
 				E6B249DD2BC26598009112EB /* Collection+Extension.swift in Sources */,
 				E6A673352BC5FEB800B96352 /* LoadingView.swift in Sources */,
 				E63F3D112BC21FCC0094A0D2 /* HomeViewController.swift in Sources */,
+				E6D642052BC92655000F6FF2 /* ProvinceCell.swift in Sources */,
 				E6C9331D2BC4ADE1001BD2EA /* UniversityRepresentation.swift in Sources */,
+				E6E827062BC9F3AB00FEDFC5 /* UniversityCell.swift in Sources */,
 				E6A673332BC5FEA600B96352 /* ErrorView.swift in Sources */,
 				E63F3D082BC21FCC0094A0D2 /* Imageable.swift in Sources */,
 				E6B249DF2BC266B6009112EB /* String+Extension.swift in Sources */,

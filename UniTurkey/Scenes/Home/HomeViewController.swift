@@ -110,7 +110,8 @@ final class HomeViewController: UIViewController {
     private func tableViewSetup() {
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        tableView.register(ProvinceCell.self)
+        tableView.register(UniversityCell.self)
     }
     
     // MARK: - Configure UI
@@ -138,8 +139,8 @@ final class HomeViewController: UIViewController {
             errorView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             
             tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
-            tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 10),
+            tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -10),
             tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             
             paginationLoadingView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
@@ -185,8 +186,11 @@ extension HomeViewController {
 // MARK: - ErrorViewDelegate
 extension HomeViewController: ErrorViewDelegate {
     
-    func didTapRetryButton() {
-        viewModel.didTryAgain()
+    func handleOutput(_ output: ErrorViewOutput) {
+        switch output {
+        case .retry:
+            viewModel.didTryAgain()
+        }
     }
     
 }
@@ -207,26 +211,46 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         }
     }
     
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         
+                
         if indexPath.row == 0 {
-            cell.textLabel?.text = provinces[indexPath.section].name
+            let cell: ProvinceCell = tableView.dequeueReusableCell(for: indexPath)
+            cell.configure(with: provinces[indexPath.section])
+            return cell
         } else {
-            cell.textLabel?.text = provinces[indexPath.section].universities[indexPath.row - 1].name
+            let cell: UniversityCell = tableView.dequeueReusableCell(for: indexPath)
+            cell.configure(with: provinces[indexPath.section].universities[indexPath.row - 1])
+            cell.delegate = self
+            return cell
         }
-        
-        return cell
         
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         if indexPath.row == 0 {
+            guard !provinces[indexPath.section].universities.isEmpty else {
+                return
+            }
             provinces[indexPath.section].isExpanded.toggle()
             tableView.reloadSections([indexPath.section], with: .fade)
         } else {
-            print(provinces[indexPath.section].universities[indexPath.row - 1].name)
+            provinces[indexPath.section].universities[indexPath.row - 1].isExpanded.toggle()
+            tableView.reloadRows(at: [indexPath], with: .fade)
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if indexPath.row == 0 {
+            return 60
+        } else {
+            if provinces[indexPath.section].universities[indexPath.row - 1].isExpanded {
+                return 150
+            } else {
+                return 50
+            }
         }
     }
         
@@ -288,6 +312,27 @@ extension HomeViewController : HomeViewModelDelegate {
     
     func navigate(to route: HomeRoute) {
         
+    }
+    
+}
+
+// MARK: - UniversityCell Delegate
+extension HomeViewController: UniversityCellDelegate {
+    
+    func handleOutput(_ output: UniversityCellOutput) {
+        switch output {
+        case .didSelectFavorite(let university):
+            didTapFavoriteButton(with: university)
+        case .didSelectWebsite(_):
+            print("Website")
+        case .didSelectPhone(_):
+            print("Phone")
+        }
+    }
+    
+    
+    func didTapFavoriteButton(with university: UniversityRepresentation) {
+        print("Favorite Button Tapped")
     }
     
 }
