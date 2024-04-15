@@ -15,6 +15,11 @@ enum Constants {
         static let infinityScrollLateLimitSecond = 1.0
     }
     
+    // MARK: - Layout Constant
+    enum Layout {
+        static let universityCellMargins = UIEdgeInsets(top: 0, left: 10, bottom: 10, right: 0)
+    }
+    
     // MARK: - Network Constant
     enum Network {
         static let baseURL = "https://storage.googleapis.com/invio-com/usg-challenge/universities-at-turkey/"
@@ -28,6 +33,7 @@ enum Constants {
         static let homeTitleText = "Universities"
         static let notAvaliableText = "Not Avaliable"
         static let errorTitleText = "Oops! An Error Occurred"
+        static let noUniversityText = "No University"
     }
     
     // MARK: - Color Constant
@@ -37,6 +43,7 @@ enum Constants {
         static let whiteColor = UIColor(hex: "FFFFFF")
         static let lightRedColor = UIColor(hex: "F44336")
         static let darkRedColor = UIColor(hex: "D62121")
+        static let grayColor = UIColor(hex: "F5F5F5")
         static let borderColor = UIColor(hex: "C8C7CC")
     }
     
