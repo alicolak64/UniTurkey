@@ -8,92 +8,81 @@
 import Foundation
 
 
-// MARK: - University Representation
-struct UniversityRepresentation: Codable {
+class UniversityRepresentation: Codable {
     
-    let university: UniversityResponse
-    
-    static var count: Int = -1
-    
-    var name: String {
-        university.name == Constants.Network.notAvaliableAPIText
-        ? Constants.Text.notAvaliableText
-        : university.name.capitalizedEachWord.trimmed
-    }
-    
-    var phone: String {
-        university.phone == Constants.Network.notAvaliableAPIText
-        ? Constants.Text.notAvaliableText
-        : university.phone.trimmed
-    }
-    
-    var fax: String {
-        university.fax == Constants.Network.notAvaliableAPIText
-        ? Constants.Text.notAvaliableText
-        : university.fax.lowercased().trimmed
-    }
-    
-    var website: String {
-        university.website == Constants.Network.notAvaliableAPIText
-        ? Constants.Text.notAvaliableText
-        : university.website.lowercased().trimmed
-    }
-    
-    var email: String {
-        university.email == Constants.Network.notAvaliableAPIText
-        ? Constants.Text.notAvaliableText
-        : university.email.lowercased().trimmed
-    }
-    
-    var address: String {
-        university.address == Constants.Network.notAvaliableAPIText
-        ? Constants.Text.notAvaliableText
-        : university.address.trimmed
-    }
-    
-    var rector: String {
-        university.rector == Constants.Network.notAvaliableAPIText
-        ? Constants.Text.notAvaliableText
-        : university.rector.capitalizedEachWord.trimmed
-    }
-    
-    var index: Int {
-        Self.count += 1
-        return Self.count
-    }
+    let name: String
+    let phone: String
+    let fax: String
+    let website: String
+    let email: String
+    let address: String
+    let rector: String
     
     var isExpanded: Bool = false
     
-    mutating func toggle() {
+    let provinceId: Int
+    let index: Int
+    
+    init(university: UniversityResponse, provinceId: Int, index: Int) {
+        
+        self.provinceId = provinceId
+        self.index = index
+        
+        self.name = capitaledTrimmed(university.name)
+        self.phone = trimmed(university.phone)
+        self.fax = lowercasedTrimmed(university.fax)
+        self.website = lowercasedTrimmed(university.website)
+        self.email = trimmed(university.email)
+        self.address = trimmed(university.address)
+        self.rector = capitaledTrimmed(university.rector)
+            
+        
+        func capitaledTrimmed(_ text: String) -> String {
+            text == Constants.Network.notAvaliableAPIText
+            ? Constants.Text.notAvaliableText
+            : text.englishToTurkish.capitalCased.trimmed
+        }
+        
+        func lowercasedTrimmed(_ text: String) -> String {
+            text == Constants.Network.notAvaliableAPIText
+            ? Constants.Text.notAvaliableText
+            : text.lowercased().trimmed
+        }
+        
+        func trimmed(_ text: String) -> String {
+            text == Constants.Network.notAvaliableAPIText
+            ? Constants.Text.notAvaliableText
+            : text.trimmed
+        }
+    
+    }
+    
+    func toggle() {
         isExpanded.toggle()
     }
     
 }
+
 
 // MARK: - University Province Representation
-struct UniversityProvinceRepresentation: Codable {
-    
-    let province: UniversityProvinceResponse
-    
-    var id: Int {
-        return province.id
-    }
-    
-    var name: String {
-        province.province == Constants.Network.notAvaliableAPIText
-        ? Constants.Text.notAvaliableText
-        : province.province.capitalizedEachWord.trimmed
-    }
-    
-    var universities: [UniversityRepresentation] {
-        return province.universities.map { UniversityRepresentation(university: $0) }
-    }
-    
+class UniversityProvinceRepresentation: Codable {
+        
+    let id: Int
+    let name: String
+    var universities = [UniversityRepresentation]()
     var isExpanded: Bool = false
     
-    mutating func toggle() {
+    init(province: UniversityProvinceResponse) {
+        self.id = province.id
+        self.name =
+            province.province == Constants.Network.notAvaliableAPIText
+            ? Constants.Text.notAvaliableText
+            : province.province.englishToTurkish.capitalCased.trimmed
+        self.universities = province.universities.enumerated().map { UniversityRepresentation(university: $0.element, provinceId: id, index: $0.offset) }
+    }
+    
+    func toggle() {
         isExpanded.toggle()
     }
     
 }
-
