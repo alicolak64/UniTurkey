@@ -7,9 +7,10 @@
 
 import Foundation
 
-
+// MARK: - University Representation
 class UniversityRepresentation: Codable {
     
+    // MARK: - Properties
     let name: String
     let phone: String
     let fax: String
@@ -23,64 +24,47 @@ class UniversityRepresentation: Codable {
     let provinceId: Int
     let index: Int
     
+    // MARK: - Init
     init(university: UniversityResponse, provinceId: Int, index: Int) {
         
         self.provinceId = provinceId
         self.index = index
         
-        self.name = capitaledTrimmed(university.name)
-        self.phone = trimmed(university.phone)
-        self.fax = lowercasedTrimmed(university.fax)
-        self.website = lowercasedTrimmed(university.website)
-        self.email = trimmed(university.email)
-        self.address = trimmed(university.address)
-        self.rector = capitaledTrimmed(university.rector)
-            
+        self.name = university.name.apiCapitaledTrimmed
+        self.phone = university.phone.apiTrimmed
+        self.fax = university.fax.apiLowercasedTrimmed
+        self.website = university.website.apiLowercasedTrimmed
+        self.email = university.email.apiTrimmed
+        self.address = university.address.apiTrimmed
+        self.rector = university.rector.apiCapitaledTrimmed
         
-        func capitaledTrimmed(_ text: String) -> String {
-            text == Constants.Network.notAvaliableAPIText
-            ? Constants.Text.notAvaliableText
-            : text.englishToTurkish.capitalCased.trimmed
-        }
-        
-        func lowercasedTrimmed(_ text: String) -> String {
-            text == Constants.Network.notAvaliableAPIText
-            ? Constants.Text.notAvaliableText
-            : text.lowercased().trimmed
-        }
-        
-        func trimmed(_ text: String) -> String {
-            text == Constants.Network.notAvaliableAPIText
-            ? Constants.Text.notAvaliableText
-            : text.trimmed
-        }
-    
     }
     
+    // MARK: - Methods
     func toggle() {
         isExpanded.toggle()
     }
     
 }
 
-
 // MARK: - University Province Representation
 class UniversityProvinceRepresentation: Codable {
-        
+    
+    // MARK: - Properties
     let id: Int
     let name: String
     var universities = [UniversityRepresentation]()
     var isExpanded: Bool = false
     
+    // MARK: - Init
     init(province: UniversityProvinceResponse) {
         self.id = province.id
-        self.name =
-            province.province == Constants.Network.notAvaliableAPIText
-            ? Constants.Text.notAvaliableText
-            : province.province.englishToTurkish.capitalCased.trimmed
-        self.universities = province.universities.enumerated().map { UniversityRepresentation(university: $0.element, provinceId: id, index: $0.offset) }
+        self.name = province.province.apiCapitaledTrimmed
+        self.universities = province.universities.enumerated().map { UniversityRepresentation(university: $0.element, provinceId: id, index: $0.offset)
+        }
     }
     
+    // MARK: - Methods
     func toggle() {
         isExpanded.toggle()
     }
