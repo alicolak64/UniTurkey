@@ -8,7 +8,9 @@
 import UIKit
 
 protocol ReusableView: AnyObject {
+    associatedtype Model
     static var identifier: String { get }
+    func configure(with model: Model)
 }
 
 extension ReusableView where Self: UIView {
