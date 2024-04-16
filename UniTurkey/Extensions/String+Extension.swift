@@ -67,4 +67,8 @@ extension String {
         ? Constants.Text.notAvaliableText
         : self.trimmed
     }
+    
+    var isNotAvaliable: Bool {
+        return self == Constants.Text.notAvaliableText
+    }
 }
