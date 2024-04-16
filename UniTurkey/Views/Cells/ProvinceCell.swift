@@ -9,8 +9,7 @@ import UIKit
 
 // MARK: - Province Table View Cell Protocol
 protocol ProvinceCellProtocol: ReusableView {
-    // MARK: - Methods
-    func updateExpandIcon(isExpanded: Bool)
+    
 }
 
 
@@ -48,13 +47,9 @@ final class ProvinceCell: UITableViewCell,ProvinceCellProtocol {
     // MARK: - Initializers
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        
-        contentView.addRoundedBorder(width: 1, color: UIColor.lightGray)
-        
-        contentView.addSubviews([expandIcon,provinceNameLabel,universityCountLabel])
-        
-        setupConstraints()
-        
+                
+        setupUI()
+
     }
     
     required init?(coder: NSCoder) {
@@ -64,8 +59,16 @@ final class ProvinceCell: UITableViewCell,ProvinceCellProtocol {
     // MARK: Lifecycle
     override func layoutSubviews() {
         super.layoutSubviews()
-        let margins = UIEdgeInsets(top: 0, left: 0, bottom: 10, right: 0)
-        contentView.frame = contentView.frame.inset(by: margins)
+        contentView.frame = contentView.frame.inset(by: Constants.Layout.provinceCellMargins)
+        setupConstraints()
+    }
+    
+    // MARK: Setup UI
+    private func setupUI() {
+        backgroundColor = Constants.Color.whiteColor
+        selectionStyle = .none
+        contentView.addRoundedBorder(width: 1, color: UIColor.lightGray)
+        contentView.addSubviews(expandIcon, provinceNameLabel, universityCountLabel)
     }
     
     // MARK: Setup Constraints
@@ -87,10 +90,10 @@ final class ProvinceCell: UITableViewCell,ProvinceCellProtocol {
     // MARK: Configure UI
     func configure(with model: UniversityProvinceRepresentation) {
         provinceNameLabel.text = model.name
-        updateExpandIcon(isExpanded: model.isExpanded)
+        updateExpansionFeature(isExpanded: model.isExpanded)
         if model.universities.count == 0 {
             universityCountLabel.text = Constants.Text.noUniversityText
-            updateExpandIcon(isExpanded: true)
+            expandIcon.image = nil
         } else if model.universities.count == 1 {
             universityCountLabel.text = "\(model.universities.count) university"
         } else {
@@ -98,11 +101,8 @@ final class ProvinceCell: UITableViewCell,ProvinceCellProtocol {
         }
     }
     
-    
-    // MARK: Update Expand Icon
-    func updateExpandIcon(isExpanded: Bool) {
+    private func updateExpansionFeature(isExpanded: Bool) {
         expandIcon.image = isExpanded ? Constants.Icon.minusIcon : Constants.Icon.plusIcon
-        expandIcon.accessibilityLabel = ""
     }
     
     // MARK: Prepare For Reuse

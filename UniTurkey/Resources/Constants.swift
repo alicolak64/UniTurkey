@@ -19,6 +19,7 @@ enum Constants {
     // MARK: - Layout Constant
     enum Layout {
         static let universityCellMargins = UIEdgeInsets(top: 0, left: 10, bottom: 10, right: 0)
+        static let provinceCellMargins = UIEdgeInsets(top: 0, left: 0, bottom: 10, right: 0)
     }
     
     // MARK: - Network Constant
@@ -56,8 +57,12 @@ enum Constants {
         static let subtitleFont = UIFont.systemFont(ofSize: 24, weight: .regular)
         static let bodyBoldFont = UIFont.systemFont(ofSize: 16, weight: .bold)
         static let bodyFont = UIFont.systemFont(ofSize: 16, weight: .regular)
+        static let subBodyFont = UIFont.systemFont(ofSize: 14, weight: .regular)
         static let captionBoldFont = UIFont.systemFont(ofSize: 12, weight: .bold)
         static let captionFont = UIFont.systemFont(ofSize: 12, weight: .regular)
+        static let subcaptionFont = UIFont.systemFont(ofSize: 10, weight: .regular)
+        static let littleFont = UIFont.systemFont(ofSize: 8, weight: .regular)
+        static let miniFont = UIFont.systemFont(ofSize: 6, weight: .regular)
     }
     
     // MARK: - Icon Constant

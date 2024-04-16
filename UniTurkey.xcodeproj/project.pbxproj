@@ -32,6 +32,10 @@
 		E690A02F2BC363D8003B2F83 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = E690A02E2BC363D7003B2F83 /* Constants.swift */; };
 		E690A0312BC367E9003B2F83 /* UniversityResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E690A0302BC367E9003B2F83 /* UniversityResponse.swift */; };
 		E690A0372BC3914A003B2F83 /* HomeBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = E690A0362BC3914A003B2F83 /* HomeBuilder.swift */; };
+		E696C07B2BCDCC4A00CA91A3 /* FavoriteService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E696C07A2BCDCC4A00CA91A3 /* FavoriteService.swift */; };
+		E696C07D2BCDCC5500CA91A3 /* FavoriteManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E696C07C2BCDCC5500CA91A3 /* FavoriteManager.swift */; };
+		E696C07F2BCDCD9E00CA91A3 /* UserDefaults+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E696C07E2BCDCD9E00CA91A3 /* UserDefaults+Extension.swift */; };
+		E696C0852BCE03FB00CA91A3 /* InfoButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = E696C0842BCE03FB00CA91A3 /* InfoButton.swift */; };
 		E6A673332BC5FEA600B96352 /* ErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6A673322BC5FEA600B96352 /* ErrorView.swift */; };
 		E6A673352BC5FEB800B96352 /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6A673342BC5FEB800B96352 /* LoadingView.swift */; };
 		E6B249D72BC25A39009112EB /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6B249D62BC25A39009112EB /* UIView+Extension.swift */; };
@@ -91,6 +95,10 @@
 		E690A02E2BC363D7003B2F83 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		E690A0302BC367E9003B2F83 /* UniversityResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UniversityResponse.swift; sourceTree = "<group>"; };
 		E690A0362BC3914A003B2F83 /* HomeBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeBuilder.swift; sourceTree = "<group>"; };
+		E696C07A2BCDCC4A00CA91A3 /* FavoriteService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteService.swift; sourceTree = "<group>"; };
+		E696C07C2BCDCC5500CA91A3 /* FavoriteManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteManager.swift; sourceTree = "<group>"; };
+		E696C07E2BCDCD9E00CA91A3 /* UserDefaults+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Extension.swift"; sourceTree = "<group>"; };
+		E696C0842BCE03FB00CA91A3 /* InfoButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoButton.swift; sourceTree = "<group>"; };
 		E6A673322BC5FEA600B96352 /* ErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorView.swift; sourceTree = "<group>"; };
 		E6A673342BC5FEB800B96352 /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
 		E6B249D62BC25A39009112EB /* UIView+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+Extension.swift"; sourceTree = "<group>"; };
@@ -155,7 +163,7 @@
 				E63F3CE92BC21E330094A0D2 /* Resources */,
 				E63F3CFF2BC21FCC0094A0D2 /* Extensions */,
 				E63F3CF92BC21FCC0094A0D2 /* Model */,
-				E63F3CF82BC21FCC0094A0D2 /* Network */,
+				E63F3CF82BC21FCC0094A0D2 /* Service */,
 				E63F3CF72BC21FCC0094A0D2 /* Protocols */,
 				E63F3D062BC21FCC0094A0D2 /* Scenes */,
 				E6A6732F2BC5FE2A00B96352 /* Views */,
@@ -212,13 +220,13 @@
 			path = Protocols;
 			sourceTree = "<group>";
 		};
-		E63F3CF82BC21FCC0094A0D2 /* Network */ = {
+		E63F3CF82BC21FCC0094A0D2 /* Service */ = {
 			isa = PBXGroup;
 			children = (
-				E690A0272BC35591003B2F83 /* UniversityService.swift */,
-				E690A0292BC35B67003B2F83 /* UniversityManager.swift */,
+				E696C0792BCDCC3200CA91A3 /* Local */,
+				E696C0782BCDCC2B00CA91A3 /* Network */,
 			);
-			path = Network;
+			path = Service;
 			sourceTree = "<group>";
 		};
 		E63F3CF92BC21FCC0094A0D2 /* Model */ = {
@@ -243,6 +251,7 @@
 				E6B249DA2BC25D7D009112EB /* UIViewController+Extension.swift */,
 				E6B249DC2BC26598009112EB /* Collection+Extension.swift */,
 				E6B249DE2BC266B6009112EB /* String+Extension.swift */,
+				E696C07E2BCDCD9E00CA91A3 /* UserDefaults+Extension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -282,6 +291,24 @@
 			path = Scenes;
 			sourceTree = "<group>";
 		};
+		E696C0782BCDCC2B00CA91A3 /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				E690A0272BC35591003B2F83 /* UniversityService.swift */,
+				E690A0292BC35B67003B2F83 /* UniversityManager.swift */,
+			);
+			path = Network;
+			sourceTree = "<group>";
+		};
+		E696C0792BCDCC3200CA91A3 /* Local */ = {
+			isa = PBXGroup;
+			children = (
+				E696C07A2BCDCC4A00CA91A3 /* FavoriteService.swift */,
+				E696C07C2BCDCC5500CA91A3 /* FavoriteManager.swift */,
+			);
+			path = Local;
+			sourceTree = "<group>";
+		};
 		E6A6732F2BC5FE2A00B96352 /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -305,6 +332,7 @@
 			children = (
 				E6A673322BC5FEA600B96352 /* ErrorView.swift */,
 				E6A673342BC5FEB800B96352 /* LoadingView.swift */,
+				E696C0842BCE03FB00CA91A3 /* InfoButton.swift */,
 			);
 			path = CustomViews;
 			sourceTree = "<group>";
@@ -439,6 +467,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E696C0852BCE03FB00CA91A3 /* InfoButton.swift in Sources */,
 				E63F3CC62BC21DCE0094A0D2 /* AppRouter.swift in Sources */,
 				E690A02A2BC35B67003B2F83 /* UniversityManager.swift in Sources */,
 				E63F3CC52BC21DCE0094A0D2 /* AppDelegate.swift in Sources */,
@@ -449,14 +478,17 @@
 				E6D642052BC92655000F6FF2 /* ProvinceCell.swift in Sources */,
 				E6C9331D2BC4ADE1001BD2EA /* UniversityRepresentation.swift in Sources */,
 				E6E827062BC9F3AB00FEDFC5 /* UniversityCell.swift in Sources */,
+				E696C07B2BCDCC4A00CA91A3 /* FavoriteService.swift in Sources */,
 				E6A673332BC5FEA600B96352 /* ErrorView.swift in Sources */,
 				E63F3D082BC21FCC0094A0D2 /* Imageable.swift in Sources */,
 				E6B249DF2BC266B6009112EB /* String+Extension.swift in Sources */,
 				E63F3CC72BC21DCE0094A0D2 /* AppContainer.swift in Sources */,
 				E6B249DB2BC25D7D009112EB /* UIViewController+Extension.swift in Sources */,
 				E63F3D0B2BC21FCC0094A0D2 /* UIApplication+Extension.swift in Sources */,
+				E696C07F2BCDCD9E00CA91A3 /* UserDefaults+Extension.swift in Sources */,
 				E690A02F2BC363D8003B2F83 /* Constants.swift in Sources */,
 				E63F3D072BC21FCC0094A0D2 /* Colorable.swift in Sources */,
+				E696C07D2BCDCC5500CA91A3 /* FavoriteManager.swift in Sources */,
 				E63F3D0C2BC21FCC0094A0D2 /* UICollectionView+Extension.swift in Sources */,
 				E63F3D092BC21FCC0094A0D2 /* ReusableView.swift in Sources */,
 				E690A0282BC35591003B2F83 /* UniversityService.swift in Sources */,

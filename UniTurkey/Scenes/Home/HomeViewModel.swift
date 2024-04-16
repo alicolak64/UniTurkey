@@ -7,17 +7,6 @@
 
 import Foundation
 
-// MARK: - DataSource
-protocol HomeViewModelDataSource {
-    // MARK: - Properties
-    var title: String? { get set }
-    var totalPages: Int { get set }
-    var currentPage: Int { get set  }
-    var provinces : [UniversityProvinceResponse] { get set }
-    var loading: Bool { get set }
-    var error: Error? { get set }
-}
-
 // MARK: - Output
 enum HomeViewModelOutput {
     // MARK: - Cases
@@ -35,7 +24,7 @@ protocol HomeViewModelDelegate: AnyObject {
 }
 
 // MARK: - Protocol
-protocol HomeViewModelProtocol: HomeViewModelDataSource {
+protocol HomeViewModelProtocol {
     // MARK: - Properties
     var  delegate: HomeViewModelDelegate? { get set }
     
@@ -44,6 +33,8 @@ protocol HomeViewModelProtocol: HomeViewModelDataSource {
     func fetchUniversities()
     func selectUniversity(id: Int, at index: Int)
     func didTryAgain()
+    
+    func didTapFavoriteButton(with university: UniversityRepresentation)
 }
 
 // MARK: - ViewModel
@@ -51,21 +42,30 @@ final class HomeViewModel {
     
     // MARK: - Dependency Properties
     weak var delegate: HomeViewModelDelegate?
-    private let service: UniversityService
+    private let universityService: UniversityService
+    private let favoriteService: FavoriteService
     
     // MARK: - Data Source Properties
-    var title: String?
-    var totalPages: Int = 1
-    var currentPage: Int = 0
-    var provinces: [UniversityProvinceResponse] = []
-    var loading: Bool = false
-    var error: Error?
+    private var title: String?
+    private var totalPages: Int = 1
+    private var currentPage: Int = 0
+    private var provinces = Array<UniversityProvinceResponse>()
+    private var loading: Bool = false
+    private var error: Error?
+    
+    private var favorites = Array<UniversityRepresentation>()
     
     // MARK: - Init
-    init (service: UniversityService) {
-        self.service = service
+    init(service: UniversityService, favoriteService: FavoriteService) {
+        self.universityService = service
+        self.favoriteService = favoriteService
+        getFavorites()
     }
     
+    // MARK: - Private Methods
+    private func getFavorites() {
+        favorites = favoriteService.getFavorites()
+    }
 }
 
 // MARK: - ViewModel Protocol
@@ -80,7 +80,7 @@ extension HomeViewModel: HomeViewModelProtocol {
     func fetchUniversities() {
         guard currentPage < totalPages && !loading else {  return }
         notify(.updateLoading(true))
-        service.fetchUniversities(page: currentPage + 1) { [weak self] result in
+        universityService.fetchUniversities(page: currentPage + 1) { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success(let response):
@@ -89,6 +89,14 @@ extension HomeViewModel: HomeViewModelProtocol {
                 self.totalPages = response.totalPages
                 self.provinces.append(contentsOf: response.provinces)
                 let presentations = self.provinces.map { UniversityProvinceRepresentation(province: $0) }
+                // check if university is favorite
+                presentations.forEach { province in
+                    province.universities.forEach { university in
+                        if self.favorites.contains(where: { $0.provinceId == province.id && $0.name.apiCapitaledTrimmed == university.name  }) {
+                            university.isFavorite = true
+                        }
+                    }
+                }
                 self.notify(.updateProvinces(presentations))
             case .failure(let error):
                 self.notify(.updateLoading(false))
@@ -99,8 +107,10 @@ extension HomeViewModel: HomeViewModelProtocol {
     }
     
     func selectUniversity(id: Int, at index: Int) {
-        guard let province = provinces.first(where: { $0.id == id }) else { return }
-        guard let university = province.universities[safe: index] else { return }
+        guard let province = provinces.first(where: { $0.id == id }),
+              let university = province.universities[safe: index] else {
+          return
+        }
         delegate?.navigate(to: .detail(university))
     }
     
@@ -110,8 +120,18 @@ extension HomeViewModel: HomeViewModelProtocol {
         totalPages = 1
         loading = false
         error = nil
-        provinces = []
+        provinces.removeAll()
         fetchUniversities()
+    }
+    
+    // MARK: - Favorite Methods
+    func didTapFavoriteButton(with university: UniversityRepresentation) {
+        if favoriteService.isFavorite(university) {
+            favoriteService.removeFavorite(university)
+        } else {
+            favoriteService.addFavorite(university)
+        }
+        getFavorites()
     }
     
     // MARK: - Delegate Notifier

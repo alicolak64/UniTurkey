@@ -20,6 +20,7 @@ class UniversityRepresentation: Codable {
     let rector: String
     
     var isExpanded: Bool = false
+    var isFavorite: Bool = false
     
     let provinceId: Int
     let index: Int
@@ -41,8 +42,16 @@ class UniversityRepresentation: Codable {
     }
     
     // MARK: - Methods
-    func toggle() {
+    func toggleExpand() {
         isExpanded.toggle()
+    }
+    
+    func toggleFavorite() {
+        isFavorite.toggle()
+    }
+    
+    var details: [String] {
+        return [phone, fax, website, email, address, rector].filter { !$0.isNotAvaliable }
     }
     
 }
@@ -65,7 +74,7 @@ class UniversityProvinceRepresentation: Codable {
     }
     
     // MARK: - Methods
-    func toggle() {
+    func toggleExpand() {
         isExpanded.toggle()
     }
     
