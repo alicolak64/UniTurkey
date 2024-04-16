@@ -16,6 +16,7 @@ final class AppContainer {
     
     // MARK: - Properties
     let router = AppRouter()
-    let service = UniversityManager.shared
+    let universityService = UniversityManager.shared
+    let favoriteService = FavoriteManager.shared
     
 }
