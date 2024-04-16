@@ -7,8 +7,23 @@
 
 import Foundation
 
-// MARK: - University Representation
 class UniversityRepresentation: Codable {
+    
+    // MARK: Enums
+    enum DetailCategory {
+        case phone
+        case fax
+        case website
+        case email
+        case address
+        case rector
+    }
+    
+    // MARK: - Structs
+    struct Detail {
+        let category: DetailCategory
+        let value: String
+    }
     
     // MARK: - Properties
     let name: String
@@ -24,6 +39,19 @@ class UniversityRepresentation: Codable {
     
     let provinceId: Int
     let index: Int
+    
+    // MARK: - Computed Properties
+    var details: [Detail] {
+        return [
+            Detail(category: .phone, value: phone),
+            Detail(category: .fax, value: fax),
+            Detail(category: .website, value: website),
+            Detail(category: .email, value: email),
+            Detail(category: .address, value: address),
+            Detail(category: .rector, value: rector)
+        ].filter { !$0.value.isNotAvaliable }
+    }
+    
     
     // MARK: - Init
     init(university: UniversityResponse, provinceId: Int, index: Int) {
@@ -50,13 +78,8 @@ class UniversityRepresentation: Codable {
         isFavorite.toggle()
     }
     
-    var details: [String] {
-        return [phone, fax, website, email, address, rector].filter { !$0.isNotAvaliable }
-    }
-    
 }
 
-// MARK: - University Province Representation
 class UniversityProvinceRepresentation: Codable {
     
     // MARK: - Properties

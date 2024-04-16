@@ -7,28 +7,19 @@
 
 import UIKit
 
-// MARK: - University Table View Output
 enum UniversityCellOutput {
-    // MARK: - Cases
     case didSelectFavorite(UniversityRepresentation)
-    case didSelectWebsite(UniversityRepresentation)
-    case didSelectPhone(UniversityRepresentation)
+    case didSelectDetail(UniversityRepresentation,UniversityRepresentation.Detail)
 }
 
-// MARK: - University Table View Delegate
 protocol UniversityCellDelegate: AnyObject {
-    // MARK: - Methods
     func handleOutput(_ output: UniversityCellOutput)
 }
 
-// MARK: - University Table View Cell Protocol
 protocol UniversityCellProtocol: ReusableView {
-    // MARK: - Properties
     var  delegate: UniversityCellDelegate? { get set }
-    
 }
 
-// MARK: - University Table View Cell
 final class UniversityCell: UITableViewCell,UniversityCellProtocol {
     
     // MARK: - Typealias
@@ -37,8 +28,8 @@ final class UniversityCell: UITableViewCell,UniversityCellProtocol {
     // MARK: - Dependency Properties
     weak var delegate: UniversityCellDelegate?
     private var university: UniversityRepresentation?
-        
-    // MARK: - UI
+    
+    // MARK: - UI Components
     
     private lazy var titleView: UIView = {
         let view = UIView()
@@ -82,44 +73,13 @@ final class UniversityCell: UITableViewCell,UniversityCellProtocol {
     }()
     
     
-    private lazy var phoneInfo: InfoButton = {
-        let button = InfoButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.addTarget(self, action: #selector(phoneButtonTapped), for: .touchUpInside)
-        return button
-    }()
-    
-    private lazy var faxInfo: InfoButton = {
-        let button = InfoButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
-    }()
-    
-    private lazy var websiteInfo: InfoButton = {
-        let button = InfoButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.addTarget(self, action: #selector(websiteButtonTapped), for: .touchUpInside)
-        return button
-    }()
-    
-    private lazy var addressInfo: InfoButton = {
-        let button = InfoButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
-    }()
-    
-    private lazy var rectorInfo: InfoButton = {
-        let button = InfoButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
-    }()
-    
-    
     // MARK: - Initializers
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         setupUI()
+        
+        setupTableView()
         
     }
     
@@ -134,19 +94,40 @@ final class UniversityCell: UITableViewCell,UniversityCellProtocol {
         setupConstraints()
     }
     
-    // MARK: Setup UI
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        universityNameLabel.text = nil
+    }
+    
+    // Implemented to prevent the touch event from being triggered outside the cell
+    // The reason for being outside cell is add UIEdgeInsets to contentView
+    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        let insetRect = contentView.frame.inset(by: Constants.Layout.universityCellMargins)
+        if !insetRect.contains(point) {
+            return nil
+        }
+        return super.hitTest(point, with: event)
+    }
+    
+    // MARK: Setup
+    private func setupTableView() {
+        detailTableView.delegate = self
+        detailTableView.dataSource = self
+        detailTableView.register(DetailCell.self)
+    }
+    
+    // MARK: Layout
     private func setupUI() {
         backgroundColor = Constants.Color.whiteColor
         selectionStyle = .none
         
-        titleView.addRoundedBorder(width: 1, color: UIColor.lightGray)
+        titleView.addRoundedBorder(width: 1, color: Constants.Color.borderColor)
         titleView.addSubviews(expandIcon, universityNameLabel, favoriteButton)
         
-        contentView.addSubviews(titleView, phoneInfo, faxInfo, websiteInfo, addressInfo, rectorInfo)
+        contentView.addSubviews(titleView, detailTableView)
         
     }
     
-    // MARK: Setup Constraints
     private func setupConstraints() {
         NSLayoutConstraint.activate([
             
@@ -168,27 +149,11 @@ final class UniversityCell: UITableViewCell,UniversityCellProtocol {
             favoriteButton.centerYAnchor.constraint(equalTo: titleView.centerYAnchor),
             favoriteButton.widthAnchor.constraint(equalToConstant: 24),
             favoriteButton.heightAnchor.constraint(equalToConstant: 24),
-
             
-            phoneInfo.topAnchor.constraint(equalTo: titleView.bottomAnchor, constant: 10),
-            phoneInfo.leadingAnchor.constraint(equalTo: titleView.leadingAnchor, constant: 30),
-            phoneInfo.trailingAnchor.constraint(equalTo: titleView.trailingAnchor),
-            
-            faxInfo.topAnchor.constraint(equalTo: phoneInfo.bottomAnchor, constant: 10),
-            faxInfo.leadingAnchor.constraint(equalTo: phoneInfo.leadingAnchor),
-            faxInfo.trailingAnchor.constraint(equalTo: phoneInfo.trailingAnchor),
-            
-            websiteInfo.topAnchor.constraint(equalTo: faxInfo.bottomAnchor, constant: 10),
-            websiteInfo.leadingAnchor.constraint(equalTo: phoneInfo.leadingAnchor),
-            websiteInfo.trailingAnchor.constraint(equalTo: phoneInfo.trailingAnchor),
-            
-            addressInfo.topAnchor.constraint(equalTo: websiteInfo.bottomAnchor, constant: 10),
-            addressInfo.leadingAnchor.constraint(equalTo: phoneInfo.leadingAnchor),
-            addressInfo.trailingAnchor.constraint(equalTo: phoneInfo.trailingAnchor),
-            
-            rectorInfo.topAnchor.constraint(equalTo: addressInfo.bottomAnchor, constant: 10),
-            rectorInfo.leadingAnchor.constraint(equalTo: phoneInfo.leadingAnchor),
-            rectorInfo.trailingAnchor.constraint(equalTo: phoneInfo.trailingAnchor),
+            detailTableView.topAnchor.constraint(equalTo: titleView.bottomAnchor, constant: 10),
+            detailTableView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            detailTableView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            detailTableView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
             
         ])
     }
@@ -198,46 +163,39 @@ final class UniversityCell: UITableViewCell,UniversityCellProtocol {
         university = model
         universityNameLabel.text = model.name
         
+        updateFavoriteFeature(isFavorite: model.isFavorite)
+        
         if model.details.isEmpty {
-            expandIcon.image = nil
-            updateFavoriteFeature(isFavorite: model.isFavorite)
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else { return }
+                self.expandIcon.image = nil
+            }
             hideDetails()
         } else {
             updateExpansionFeature(isExpanded: model.isExpanded)
-            updateFavoriteFeature(isFavorite: model.isFavorite)
-            
-            if model.isExpanded {
-                phoneInfo.configure(category: .phone, text: model.phone)
-                faxInfo.configure(category: .fax, text: model.fax)
-                websiteInfo.configure(category: .website, text: model.website)
-                addressInfo.configure(category: .address, text: model.address)
-                rectorInfo.configure(category: .rector, text: model.rector)
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else { return }
+                self.detailTableView.reloadData()
             }
+            showDetails()
         }
-        
-        
         
     }
     
-    // MARK: Helpers
     private func updateExpansionFeature(isExpanded: Bool) {
-        expandIcon.image = isExpanded ? Constants.Icon.minusIcon : Constants.Icon.plusIcon
-        isExpanded ? showDetails() : hideDetails()
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            self.expandIcon.image = isExpanded ? Constants.Icon.minusIcon : Constants.Icon.plusIcon
+            self.detailTableView.reloadData()
+        }
     }
     
     private func updateFavoriteFeature(isFavorite: Bool) {
-        favoriteButton.setImage(isFavorite ? Constants.Icon.heartFillIcon : Constants.Icon.heartIcon, for: .normal)
-    }
-    
-    // MARK: Hit Test
-    // Implemented to prevent the touch event from being triggered outside the cell
-    // The reason for being outside cell is add UIEdgeInsets to contentView
-    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
-        let insetRect = contentView.frame.inset(by: Constants.Layout.universityCellMargins)
-        if !insetRect.contains(point) {
-            return nil
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            self.favoriteButton.setImage(isFavorite ? Constants.Icon.heartFillIcon : Constants.Icon.heartIcon, for: .normal)
+            self.detailTableView.reloadData()
         }
-        return super.hitTest(point, with: event)
     }
     
     // MARK: - Actions
@@ -246,50 +204,50 @@ final class UniversityCell: UITableViewCell,UniversityCellProtocol {
         notify(output: .didSelectFavorite(university))
     }
     
-    @objc private func websiteButtonTapped() {
-        print("Website Button Tapped")
-        guard let university = university else { return }
-        notify(output: .didSelectWebsite(university))
+    // MARK: Helpers
+    private func hideDetails() {
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            self.detailTableView.isHidden = true
+        }
     }
     
-    @objc private func phoneButtonTapped() {
-        print("Phone Button Tapped")
-        guard let university = university else { return }
-        notify(output: .didSelectPhone(university))
+    private func showDetails() {
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            self.detailTableView.isHidden = false
+        }
     }
     
-    
-    // MARK: Delegate
     private func notify (output: UniversityCellOutput) {
         delegate?.handleOutput(output)
     }
     
-    // MARK: Prepare For Reuse
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        universityNameLabel.text = nil
-        phoneInfo.prepareForReuse()
-        faxInfo.prepareForReuse()
-        websiteInfo.prepareForReuse()
-        addressInfo.prepareForReuse()
-        rectorInfo.prepareForReuse()
+}
+
+// MARK: - TableView Delegate & DataSource
+extension UniversityCell: UITableViewDelegate, UITableViewDataSource {
+    
+    // MARK: - UITableViewDataSource
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return university?.details.count ?? 0
     }
     
-    // MARK: Private Methods
-    private func hideDetails() {
-        phoneInfo.isHidden = true
-        faxInfo.isHidden = true
-        websiteInfo.isHidden = true
-        addressInfo.isHidden = true
-        rectorInfo.isHidden = true
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let university = university, let detail = university.details[safe: indexPath.row] else { return UITableViewCell() }
+        
+        let cell: DetailCell = tableView.dequeueReusableCell(for: indexPath)
+        cell.configure(with: detail)
+        return cell
     }
     
-    private func showDetails() {
-        phoneInfo.isHidden = false
-        faxInfo.isHidden = false
-        websiteInfo.isHidden = false
-        addressInfo.isHidden = false
-        rectorInfo.isHidden = false
+    // MARK: - UITableViewDelegate
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableView.automaticDimension
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard let university = university, let detail = university.details[safe: indexPath.row] else { return }
+        notify(output: .didSelectDetail(university,detail))
+    }
 }
