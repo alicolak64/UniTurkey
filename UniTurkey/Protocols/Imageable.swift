@@ -7,7 +7,6 @@
 
 import UIKit
 
-// MARK: - Imageable Protocol
 protocol Imageable {
     // MARK: - Properties
     var image: UIImage { get }
@@ -15,7 +14,6 @@ protocol Imageable {
 
 // MARK: - Default Implementation
 extension Imageable {
-    // MARK: - Properties
     var image: UIImage {
         UIImage(named: String(describing: self)) ?? UIImage()
     }

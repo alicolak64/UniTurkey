@@ -7,19 +7,17 @@
 
 import UIKit
 
-// MARK: - Province Table View Cell Protocol
 protocol ProvinceCellProtocol: ReusableView {
     
 }
 
 
-// MARK: - Province Table View Cell
 final class ProvinceCell: UITableViewCell,ProvinceCellProtocol {
     
     // MARK: - Typealias
     typealias Model = UniversityProvinceRepresentation
     
-    // MARK: - UI
+    // MARK: - UI Components
     private lazy var expandIcon: UIImageView = {
         let imageView = UIImageView()
         imageView.image = Constants.Icon.plusIcon ?? UIImage()
@@ -47,9 +45,9 @@ final class ProvinceCell: UITableViewCell,ProvinceCellProtocol {
     // MARK: - Initializers
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-                
+        
         setupUI()
-
+        
     }
     
     required init?(coder: NSCoder) {
@@ -63,7 +61,13 @@ final class ProvinceCell: UITableViewCell,ProvinceCellProtocol {
         setupConstraints()
     }
     
-    // MARK: Setup UI
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        provinceNameLabel.text = nil
+        universityCountLabel.text = nil
+    }
+    
+    // MARK: Layout
     private func setupUI() {
         backgroundColor = Constants.Color.whiteColor
         selectionStyle = .none
@@ -71,7 +75,6 @@ final class ProvinceCell: UITableViewCell,ProvinceCellProtocol {
         contentView.addSubviews(expandIcon, provinceNameLabel, universityCountLabel)
     }
     
-    // MARK: Setup Constraints
     private func setupConstraints() {
         NSLayoutConstraint.activate([
             expandIcon.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
@@ -87,30 +90,29 @@ final class ProvinceCell: UITableViewCell,ProvinceCellProtocol {
         ])
     }
     
-    // MARK: Configure UI
+    // MARK: Configure
     func configure(with model: UniversityProvinceRepresentation) {
-        provinceNameLabel.text = model.name
-        updateExpansionFeature(isExpanded: model.isExpanded)
-        if model.universities.count == 0 {
-            universityCountLabel.text = Constants.Text.noUniversityText
-            expandIcon.image = nil
-        } else if model.universities.count == 1 {
-            universityCountLabel.text = "\(model.universities.count) university"
-        } else {
-            universityCountLabel.text = "\(model.universities.count) universities"
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            self.provinceNameLabel.text = model.name
+            self.updateExpansionFeature(isExpanded: model.isExpanded)
+            if model.universities.count == 0 {
+                self.universityCountLabel.text = Constants.Text.noUniversityText
+                self.expandIcon.image = nil
+            } else if model.universities.count == 1 {
+                self.universityCountLabel.text = "\(model.universities.count) university"
+            } else {
+                self.universityCountLabel.text = "\(model.universities.count) universities"
+            }
         }
+        
     }
     
     private func updateExpansionFeature(isExpanded: Bool) {
-        expandIcon.image = isExpanded ? Constants.Icon.minusIcon : Constants.Icon.plusIcon
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            self.expandIcon.image = isExpanded ? Constants.Icon.minusIcon : Constants.Icon.plusIcon
+        }
     }
-    
-    // MARK: Prepare For Reuse
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        provinceNameLabel.text = nil
-        universityCountLabel.text = nil
-    }
-    
     
 }

@@ -7,7 +7,6 @@
 
 import UIKit
 
-// MARK: - UIImage Extension
 extension UIImage {
     
     // MARK: - Image Resizing

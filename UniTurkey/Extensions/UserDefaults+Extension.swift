@@ -7,7 +7,6 @@
 
 import Foundation
 
-// MARK: - UserDefaults Extension
 extension UserDefaults {
     
     // MARK: Subscript

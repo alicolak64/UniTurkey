@@ -7,7 +7,6 @@
 
 import UIKit
 
-// MARK: - UICollectionView Extension
 extension UICollectionView {
     
     // MARK: - Register

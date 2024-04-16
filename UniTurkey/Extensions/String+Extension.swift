@@ -7,7 +7,6 @@
 
 import Foundation
 
-// MARK: - String Extension
 extension String {
     
     // MARK: - Properties

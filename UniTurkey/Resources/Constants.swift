@@ -7,7 +7,6 @@
 
 import UIKit
 
-// MARK: - Constants
 enum Constants {
     
     // MARK: - UI Constants
@@ -18,8 +17,9 @@ enum Constants {
     
     // MARK: - Layout Constant
     enum Layout {
-        static let universityCellMargins = UIEdgeInsets(top: 0, left: 10, bottom: 10, right: 0)
         static let provinceCellMargins = UIEdgeInsets(top: 0, left: 0, bottom: 10, right: 0)
+        static let universityCellMargins = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 0)
+        static let detailCellMargins = UIEdgeInsets(top: 0, left: 10, bottom: 10, right: 0)
     }
     
     // MARK: - Network Constant
@@ -46,7 +46,7 @@ enum Constants {
         static let lightRedColor = UIColor(hex: "F44336")
         static let darkRedColor = UIColor(hex: "D62121")
         static let grayColor = UIColor(hex: "F5F5F5")
-        static let borderColor = UIColor(hex: "C8C7CC")
+        static let borderColor = UIColor.lightGray
     }
     
     // MARK: - Font Constant

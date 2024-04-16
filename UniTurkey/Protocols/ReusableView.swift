@@ -7,7 +7,6 @@
 
 import UIKit
 
-// MARK: - ReusableView Protocol
 protocol ReusableView: AnyObject {
     // MARK: - Associated Type
     associatedtype Model
@@ -21,7 +20,6 @@ protocol ReusableView: AnyObject {
 
 // MARK: Default Implementation
 extension ReusableView where Self: UIView {
-    // MARK: - Properties
     static var identifier: String {
         return String(describing: self)
     }

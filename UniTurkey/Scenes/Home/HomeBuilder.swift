@@ -7,16 +7,12 @@
 
 import UIKit
 
-// MARK: - Home Buildable
 protocol HomeBuildable {
-    // MARK: - Methods
     func build() -> UIViewController
 }
 
-// MARK: - Home Builder
 final class HomeBuilder: HomeBuildable {
     
-    // MARK: - Methods
     func build() -> UIViewController {
         let universityService = app.universityService
         let favoriteService = app.favoriteService

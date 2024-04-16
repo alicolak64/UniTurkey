@@ -7,36 +7,27 @@
 
 import UIKit
 
-// MARK: - Error View Protocol
 protocol ErrorViewProtocol {
-    // MARK: - Methods
     func showError(error: Error?)
     func hideError()
 }
 
-// MARK: - Error State
 enum ErrorState {
-    // MARK: - Cases
     case error
     case noError
 }
 
-// MARK: - Error View Output
 enum ErrorViewOutput {
-    // MARK: - Cases
     case retry
 }
 
-// MARK: - Error View Delegate
 protocol ErrorViewDelegate: AnyObject {
-    // MARK: - Methods
     func handleOutput(_ output: ErrorViewOutput)
 }
 
-// MARK: - Error View
 final class ErrorView: UIView, ErrorViewProtocol {
     
-    // MARK: - UI
+    // MARK: - UI Components
     private lazy var errorImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = Constants.Icon.errorIcon
@@ -79,9 +70,15 @@ final class ErrorView: UIView, ErrorViewProtocol {
         didSet {
             switch state {
             case .error:
-                isHidden = false
+                DispatchQueue.main.async { [weak self] in
+                    guard let self = self else { return }
+                    self.isHidden = false
+                }
             case .noError:
-                isHidden = true
+                DispatchQueue.main.async { [weak self] in
+                    guard let self = self else { return }
+                    self.isHidden = true
+                }
             }
         }
     }
@@ -89,7 +86,7 @@ final class ErrorView: UIView, ErrorViewProtocol {
     // MARK: Dependency Properties
     weak var delegate: ErrorViewDelegate?
     
-    // MARK: - Initializer
+    // MARK: - Initializers
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupLayout()
@@ -99,10 +96,18 @@ final class ErrorView: UIView, ErrorViewProtocol {
         fatalError("init(coder:) has not been implemented")
     }
     
-    // MARK: - Setup Layout
+    // MARK: - Lifecycle
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        setupConstraints()
+    }
+    
+    // MARK: - Layout
     private func setupLayout() {
         addSubviews(errorImageView, errorTitleLabel, errorDescriptionLabel, retryButton)
-        
+    }
+    
+    private func setupConstraints() {
         NSLayoutConstraint.activate([
             errorImageView.centerXAnchor.constraint(equalTo: centerXAnchor),
             errorImageView.topAnchor.constraint(equalTo: topAnchor),
@@ -121,7 +126,6 @@ final class ErrorView: UIView, ErrorViewProtocol {
             retryButton.widthAnchor.constraint(equalToConstant: 100),
             retryButton.heightAnchor.constraint(equalToConstant: 40),
         ])
-        
     }
     
     // MARK: - Actions
@@ -145,7 +149,7 @@ final class ErrorView: UIView, ErrorViewProtocol {
         state = .noError
     }
     
-    // MARK: - Delegate Notifier
+    // MARK: - Helpers
     private func notify(_ output: ErrorViewOutput) {
         delegate?.handleOutput(output)
     }

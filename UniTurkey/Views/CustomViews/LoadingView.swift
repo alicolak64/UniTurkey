@@ -7,24 +7,19 @@
 
 import UIKit
 
-// MARK: - Loading View Protocol
 protocol LoadingViewProtocol {
-    // MARK: - Methods
     func showLoading()
     func hideLoading()
 }
 
-// MARK: - Loading State
 enum LoadingState {
-    // MARK: - Cases
     case loading
     case loaded
 }
 
-// MARK: - Loading View
 final class LoadingView: UIView, LoadingViewProtocol {
     
-    // MARK: - UI
+    // MARK: - UI Components
     private lazy var activityIndicator: UIActivityIndicatorView = {
         let indicator = UIActivityIndicatorView(style: .large)
         indicator.color = Constants.Color.blackColor
@@ -35,7 +30,6 @@ final class LoadingView: UIView, LoadingViewProtocol {
     
     // MARK: - Properties
     private var state: LoadingState = .loading {
-        // MARK: - Did Set
         didSet {
             switch state {
             case .loading:
@@ -62,15 +56,22 @@ final class LoadingView: UIView, LoadingViewProtocol {
         fatalError("init(coder:) has not been implemented")
     }
     
-    // MARK: - Setup
+    // MARK: - Lifecycle
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        setupConstraints()
+    }
+    
+    // MARK: - Layout
     private func setupLayout() {
         addSubview(activityIndicator)
-        
+    }
+    
+    private func setupConstraints() {
         NSLayoutConstraint.activate([
             activityIndicator.centerXAnchor.constraint(equalTo: centerXAnchor),
-            activityIndicator.centerYAnchor.constraint(equalTo: centerYAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: centerYAnchor)
         ])
-        
     }
     
     // MARK: - Delegate Methods

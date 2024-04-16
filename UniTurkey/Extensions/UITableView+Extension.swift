@@ -7,7 +7,6 @@
 
 import UIKit
 
-// MARK: - UITableView Extension
 extension UITableView {
     
     // MARK: - Register

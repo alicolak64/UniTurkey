@@ -16,7 +16,7 @@ final class UniversityManager: UniversityService {
     // MARK: - Private Initializer
     private init() {}
     
-    // MARK: - Fetch Universities
+    // MARK: - Methods
     func fetchUniversities(page: Int, completion: @escaping (Result<UniversitiesPageResponse, ServiceError>) -> Void) {
         
         guard let url = URL(string: "\(Constants.Network.baseURL)\(Constants.Network.page)\(page)\(Constants.Network.json)") else {

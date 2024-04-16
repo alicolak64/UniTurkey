@@ -7,8 +7,8 @@
 
 import Foundation
 
-// MARK: - Response University
 struct UniversityResponse: Codable {
+    
     // MARK: - Properties
     let name : String
     let phone: String
@@ -31,7 +31,6 @@ struct UniversityResponse: Codable {
     
 }
 
-// MARK: - Response University Province
 struct UniversityProvinceResponse: Codable {
     
     // MARK: - Properties
@@ -48,7 +47,6 @@ struct UniversityProvinceResponse: Codable {
 }
 
 
-// MARK: - Response Universities Page
 struct UniversitiesPageResponse: Codable {
     
     // MARK: - Properties

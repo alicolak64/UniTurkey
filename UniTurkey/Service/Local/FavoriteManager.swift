@@ -7,7 +7,6 @@
 
 import Foundation
 
-// MARK: Favorite Manager
 final class FavoriteManager: FavoriteService{
     
     // MARK: - Properties(Singleton)

@@ -7,20 +7,15 @@
 
 import UIKit
 
-// MARK: - Home Route Cases
 enum HomeRoute {
-    // MARK: - Cases
     case detail(UniversityResponse)
     case favorites
 }
 
-// MARK: - Home Router Protocol
 protocol HomeRouterProtocol {
-    // MARK: - Methods
     func navigate(to route: HomeRoute)
 }
 
-// MARK: - Home Router
 final class HomeRouter: HomeRouterProtocol {
     
     // MARK: - Properties

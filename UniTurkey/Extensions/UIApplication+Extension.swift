@@ -7,7 +7,6 @@
 
 import UIKit
 
-// MARK: - UIApplication Extension
 extension UIApplication {
     // MARK: - Properties
     static let appVersion: String = {

@@ -7,7 +7,6 @@
 
 import UIKit
 
-// MARK: - Symbolable Protocol
 protocol Symbolable {
     // MARK: - Properties
     var symbolName: String { get }
@@ -17,7 +16,6 @@ protocol Symbolable {
 
 // MARK: - Default Implementation
 extension Symbolable {
-    // MARK: - Methods
     func symbol(size: CGFloat = 15, weight: UIImage.SymbolWeight = .medium) -> UIImage {
         let configuration = UIImage.SymbolConfiguration(pointSize: size, weight: weight)
         

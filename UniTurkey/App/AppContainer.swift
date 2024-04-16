@@ -11,7 +11,6 @@ import Foundation
 let app = AppContainer()
 
 
-// MARK: - App Container
 final class AppContainer {
     
     // MARK: - Properties

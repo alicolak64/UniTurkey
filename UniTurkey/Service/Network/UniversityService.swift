@@ -7,9 +7,7 @@
 
 import Foundation
 
-// MARK: - Service Error Enum
 enum ServiceError: Error {
-    // MARK: - Cases
     case noConnectionError // No internet connection
     case invalidURLError // Invalid URL
     case serverError // Server error
@@ -18,9 +16,7 @@ enum ServiceError: Error {
     case unknownError // Unknown error
 }
 
-// MARK: - University Service Protocol
 protocol UniversityService {
-    // MARK: - Methods
     func fetchUniversities(page: Int, completion: @escaping (Result<UniversitiesPageResponse, ServiceError>) -> Void)
 }
 

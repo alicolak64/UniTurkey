@@ -7,23 +7,18 @@
 
 import Foundation
 
-// MARK: - Output
 enum HomeViewModelOutput {
-    // MARK: - Cases
     case updateTitle(String)
     case updateProvinces([UniversityProvinceRepresentation])
     case updateLoading(Bool)
     case updateError(Error)
 }
 
-// MARK: - Delegate
 protocol HomeViewModelDelegate: AnyObject {
-    // MARK: - Methods
     func handleOutput(_ output: HomeViewModelOutput)
     func navigate(to route: HomeRoute)
 }
 
-// MARK: - Protocol
 protocol HomeViewModelProtocol {
     // MARK: - Properties
     var  delegate: HomeViewModelDelegate? { get set }
@@ -37,7 +32,6 @@ protocol HomeViewModelProtocol {
     func didTapFavoriteButton(with university: UniversityRepresentation)
 }
 
-// MARK: - ViewModel
 final class HomeViewModel {
     
     // MARK: - Dependency Properties
@@ -62,17 +56,12 @@ final class HomeViewModel {
         getFavorites()
     }
     
-    // MARK: - Private Methods
-    private func getFavorites() {
-        favorites = favoriteService.getFavorites()
-    }
 }
 
-// MARK: - ViewModel Protocol
+// MARK: - Home ViewModel Delegate
 extension HomeViewModel: HomeViewModelProtocol {
     
-    // MARK: - Delegate Methods
-    
+    // MARK: - Methods
     func fetchTitle() {
         notify(.updateTitle(Constants.Text.homeTitleText))
     }
@@ -109,7 +98,7 @@ extension HomeViewModel: HomeViewModelProtocol {
     func selectUniversity(id: Int, at index: Int) {
         guard let province = provinces.first(where: { $0.id == id }),
               let university = province.universities[safe: index] else {
-          return
+            return
         }
         delegate?.navigate(to: .detail(university))
     }
@@ -124,7 +113,6 @@ extension HomeViewModel: HomeViewModelProtocol {
         fetchUniversities()
     }
     
-    // MARK: - Favorite Methods
     func didTapFavoriteButton(with university: UniversityRepresentation) {
         if favoriteService.isFavorite(university) {
             favoriteService.removeFavorite(university)
@@ -134,7 +122,11 @@ extension HomeViewModel: HomeViewModelProtocol {
         getFavorites()
     }
     
-    // MARK: - Delegate Notifier
+    // MARK: - Helpers
+    private func getFavorites() {
+        favorites = favoriteService.getFavorites()
+    }
+    
     private func notify(_ output: HomeViewModelOutput) {
         switch output {
         case .updateTitle(let title):

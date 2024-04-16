@@ -7,7 +7,6 @@
 
 import UIKit
 
-// MARK: - App Router
 final class AppRouter {
     
     // MARK: - Properties
