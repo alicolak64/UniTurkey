@@ -11,7 +11,6 @@ final class HomeViewController: UIViewController {
     
     // MARK: - Dependency Properties
     private let viewModel: HomeViewModel
-    private let router: HomeRouter
     
     // MARK: - Properties
     private var lastScrollTime: Date?
@@ -28,18 +27,18 @@ final class HomeViewController: UIViewController {
     
     private lazy var navigationBarRightItem: UIBarButtonItem = {
         
-        let favouriteButton = UIButton(type: .custom)
+        let favoriteButton = UIButton(type: .custom)
         
         let heartIcon = Constants.Icon.heartIcon
         let heartIconSize = CGSize(width: 24, height: 24)
-        favouriteButton.setImage(heartIcon, for: .normal)
-        favouriteButton.tintColor = Constants.Color.lightRedColor ?? .systemRed
+        favoriteButton.setImage(heartIcon, for: .normal)
+        favoriteButton.tintColor = Constants.Color.lightRedColor ?? .systemRed
         
-        favouriteButton.addTarget(self, action: #selector(favoriteButtonTapped), for: .touchUpInside)
+        favoriteButton.addTarget(self, action: #selector(favoriteButtonTapped), for: .touchUpInside)
         
-        let favouriteButtonItem = UIBarButtonItem(customView: favouriteButton)
+        let favoriteButtonItem = UIBarButtonItem(customView: favoriteButton)
         
-        return favouriteButtonItem
+        return favoriteButtonItem
         
     }()
     
@@ -63,7 +62,7 @@ final class HomeViewController: UIViewController {
         return view
     }()
     
-    private lazy var tableView: UITableView = {
+    private lazy var provincesTableView: UITableView = {
         let tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.backgroundColor = Constants.Color.backgroundColor
@@ -73,11 +72,9 @@ final class HomeViewController: UIViewController {
     }()
     
     // MARK: - Initializers
-    init(viewModel: HomeViewModel, router: HomeRouter) {
+    init(viewModel: HomeViewModel) {
         self.viewModel = viewModel
-        self.router = router
         super.init(nibName: nil, bundle: nil)
-        self.viewModel.delegate = self
     }
     
     required init?(coder: NSCoder) {
@@ -87,8 +84,16 @@ final class HomeViewController: UIViewController {
     // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        viewModel.delegate = self
         initalSetup()
         configureUI()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if errorView.isHidden{
+            viewModel.checkFavorites(with: provinces)
+        }
     }
     
     override func viewDidLayoutSubviews() {
@@ -101,26 +106,26 @@ final class HomeViewController: UIViewController {
         // fetch title
         viewModel.fetchTitle()
         // fetch provinces
-        viewModel.fetchUniversities()
+        viewModel.fetchProvinces()
         // tableview setup
         tableViewSetup()
     }
     
     private func tableViewSetup() {
         // MARK: - TableView Dependencies
-        tableView.delegate = self
-        tableView.dataSource = self
+        provincesTableView.delegate = self
+        provincesTableView.dataSource = self
         
         // MARK: - Register Cells
-        tableView.register(ProvinceCell.self)
-        tableView.register(UniversityCell.self)
+        provincesTableView.register(ProvinceCell.self)
+        provincesTableView.register(UniversityCell.self)
     }
     
     // MARK: - Layout
     private func configureUI() {
         view.backgroundColor = Constants.Color.backgroundColor
         configureNavigationBar()
-        view.addSubviews([loadingView,errorView,tableView,paginationLoadingView])
+        view.addSubviews([loadingView,errorView,provincesTableView,paginationLoadingView])
     }
     
     private func configureNavigationBar() {
@@ -139,38 +144,30 @@ final class HomeViewController: UIViewController {
             errorView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             errorView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             
-            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
-            tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 10),
-            tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -10),
-            tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            provincesTableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
+            provincesTableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 10),
+            provincesTableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -10),
+            provincesTableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             
             paginationLoadingView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            paginationLoadingView.bottomAnchor.constraint(equalTo: tableView.bottomAnchor, constant: -20)
+            paginationLoadingView.bottomAnchor.constraint(equalTo: provincesTableView.bottomAnchor, constant: -20)
             
         ])
     }
     
     // MARK: - Helpers
     private func startLoading() {
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
-            self.tableView.isHidden = true
-            self.loadingView.showLoading()
-        }
+        provincesTableView.isHidden = true
+        loadingView.showLoading()
     }
     
     private func stopLoading() {
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
-            self.loadingView.hideLoading()
-        }
+        loadingView.hideLoading()
     }
     
     private func showError(_ error: Error) {
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
-            self.errorView.showError(error: error)
-        }
+        provincesTableView.isHidden = true
+        errorView.showError(error: error)
     }
     
 }
@@ -179,7 +176,7 @@ final class HomeViewController: UIViewController {
 extension HomeViewController {
     
     @objc private func favoriteButtonTapped() {
-        print("Favorite Button Tapped")
+        viewModel.navigate(to: .favorites)
     }
     
 }
@@ -231,10 +228,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     
     // MARK: - TableView Delegate
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
-            self.tableView.deselectRow(at: indexPath, animated: true)
-        }
+        provincesTableView.deselectRow(at: indexPath, animated: true)
         guard let province = provinces[safe: indexPath.section] else { return }
         if indexPath.row == 0 {
             guard !province.universities.isEmpty else {
@@ -242,10 +236,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 return
             }
             province.toggleExpand()
-            DispatchQueue.main.async { [weak self] in
-                guard let self = self else { return }
-                self.tableView.reloadSections([indexPath.section], with: .fade)
-            }
+            provincesTableView.reloadSections([indexPath.section], with: .fade)
         } else {
             guard let university = province.universities[safe: indexPath.row - 1] else { return }
             guard !university.details.isEmpty else {
@@ -253,10 +244,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 return
             }
             university.toggleExpand()
-            DispatchQueue.main.async { [weak self] in
-                guard let self = self else { return }
-                self.tableView.reloadRows(at: [indexPath], with: .fade)
-            }
+            provincesTableView.reloadRows(at: [indexPath], with: .fade)
         }
     }
     
@@ -265,7 +253,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             return 60
         } else {
             guard let province = provinces[safe: indexPath.section],
-                  let university = province.universities[safe: indexPath.row - 1] 
+                  let university = province.universities[safe: indexPath.row - 1]
             else {
                 return 0
             }
@@ -293,7 +281,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 return
             }
             
-            viewModel.fetchUniversities()
+            viewModel.fetchProvinces()
             
             self.lastScrollTime = now
             
@@ -308,37 +296,26 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
 extension HomeViewController : HomeViewModelDelegate {
     
     func handleOutput(_ output: HomeViewModelOutput) {
-        switch output {
-        case .updateTitle(let title):
-            DispatchQueue.main.async { [weak self] in
-                guard let self = self else { return }
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            switch output {
+            case .updateTitle(let title):
                 self.navigationBarTitle.text = title
-            }
-        case .updateProvinces(let provinces):
-            self.provinces = provinces
-            DispatchQueue.main.async { [weak self] in
-                guard let self = self else { return }
-                self.tableView.isHidden = false
-                self.tableView.reloadData()
-            }
-        case .updateLoading(let loading):
-            DispatchQueue.main.async { [weak self] in
-                guard let self = self else { return }
+            case .updateProvinces(let provinces):
+                self.provinces = provinces
+                self.provincesTableView.isHidden = false
+                self.provincesTableView.reloadData()
+            case .updateLoading(let loading):
                 if self.provinces.isEmpty {
                     loading ? self.startLoading() : self.stopLoading()
                 } else {
                     loading ? self.paginationLoadingView.showLoading() : self.paginationLoadingView.hideLoading()
                 }
+            case .updateError(let error):
+                showError(error)
             }
-        case .updateError(let error):
-            showError(error)
         }
     }
-    
-    func navigate(to route: HomeRoute) {
-        
-    }
-    
 }
 
 // MARK: - University Cell Delegate
@@ -371,11 +348,7 @@ extension HomeViewController: UniversityCellDelegate {
             return
         }
         university.toggleFavorite()
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
-            self.tableView.reloadRows(at: [IndexPath(row: university.index + 1, section: provinceIndex)], with: .fade)
-        }
-        
+        provincesTableView.reloadRows(at: [IndexPath(row: university.index + 1, section: provinceIndex)], with: .fade)
         viewModel.didTapFavoriteButton(with: university)
     }
     
