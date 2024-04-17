@@ -16,11 +16,10 @@ final class HomeBuilder: HomeBuildable {
     func build() -> UIViewController {
         let universityService = app.universityService
         let favoriteService = app.favoriteService
-        let viewModel = HomeViewModel(service: universityService, favoriteService: favoriteService)
-        let router = HomeRouter()
-        let viewController = HomeViewController(viewModel: viewModel, router: router)
-        guard let navigationController = viewController.navigationController else { return viewController }
-        router.navigationController = navigationController
+        let navigationController = app.navigationController
+        let router = HomeRouter(navigationController: navigationController)
+        let viewModel = HomeViewModel(router: router, universityService: universityService, favoriteService: favoriteService)
+        let viewController = HomeViewController(viewModel: viewModel)
         return viewController
     }
     

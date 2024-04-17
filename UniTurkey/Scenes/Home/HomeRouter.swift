@@ -13,16 +13,23 @@ enum HomeRoute {
 }
 
 protocol HomeRouterProtocol {
+    var navigationController: UINavigationController? { get }
     func navigate(to route: HomeRoute)
 }
 
 final class HomeRouter: HomeRouterProtocol {
     
     // MARK: - Properties
-    var navigationController: UINavigationController?
+    weak var navigationController: UINavigationController?
+    
+    // MARK: - Init
+    init(navigationController: UINavigationController) {
+        self.navigationController = navigationController
+    }
     
     // MARK: - Methods
     func navigate(to route: HomeRoute) {
+        guard let navigationController = navigationController else { return }
         switch route {
         case .detail(let university):
             print(university)
@@ -31,7 +38,8 @@ final class HomeRouter: HomeRouterProtocol {
              navigationController.pushViewController(detailViewController, animated: true)
              */
         case .favorites:
-            print("Favorites")
+            let favoriteViewController = FavoriteBuilder().build()
+            navigationController.pushViewController(favoriteViewController, animated: true)
         }
         
     }
