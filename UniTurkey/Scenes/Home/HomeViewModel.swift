@@ -16,7 +16,6 @@ enum HomeViewModelOutput {
 
 protocol HomeViewModelDelegate: AnyObject {
     func handleOutput(_ output: HomeViewModelOutput)
-    func navigate(to route: HomeRoute)
 }
 
 protocol HomeViewModelProtocol {
@@ -25,9 +24,12 @@ protocol HomeViewModelProtocol {
     
     // MARK: - Methods
     func fetchTitle()
-    func fetchUniversities()
-    func selectUniversity(id: Int, at index: Int)
+    func fetchProvinces()
     func didTryAgain()
+    
+    func checkFavorites(with provinces : [UniversityProvinceRepresentation])
+    
+    func navigate(to route: HomeRoute)
     
     func didTapFavoriteButton(with university: UniversityRepresentation)
 }
@@ -38,6 +40,7 @@ final class HomeViewModel {
     weak var delegate: HomeViewModelDelegate?
     private let universityService: UniversityService
     private let favoriteService: FavoriteService
+    private let router: HomeRouterProtocol
     
     // MARK: - Data Source Properties
     private var title: String?
@@ -50,9 +53,10 @@ final class HomeViewModel {
     private var favorites = Array<UniversityRepresentation>()
     
     // MARK: - Init
-    init(service: UniversityService, favoriteService: FavoriteService) {
-        self.universityService = service
+    init(router: HomeRouterProtocol, universityService: UniversityService, favoriteService: FavoriteService) {
+        self.universityService = universityService
         self.favoriteService = favoriteService
+        self.router = router
         getFavorites()
     }
     
@@ -66,10 +70,10 @@ extension HomeViewModel: HomeViewModelProtocol {
         notify(.updateTitle(Constants.Text.homeTitleText))
     }
     
-    func fetchUniversities() {
+    func fetchProvinces() {
         guard currentPage < totalPages && !loading else {  return }
         notify(.updateLoading(true))
-        universityService.fetchUniversities(page: currentPage + 1) { [weak self] result in
+        universityService.fetchProvinces(page: currentPage + 1) { [weak self] result in
             guard let self = self else { return }
             DispatchQueue.main.async { [weak self] in
                 guard let self = self else { return }
@@ -90,20 +94,27 @@ extension HomeViewModel: HomeViewModelProtocol {
                     }
                     self.notify(.updateProvinces(presentations))
                 case .failure(let error):
-                    self.notify(.updateLoading(false))
-                    self.notify(.updateError(error))
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+                        guard let self = self else { return }
+                        self.notify(.updateLoading(false))
+                        self.notify(.updateError(error))
+                    }
                 }
             }
         }
         
     }
     
-    func selectUniversity(id: Int, at index: Int) {
-        guard let province = provinces.first(where: { $0.id == id }),
-              let university = province.universities[safe: index] else {
-            return
+    func checkFavorites(with provinces: [UniversityProvinceRepresentation]) {
+        getFavorites()
+        provinces.forEach { province in
+            province.universities.forEach { university in
+                if !favorites.contains(where: { $0.provinceId == province.id && $0.name.apiCapitaledTrimmed == university.name }) {
+                    university.isFavorite = false
+                }
+            }
         }
-        delegate?.navigate(to: .detail(university))
+        notify(.updateProvinces(provinces))
     }
     
     func didTryAgain() {
@@ -113,16 +124,25 @@ extension HomeViewModel: HomeViewModelProtocol {
         loading = false
         error = nil
         provinces.removeAll()
-        fetchUniversities()
+        fetchProvinces()
     }
     
     func didTapFavoriteButton(with university: UniversityRepresentation) {
-        if favoriteService.isFavorite(university) {
-            favoriteService.removeFavorite(university)
+        // create new university representation with favorite status
+        guard let universityModel = provinces.first(where: { $0.id == university.provinceId })?.universities[safe: university.index] else { return }
+        let favoriteUniversity = UniversityRepresentation(university: universityModel, provinceId: university.provinceId, index: university.index)
+        favoriteUniversity.toggleFavorite()
+        favoriteUniversity.isExpanded ? favoriteUniversity.toggleExpand() : nil
+        if favoriteService.isFavorite(favoriteUniversity) {
+            favoriteService.removeFavorite(with: favoriteUniversity)
         } else {
-            favoriteService.addFavorite(university)
+            favoriteService.addFavorite(favoriteUniversity)
         }
         getFavorites()
+    }
+    
+    func navigate(to route: HomeRoute) {
+        router.navigate(to: route)
     }
     
     // MARK: - Helpers
