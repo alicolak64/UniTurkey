@@ -71,25 +71,28 @@ extension HomeViewModel: HomeViewModelProtocol {
         notify(.updateLoading(true))
         universityService.fetchUniversities(page: currentPage + 1) { [weak self] result in
             guard let self = self else { return }
-            switch result {
-            case .success(let response):
-                self.notify(.updateLoading(false))
-                self.currentPage = response.currentPage
-                self.totalPages = response.totalPages
-                self.provinces.append(contentsOf: response.provinces)
-                let presentations = self.provinces.map { UniversityProvinceRepresentation(province: $0) }
-                // check if university is favorite
-                presentations.forEach { province in
-                    province.universities.forEach { university in
-                        if self.favorites.contains(where: { $0.provinceId == province.id && $0.name.apiCapitaledTrimmed == university.name  }) {
-                            university.isFavorite = true
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else { return }
+                switch result {
+                case .success(let response):
+                    self.notify(.updateLoading(false))
+                    self.currentPage = response.currentPage
+                    self.totalPages = response.totalPages
+                    self.provinces.append(contentsOf: response.provinces)
+                    let presentations = self.provinces.map { UniversityProvinceRepresentation(province: $0) }
+                    // check if university is favorite
+                    presentations.forEach { province in
+                        province.universities.forEach { university in
+                            if self.favorites.contains(where: { $0.provinceId == province.id && $0.name.apiCapitaledTrimmed == university.name  }) {
+                                university.isFavorite = true
+                            }
                         }
                     }
+                    self.notify(.updateProvinces(presentations))
+                case .failure(let error):
+                    self.notify(.updateLoading(false))
+                    self.notify(.updateError(error))
                 }
-                self.notify(.updateProvinces(presentations))
-            case .failure(let error):
-                self.notify(.updateLoading(false))
-                self.notify(.updateError(error))
             }
         }
         

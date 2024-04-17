@@ -96,7 +96,6 @@ final class UniversityCell: UITableViewCell,UniversityCellProtocol {
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        universityNameLabel.text = nil
     }
     
     // Implemented to prevent the touch event from being triggered outside the cell
@@ -160,8 +159,13 @@ final class UniversityCell: UITableViewCell,UniversityCellProtocol {
     
     // MARK: Configure
     func configure(with model: UniversityRepresentation) {
+        
         university = model
-        universityNameLabel.text = model.name
+        
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            self.universityNameLabel.text = model.name
+        }
         
         updateFavoriteFeature(isFavorite: model.isFavorite)
         
@@ -173,13 +177,7 @@ final class UniversityCell: UITableViewCell,UniversityCellProtocol {
             hideDetails()
         } else {
             updateExpansionFeature(isExpanded: model.isExpanded)
-            DispatchQueue.main.async { [weak self] in
-                guard let self = self else { return }
-                self.detailTableView.reloadData()
-            }
-            showDetails()
         }
-        
     }
     
     private func updateExpansionFeature(isExpanded: Bool) {
@@ -187,14 +185,15 @@ final class UniversityCell: UITableViewCell,UniversityCellProtocol {
             guard let self = self else { return }
             self.expandIcon.image = isExpanded ? Constants.Icon.minusIcon : Constants.Icon.plusIcon
             self.detailTableView.reloadData()
+            self.showDetails()
         }
+        
     }
     
     private func updateFavoriteFeature(isFavorite: Bool) {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
-            self.favoriteButton.setImage(isFavorite ? Constants.Icon.heartFillIcon : Constants.Icon.heartIcon, for: .normal)
-            self.detailTableView.reloadData()
+            favoriteButton.setImage(isFavorite ? Constants.Icon.heartFillIcon : Constants.Icon.heartIcon, for: .normal)
         }
     }
     

@@ -13,9 +13,8 @@ extension UIViewController {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
             let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-            let action = UIAlertAction(title: actionTitle, style: .default, handler: nil)
-            alert.addAction(action)
-            present(alert, animated: true, completion: nil)
+            alert.addAction(UIAlertAction(title: actionTitle, style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
         }
     }
 }

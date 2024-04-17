@@ -265,10 +265,15 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             return 60
         } else {
             guard let province = provinces[safe: indexPath.section],
-                  let university = province.universities[safe: indexPath.row - 1] else {
+                  let university = province.universities[safe: indexPath.row - 1] 
+            else {
                 return 0
             }
-            return CGFloat(university.isExpanded && !university.details.isEmpty ? 60 + (45 * university.details.count) : 60)
+            return CGFloat(
+                university.isExpanded && !university.details.isEmpty ?
+                           60 + (Constants.UI.detailCellHeight * university.details.count)
+                           : 60
+            )
         }
     }
     
@@ -359,14 +364,18 @@ extension HomeViewController: UniversityCellDelegate {
     
     
     func didTapFavoriteButton(with university: UniversityRepresentation) {
-        guard let university = provinces.first(where: { $0.id == university.provinceId })?.universities[safe: university.index] else {
+        guard
+            let university = provinces.first(where: { $0.id == university.provinceId })?.universities[safe: university.index],
+            let provinceIndex = provinces.firstIndex(where: { $0.id == university.provinceId })
+        else {
             return
         }
         university.toggleFavorite()
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
-            self.tableView.reloadData()
+            self.tableView.reloadRows(at: [IndexPath(row: university.index + 1, section: provinceIndex)], with: .fade)
         }
+        
         viewModel.didTapFavoriteButton(with: university)
     }
     

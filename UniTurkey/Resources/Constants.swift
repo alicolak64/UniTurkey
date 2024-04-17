@@ -11,8 +11,9 @@ enum Constants {
     
     // MARK: - UI Constants
     enum UI {
-        static let infinityScrollPercentage = 0.99
+        static let infinityScrollPercentage = 0.9
         static let infinityScrollLateLimitSecond = 1.0
+        static let detailCellHeight = 45
     }
     
     // MARK: - Layout Constant

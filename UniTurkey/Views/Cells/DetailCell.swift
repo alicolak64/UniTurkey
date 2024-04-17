@@ -52,7 +52,6 @@ final class DetailCell: UITableViewCell, DetailCellProtocol{
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        label.text = nil
     }
     
     // MARK: - Layout
@@ -79,17 +78,14 @@ final class DetailCell: UITableViewCell, DetailCellProtocol{
     
     // MARK: - Configure
     func configure(with model: Model) {
-        
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
-            
             self.setIcon(with: model.category)
-            self.setLabelFont(with: model.value)
-            
+            self.adjustFontSize(for: model.value)
+
             self.label.text = model.value
             self.icon.tintColor = Constants.Color.blackColor
         }
-        
     }
     
     // MARK: Helpers
@@ -114,24 +110,19 @@ final class DetailCell: UITableViewCell, DetailCellProtocol{
         }
     }
     
-    private func setLabelFont(with value: String) {
+    private func adjustFontSize(for text: String) {
+      let baseFontSize = Constants.Font.bodyFont.pointSize
+      let targetWidth = contentView.frame.width - icon.frame.width - 16
+      let estimatedSize = text.boundingRect(with: CGSize(width: targetWidth, height: CGFloat.greatestFiniteMagnitude), options: [.usesLineFragmentOrigin], attributes: [.font: Constants.Font.bodyFont], context: nil).size
+
+      if estimatedSize.height > contentView.frame.height {
+        let scalingFactor = contentView.frame.height / estimatedSize.height
+        let newFontSize = baseFontSize * scalingFactor
         DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
-            switch value.count {
-            case 0...30:
-                self.label.font = Constants.Font.subBodyFont
-            case 31...50:
-                self.label.font = Constants.Font.captionFont
-            case 51...70:
-                self.label.font = Constants.Font.subcaptionFont
-            case 71...100:
-                self.label.font = Constants.Font.littleFont
-            case 101...:
-                self.label.font = Constants.Font.miniFont
-            default:
-                self.label.font = Constants.Font.bodyFont
-            }
+          guard let self = self else { return }
+          self.label.font = Constants.Font.bodyFont.withSize(newFontSize)
         }
+      }
     }
     
 }
