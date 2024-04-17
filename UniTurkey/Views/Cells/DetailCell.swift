@@ -52,6 +52,8 @@ final class DetailCell: UITableViewCell, DetailCellProtocol{
     
     override func prepareForReuse() {
         super.prepareForReuse()
+        icon.image = nil
+        label.text = nil
     }
     
     // MARK: - Layout
@@ -90,39 +92,36 @@ final class DetailCell: UITableViewCell, DetailCellProtocol{
     
     // MARK: Helpers
     private func setIcon(with category: UniversityRepresentation.DetailCategory) {
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
-        
-            switch category {
-            case .phone:
-                self.icon.image = Constants.Icon.phoneIcon
-            case .fax:
-                self.icon.image = Constants.Icon.faxIcon
-            case .website:
-                self.icon.image = Constants.Icon.websiteIcon
-            case .email:
-                self.icon.image = Constants.Icon.emailIcon
-            case .address:
-                self.icon.image = Constants.Icon.addressIcon
-            case .rector:
-                self.icon.image = Constants.Icon.rectorIcon
-            }
+        switch category {
+        case .phone:
+            icon.image = Constants.Icon.phoneIcon
+        case .fax:
+            icon.image = Constants.Icon.faxIcon
+        case .website:
+            icon.image = Constants.Icon.websiteIcon
+        case .email:
+            icon.image = Constants.Icon.emailIcon
+        case .address:
+            icon.image = Constants.Icon.addressIcon
+        case .rector:
+            icon.image = Constants.Icon.rectorIcon
         }
     }
     
     private func adjustFontSize(for text: String) {
-      let baseFontSize = Constants.Font.bodyFont.pointSize
-      let targetWidth = contentView.frame.width - icon.frame.width - 16
-      let estimatedSize = text.boundingRect(with: CGSize(width: targetWidth, height: CGFloat.greatestFiniteMagnitude), options: [.usesLineFragmentOrigin], attributes: [.font: Constants.Font.bodyFont], context: nil).size
-
-      if estimatedSize.height > contentView.frame.height {
-        let scalingFactor = contentView.frame.height / estimatedSize.height
-        let newFontSize = baseFontSize * scalingFactor
-        DispatchQueue.main.async { [weak self] in
-          guard let self = self else { return }
-          self.label.font = Constants.Font.bodyFont.withSize(newFontSize)
+        if text.count < 40 {
+            label.font = Constants.Font.bodyFont
+            return
         }
-      }
+        let baseFontSize = Constants.Font.bodyFont.pointSize
+        let targetWidth = contentView.frame.width - icon.frame.width - 16
+        let estimatedSize = text.boundingRect(with: CGSize(width: targetWidth, height: CGFloat.greatestFiniteMagnitude), options: [.usesLineFragmentOrigin], attributes: [.font: Constants.Font.bodyFont], context: nil).size
+
+        if estimatedSize.height > contentView.frame.height {
+            let scalingFactor = contentView.frame.height / estimatedSize.height
+            let newFontSize = baseFontSize * scalingFactor
+            label.font = Constants.Font.bodyFont.withSize(newFontSize)
+        }
     }
     
 }

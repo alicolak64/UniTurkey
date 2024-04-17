@@ -96,6 +96,10 @@ final class UniversityCell: UITableViewCell,UniversityCellProtocol {
     
     override func prepareForReuse() {
         super.prepareForReuse()
+        university = nil
+        universityNameLabel.text = nil
+        expandIcon.image = Constants.Icon.plusIcon
+        detailTableView.reloadData()
     }
     
     // Implemented to prevent the touch event from being triggered outside the cell
@@ -165,36 +169,27 @@ final class UniversityCell: UITableViewCell,UniversityCellProtocol {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
             self.universityNameLabel.text = model.name
-        }
-        
-        updateFavoriteFeature(isFavorite: model.isFavorite)
-        
-        if model.details.isEmpty {
-            DispatchQueue.main.async { [weak self] in
-                guard let self = self else { return }
+            self.updateFavoriteFeature(isFavorite: model.isFavorite)
+            if model.details.isEmpty {
                 self.expandIcon.image = nil
+                self.hideDetails()
+            } else {
+                self.updateExpansionFeature(isExpanded: model.isExpanded)
             }
-            hideDetails()
-        } else {
-            updateExpansionFeature(isExpanded: model.isExpanded)
         }
+        
+        
+        
     }
     
     private func updateExpansionFeature(isExpanded: Bool) {
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
-            self.expandIcon.image = isExpanded ? Constants.Icon.minusIcon : Constants.Icon.plusIcon
-            self.detailTableView.reloadData()
-            self.showDetails()
-        }
-        
+        expandIcon.image = isExpanded ? Constants.Icon.minusIcon : Constants.Icon.plusIcon
+        showDetails()
+        detailTableView.reloadData()
     }
     
     private func updateFavoriteFeature(isFavorite: Bool) {
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
-            favoriteButton.setImage(isFavorite ? Constants.Icon.heartFillIcon : Constants.Icon.heartIcon, for: .normal)
-        }
+        favoriteButton.setImage(isFavorite ? Constants.Icon.heartFillIcon : Constants.Icon.heartIcon, for: .normal)
     }
     
     // MARK: - Actions
@@ -205,17 +200,11 @@ final class UniversityCell: UITableViewCell,UniversityCellProtocol {
     
     // MARK: Helpers
     private func hideDetails() {
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
-            self.detailTableView.isHidden = true
-        }
+        detailTableView.isHidden = true
     }
     
     private func showDetails() {
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
-            self.detailTableView.isHidden = false
-        }
+        detailTableView.isHidden = false
     }
     
     private func notify (output: UniversityCellOutput) {

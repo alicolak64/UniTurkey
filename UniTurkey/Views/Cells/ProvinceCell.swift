@@ -95,24 +95,22 @@ final class ProvinceCell: UITableViewCell,ProvinceCellProtocol {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
             self.provinceNameLabel.text = model.name
-            self.updateExpansionFeature(isExpanded: model.isExpanded)
-            if model.universities.count == 0 {
-                self.universityCountLabel.text = Constants.Text.noUniversityText
-                self.expandIcon.image = nil
-            } else if model.universities.count == 1 {
-                self.universityCountLabel.text = "\(model.universities.count) university"
-            } else {
-                self.universityCountLabel.text = "\(model.universities.count) universities"
-            }
+            self.updateExpansionFeature(isExpanded: model.isExpanded, isEmptyArray: model.universities.isEmpty)
+            self.updateUniveristyCountLabel(universityCount: model.universities.count)
         }
         
     }
     
-    private func updateExpansionFeature(isExpanded: Bool) {
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
-            self.expandIcon.image = isExpanded ? Constants.Icon.minusIcon : Constants.Icon.plusIcon
+    private func updateExpansionFeature(isExpanded: Bool, isEmptyArray: Bool = false) {
+        if isEmptyArray {
+            expandIcon.image = nil
+        } else {
+            expandIcon.image = isExpanded ? Constants.Icon.minusIcon : Constants.Icon.plusIcon
         }
+    }
+    
+    private func updateUniveristyCountLabel (universityCount: Int) {
+        universityCountLabel.text = universityCount > 1 ? "\(universityCount) universities" : ( universityCount == 1 ? "\(universityCount) university" : Constants.Text.noUniversityText)
     }
     
 }
