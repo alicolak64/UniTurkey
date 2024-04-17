@@ -8,15 +8,35 @@
 import Foundation
 
 enum ServiceError: Error {
-    case noConnectionError // No internet connection
+    case noConnectionError
     case invalidURLError // Invalid URL
     case serverError // Server error
     case decodingError // Decoding error
     case noDataError // No data
     case unknownError // Unknown error
+    
+}
+
+extension ServiceError: LocalizedError {
+    var errorDescription: String? {
+        switch self {
+        case .noConnectionError:
+            return "No connection error"
+        case .invalidURLError:
+            return "Invalid URL error"
+        case .serverError:
+            return "Server error"
+        case .decodingError:
+            return "Decoding error"
+        case .noDataError:
+            return "No data error"
+        case .unknownError:
+            return "Unknown error"
+        }
+    }
 }
 
 protocol UniversityService {
-    func fetchUniversities(page: Int, completion: @escaping (Result<UniversitiesPageResponse, ServiceError>) -> Void)
+    func fetchProvinces(page: Int, completion: @escaping (Result<UniversitiesPageResponse, ServiceError>) -> Void)
 }
 
