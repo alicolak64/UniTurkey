@@ -23,12 +23,12 @@ final class FavoriteManager: FavoriteService{
         userDefaults.set(object: university, forKey: university.name)
     }
     
-    func removeFavorite(_ university: UniversityRepresentation) {
+    func removeFavorite(with university: UniversityRepresentation) {
         userDefaults.set(nil, forKey: university.name)
     }
     
     func getFavorites() -> [UniversityRepresentation] {
-        
+                
         return userDefaults.dictionaryRepresentation().compactMap { key, value in
             guard let data = value as? Data,
                   let university = try? JSONDecoder().decode(UniversityRepresentation.self, from: data) else { return nil }

@@ -9,7 +9,7 @@ import Foundation
 
 protocol FavoriteService {
     func addFavorite(_ university: UniversityRepresentation)
-    func removeFavorite(_ university: UniversityRepresentation)
+    func removeFavorite(with university: UniversityRepresentation)
     func getFavorites() -> [UniversityRepresentation]
     func isFavorite(_ university: UniversityRepresentation) -> Bool
 }

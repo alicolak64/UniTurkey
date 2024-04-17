@@ -17,7 +17,7 @@ final class UniversityManager: UniversityService {
     private init() {}
     
     // MARK: - Methods
-    func fetchUniversities(page: Int, completion: @escaping (Result<UniversitiesPageResponse, ServiceError>) -> Void) {
+    func fetchProvinces(page: Int, completion: @escaping (Result<UniversitiesPageResponse, ServiceError>) -> Void) {
         
         guard let url = URL(string: "\(Constants.Network.baseURL)\(Constants.Network.page)\(page)\(Constants.Network.json)") else {
             completion(.failure(.invalidURLError))
