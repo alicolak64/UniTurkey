@@ -10,6 +10,10 @@
 		E60699492BC21B460062333F /* UniTurkeyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E60699482BC21B460062333F /* UniTurkeyTests.swift */; };
 		E60699532BC21B460062333F /* UniTurkeyUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E60699522BC21B460062333F /* UniTurkeyUITests.swift */; };
 		E60699552BC21B460062333F /* UniTurkeyUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E60699542BC21B460062333F /* UniTurkeyUITestsLaunchTests.swift */; };
+		E63EC7282BCF4F6C0036FC87 /* FavoriteBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = E63EC7272BCF4F6C0036FC87 /* FavoriteBuilder.swift */; };
+		E63EC72A2BCF50E80036FC87 /* FavoriteRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E63EC7292BCF50E80036FC87 /* FavoriteRouter.swift */; };
+		E63EC72C2BCF50F50036FC87 /* FavoriteViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E63EC72B2BCF50F50036FC87 /* FavoriteViewModel.swift */; };
+		E63EC72E2BCF50FE0036FC87 /* FavoriteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E63EC72D2BCF50FE0036FC87 /* FavoriteViewController.swift */; };
 		E63F3CC52BC21DCE0094A0D2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E63F3CC22BC21DCD0094A0D2 /* AppDelegate.swift */; };
 		E63F3CC62BC21DCE0094A0D2 /* AppRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E63F3CC32BC21DCD0094A0D2 /* AppRouter.swift */; };
 		E63F3CC72BC21DCE0094A0D2 /* AppContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E63F3CC42BC21DCD0094A0D2 /* AppContainer.swift */; };
@@ -73,6 +77,10 @@
 		E606994E2BC21B460062333F /* UniTurkeyUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UniTurkeyUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E60699522BC21B460062333F /* UniTurkeyUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UniTurkeyUITests.swift; sourceTree = "<group>"; };
 		E60699542BC21B460062333F /* UniTurkeyUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UniTurkeyUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		E63EC7272BCF4F6C0036FC87 /* FavoriteBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteBuilder.swift; sourceTree = "<group>"; };
+		E63EC7292BCF50E80036FC87 /* FavoriteRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteRouter.swift; sourceTree = "<group>"; };
+		E63EC72B2BCF50F50036FC87 /* FavoriteViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteViewModel.swift; sourceTree = "<group>"; };
+		E63EC72D2BCF50FE0036FC87 /* FavoriteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteViewController.swift; sourceTree = "<group>"; };
 		E63F3CC22BC21DCD0094A0D2 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E63F3CC32BC21DCD0094A0D2 /* AppRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppRouter.swift; sourceTree = "<group>"; };
 		E63F3CC42BC21DCD0094A0D2 /* AppContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppContainer.swift; sourceTree = "<group>"; };
@@ -263,11 +271,15 @@
 			path = Detail;
 			sourceTree = "<group>";
 		};
-		E63F3D012BC21FCC0094A0D2 /* Favourite */ = {
+		E63F3D012BC21FCC0094A0D2 /* Favorite */ = {
 			isa = PBXGroup;
 			children = (
+				E63EC7272BCF4F6C0036FC87 /* FavoriteBuilder.swift */,
+				E63EC7292BCF50E80036FC87 /* FavoriteRouter.swift */,
+				E63EC72B2BCF50F50036FC87 /* FavoriteViewModel.swift */,
+				E63EC72D2BCF50FE0036FC87 /* FavoriteViewController.swift */,
 			);
-			path = Favourite;
+			path = Favorite;
 			sourceTree = "<group>";
 		};
 		E63F3D052BC21FCC0094A0D2 /* Home */ = {
@@ -285,7 +297,7 @@
 			isa = PBXGroup;
 			children = (
 				E63F3D052BC21FCC0094A0D2 /* Home */,
-				E63F3D012BC21FCC0094A0D2 /* Favourite */,
+				E63F3D012BC21FCC0094A0D2 /* Favorite */,
 				E63F3D002BC21FCC0094A0D2 /* Detail */,
 			);
 			path = Scenes;
@@ -481,6 +493,7 @@
 				E696C07B2BCDCC4A00CA91A3 /* FavoriteService.swift in Sources */,
 				E6A673332BC5FEA600B96352 /* ErrorView.swift in Sources */,
 				E63F3D082BC21FCC0094A0D2 /* Imageable.swift in Sources */,
+				E63EC72E2BCF50FE0036FC87 /* FavoriteViewController.swift in Sources */,
 				E6B249DF2BC266B6009112EB /* String+Extension.swift in Sources */,
 				E63F3CC72BC21DCE0094A0D2 /* AppContainer.swift in Sources */,
 				E6B249DB2BC25D7D009112EB /* UIViewController+Extension.swift in Sources */,
@@ -489,15 +502,18 @@
 				E690A02F2BC363D8003B2F83 /* Constants.swift in Sources */,
 				E63F3D072BC21FCC0094A0D2 /* Colorable.swift in Sources */,
 				E696C07D2BCDCC5500CA91A3 /* FavoriteManager.swift in Sources */,
+				E63EC72C2BCF50F50036FC87 /* FavoriteViewModel.swift in Sources */,
 				E63F3D0C2BC21FCC0094A0D2 /* UICollectionView+Extension.swift in Sources */,
 				E63F3D092BC21FCC0094A0D2 /* ReusableView.swift in Sources */,
 				E690A0282BC35591003B2F83 /* UniversityService.swift in Sources */,
+				E63EC7282BCF4F6C0036FC87 /* FavoriteBuilder.swift in Sources */,
 				E63F3D0E2BC21FCC0094A0D2 /* UIDevice+Extension.swift in Sources */,
 				E63F3D0F2BC21FCC0094A0D2 /* UITableView+Extension.swift in Sources */,
 				E63F3D0D2BC21FCC0094A0D2 /* UIColor+Extension.swift in Sources */,
 				E690A0372BC3914A003B2F83 /* HomeBuilder.swift in Sources */,
 				E6B249D92BC25C98009112EB /* UIImage+Extension.swift in Sources */,
 				E690A0312BC367E9003B2F83 /* UniversityResponse.swift in Sources */,
+				E63EC72A2BCF50E80036FC87 /* FavoriteRouter.swift in Sources */,
 				E6B249D72BC25A39009112EB /* UIView+Extension.swift in Sources */,
 				E63F3D122BC21FCC0094A0D2 /* HomeViewModel.swift in Sources */,
 				E63F3D0A2BC21FCC0094A0D2 /* Symbolable.swift in Sources */,

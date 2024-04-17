@@ -14,6 +14,7 @@ enum Constants {
         static let infinityScrollPercentage = 0.9
         static let infinityScrollLateLimitSecond = 1.0
         static let detailCellHeight = 45
+        static let nonExpandCellHeight = 60
     }
     
     // MARK: - Layout Constant
@@ -34,9 +35,11 @@ enum Constants {
     // MARK: - Text Constant
     enum Text {
         static let homeTitleText = "Universities"
+        static let favoritesTitleText = "My Favorites"
         static let notAvaliableText = "Not Avaliable"
         static let errorTitleText = "Oops! An Error Occurred"
         static let noUniversityText = "No University"
+        static let noFavoriteText = "No Favorite"
     }
     
     // MARK: - Color Constant
