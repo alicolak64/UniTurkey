@@ -8,7 +8,7 @@
 import UIKit
 
 enum HomeRoute {
-    case detail(UniversityResponse)
+    case detail(UniversityRepresentation)
     case favorites
 }
 

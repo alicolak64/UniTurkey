@@ -71,3 +71,18 @@ extension String {
         return self == Constants.Text.notAvaliableText
     }
 }
+
+// MARK: - Detail String Extension
+extension String {
+    var phoneUrl: URL? {
+        return URL(string: "tel://\(self)")
+    }
+    
+    var emailUrl: URL? {
+        return URL(string: "mailto:\(self)")
+    }
+    
+    var safariUrl: URL? {
+        return URL(string: "x-web-search://?\(self)")
+    }
+}
