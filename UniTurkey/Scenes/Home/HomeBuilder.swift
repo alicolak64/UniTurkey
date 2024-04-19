@@ -8,10 +8,13 @@
 import UIKit
 
 protocol HomeBuildable {
+    // MARK: - Methods
     func build() -> UIViewController
 }
 
 final class HomeBuilder: HomeBuildable {
+    
+    // MARK: - Methods
     
     func build() -> UIViewController {
         let universityService = app.universityService

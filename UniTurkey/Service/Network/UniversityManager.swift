@@ -7,16 +7,18 @@
 
 import Foundation
 
-// MARK: - University Manager
 final class UniversityManager: UniversityService {
     
     // MARK: - Properties(Singleton)
+    
     static let shared = UniversityManager()
     
     // MARK: - Private Initializer
+    
     private init() {}
     
     // MARK: - Methods
+    
     func fetchProvinces(page: Int, completion: @escaping (Result<UniversitiesPageResponse, ServiceError>) -> Void) {
         
         guard let url = URL(string: "\(Constants.Network.baseURL)\(Constants.Network.page)\(page)\(Constants.Network.json)") else {

@@ -8,6 +8,7 @@
 import Foundation
 
 enum HomeViewModelOutput {
+    // MARK: Cases
     case updateTitle(String)
     case updateProvinces([UniversityProvinceRepresentation])
     case updateLoading(Bool)
@@ -15,14 +16,17 @@ enum HomeViewModelOutput {
 }
 
 protocol HomeViewModelDelegate: AnyObject {
+    // MARK: - Methods
     func handleOutput(_ output: HomeViewModelOutput)
 }
 
 protocol HomeViewModelProtocol {
-    // MARK: - Properties
-    var  delegate: HomeViewModelDelegate? { get set }
+    
+    // MARK: - Dependency Properties
+    var delegate: HomeViewModelDelegate? { get set }
     
     // MARK: - Methods
+    
     func fetchTitle()
     func fetchProvinces()
     func didTryAgain()
@@ -37,12 +41,14 @@ protocol HomeViewModelProtocol {
 final class HomeViewModel {
     
     // MARK: - Dependency Properties
+    
     weak var delegate: HomeViewModelDelegate?
     private let universityService: UniversityService
     private let favoriteService: FavoriteService
     private let router: HomeRouterProtocol
     
-    // MARK: - Data Source Properties
+    // MARK: - Properties
+    
     private var title: String?
     private var totalPages: Int = 1
     private var currentPage: Int = 0
@@ -53,6 +59,7 @@ final class HomeViewModel {
     private var favorites = Array<UniversityRepresentation>()
     
     // MARK: - Init
+    
     init(router: HomeRouterProtocol, universityService: UniversityService, favoriteService: FavoriteService) {
         self.universityService = universityService
         self.favoriteService = favoriteService
@@ -63,9 +70,11 @@ final class HomeViewModel {
 }
 
 // MARK: - Home ViewModel Delegate
+
 extension HomeViewModel: HomeViewModelProtocol {
     
     // MARK: - Methods
+    
     func fetchTitle() {
         notify(.updateTitle(Constants.Text.homeTitleText))
     }
@@ -79,11 +88,11 @@ extension HomeViewModel: HomeViewModelProtocol {
                 guard let self = self else { return }
                 switch result {
                 case .success(let response):
-                    self.notify(.updateLoading(false))
-                    self.currentPage = response.currentPage
-                    self.totalPages = response.totalPages
-                    self.provinces.append(contentsOf: response.provinces)
-                    let presentations = self.provinces.map { UniversityProvinceRepresentation(province: $0) }
+                    notify(.updateLoading(false))
+                    currentPage = response.currentPage
+                    totalPages = response.totalPages
+                    provinces.append(contentsOf: response.provinces)
+                    let presentations = provinces.map { UniversityProvinceRepresentation(province: $0) }
                     // check if university is favorite
                     presentations.forEach { province in
                         province.universities.forEach { university in
@@ -92,12 +101,12 @@ extension HomeViewModel: HomeViewModelProtocol {
                             }
                         }
                     }
-                    self.notify(.updateProvinces(presentations))
+                    notify(.updateProvinces(presentations))
                 case .failure(let error):
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
                         guard let self = self else { return }
-                        self.notify(.updateLoading(false))
-                        self.notify(.updateError(error))
+                        notify(.updateLoading(false))
+                        notify(.updateError(error))
                     }
                 }
             }
@@ -146,6 +155,7 @@ extension HomeViewModel: HomeViewModelProtocol {
     }
     
     // MARK: - Helpers
+    
     private func getFavorites() {
         favorites = favoriteService.getFavorites()
     }

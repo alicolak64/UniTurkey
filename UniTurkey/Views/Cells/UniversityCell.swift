@@ -8,24 +8,30 @@
 import UIKit
 
 enum UniversityCellOutput {
+    // MARK: Cases
     case didSelectFavorite(UniversityRepresentation)
     case didSelectDetail(UniversityRepresentation,UniversityRepresentation.Detail)
+    case didShareDetail(String)
 }
 
 protocol UniversityCellDelegate: AnyObject {
+    // MARK: - Methods
     func handleOutput(_ output: UniversityCellOutput)
 }
 
 protocol UniversityCellProtocol: ReusableView {
+    // MARK: - Dependency Properties
     var  delegate: UniversityCellDelegate? { get set }
 }
 
 final class UniversityCell: UITableViewCell,UniversityCellProtocol {
     
     // MARK: - Typealias
+    
     typealias Model = UniversityRepresentation
     
     // MARK: - Dependency Properties
+    
     weak var delegate: UniversityCellDelegate?
     private var university: UniversityRepresentation?
     
@@ -74,6 +80,7 @@ final class UniversityCell: UITableViewCell,UniversityCellProtocol {
     
     
     // MARK: - Initializers
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
@@ -88,6 +95,7 @@ final class UniversityCell: UITableViewCell,UniversityCellProtocol {
     }
     
     // MARK: Lifecycle
+    
     override func layoutSubviews() {
         super.layoutSubviews()
         contentView.frame = contentView.frame.inset(by: Constants.Layout.universityCellMargins)
@@ -113,6 +121,7 @@ final class UniversityCell: UITableViewCell,UniversityCellProtocol {
     }
     
     // MARK: Setup
+    
     private func setupTableView() {
         detailTableView.delegate = self
         detailTableView.dataSource = self
@@ -120,6 +129,7 @@ final class UniversityCell: UITableViewCell,UniversityCellProtocol {
     }
     
     // MARK: Layout
+    
     private func setupUI() {
         backgroundColor = Constants.Color.whiteColor
         selectionStyle = .none
@@ -162,25 +172,28 @@ final class UniversityCell: UITableViewCell,UniversityCellProtocol {
     }
     
     // MARK: Configure
+    
     func configure(with model: UniversityRepresentation) {
         
         university = model
         
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
-            self.universityNameLabel.text = model.name
-            self.updateFavoriteFeature(isFavorite: model.isFavorite)
+            universityNameLabel.text = model.name
+            updateFavoriteFeature(isFavorite: model.isFavorite)
             if model.details.isEmpty {
-                self.expandIcon.image = nil
-                self.hideDetails()
+                expandIcon.image = nil
+                hideDetails()
             } else {
-                self.updateExpansionFeature(isExpanded: model.isExpanded)
+                updateExpansionFeature(isExpanded: model.isExpanded)
             }
         }
         
         
         
     }
+    
+    // MARK: - Update UI
     
     private func updateExpansionFeature(isExpanded: Bool) {
         expandIcon.image = isExpanded ? Constants.Icon.minusIcon : Constants.Icon.plusIcon
@@ -193,12 +206,14 @@ final class UniversityCell: UITableViewCell,UniversityCellProtocol {
     }
     
     // MARK: - Actions
+    
     @objc private func favoriteButtonTapped() {
         guard let university = university else { return }
         notify(output: .didSelectFavorite(university))
     }
     
     // MARK: Helpers
+    
     private func hideDetails() {
         detailTableView.isHidden = true
     }
@@ -214,9 +229,11 @@ final class UniversityCell: UITableViewCell,UniversityCellProtocol {
 }
 
 // MARK: - TableView Delegate & DataSource
+
 extension UniversityCell: UITableViewDelegate, UITableViewDataSource {
     
     // MARK: - UITableViewDataSource
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return university?.details.count ?? 0
     }
@@ -226,10 +243,12 @@ extension UniversityCell: UITableViewDelegate, UITableViewDataSource {
         
         let cell: DetailCell = tableView.dequeueReusableCell(for: indexPath)
         cell.configure(with: detail)
+        cell.delegate = self
         return cell
     }
     
     // MARK: - UITableViewDelegate
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableView.automaticDimension
     }
@@ -238,4 +257,17 @@ extension UniversityCell: UITableViewDelegate, UITableViewDataSource {
         guard let university = university, let detail = university.details[safe: indexPath.row] else { return }
         notify(output: .didSelectDetail(university,detail))
     }
+}
+
+// MARK: - Detail Cell Delegate
+
+extension UniversityCell: DetailCellDelegate {
+    
+    func handleOutput(_ output: DetailCellOutput) {
+        switch output {
+        case .didShareButton(let text):
+            notify(output: .didShareDetail(text))
+        }
+    }
+    
 }

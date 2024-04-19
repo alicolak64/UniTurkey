@@ -8,14 +8,16 @@
 import Foundation
 
 enum ServiceError: Error {
+    // MARK: Cases
     case noConnectionError
     case invalidURLError // Invalid URL
     case serverError // Server error
     case decodingError // Decoding error
     case noDataError // No data
     case unknownError // Unknown error
-    
 }
+
+// MARK: - LocalizedError
 
 extension ServiceError: LocalizedError {
     var errorDescription: String? {
@@ -37,6 +39,7 @@ extension ServiceError: LocalizedError {
 }
 
 protocol UniversityService {
+    // MARK: - Methods
     func fetchProvinces(page: Int, completion: @escaping (Result<UniversitiesPageResponse, ServiceError>) -> Void)
 }
 

@@ -15,9 +15,11 @@ protocol ProvinceCellProtocol: ReusableView {
 final class ProvinceCell: UITableViewCell,ProvinceCellProtocol {
     
     // MARK: - Typealias
+    
     typealias Model = UniversityProvinceRepresentation
     
     // MARK: - UI Components
+    
     private lazy var expandIcon: UIImageView = {
         let imageView = UIImageView()
         imageView.image = Constants.Icon.plusIcon ?? UIImage()
@@ -43,6 +45,7 @@ final class ProvinceCell: UITableViewCell,ProvinceCellProtocol {
     }()
     
     // MARK: - Initializers
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
@@ -55,6 +58,7 @@ final class ProvinceCell: UITableViewCell,ProvinceCellProtocol {
     }
     
     // MARK: Lifecycle
+    
     override func layoutSubviews() {
         super.layoutSubviews()
         contentView.frame = contentView.frame.inset(by: Constants.Layout.provinceCellMargins)
@@ -68,6 +72,7 @@ final class ProvinceCell: UITableViewCell,ProvinceCellProtocol {
     }
     
     // MARK: Layout
+    
     private func setupUI() {
         backgroundColor = Constants.Color.whiteColor
         selectionStyle = .none
@@ -91,15 +96,18 @@ final class ProvinceCell: UITableViewCell,ProvinceCellProtocol {
     }
     
     // MARK: Configure
+    
     func configure(with model: UniversityProvinceRepresentation) {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
-            self.provinceNameLabel.text = model.name
-            self.updateExpansionFeature(isExpanded: model.isExpanded, isEmptyArray: model.universities.isEmpty)
-            self.updateUniveristyCountLabel(universityCount: model.universities.count)
+            provinceNameLabel.text = model.name
+            updateExpansionFeature(isExpanded: model.isExpanded, isEmptyArray: model.universities.isEmpty)
+            updateUniveristyCountLabel(universityCount: model.universities.count)
         }
         
     }
+    
+    // MARK: - Update UI
     
     private func updateExpansionFeature(isExpanded: Bool, isEmptyArray: Bool = false) {
         if isEmptyArray {

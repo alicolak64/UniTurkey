@@ -8,10 +8,13 @@
 import UIKit
 
 protocol FavoriteBuildable {
+    // MARK: - Methods
     func build() -> UIViewController
 }
 
 final class FavoriteBuilder: FavoriteBuildable {
+    
+    // MARK: - Methods
     
     func build() -> UIViewController {
         let favoriteService = app.favoriteService

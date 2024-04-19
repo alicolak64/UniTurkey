@@ -8,26 +8,54 @@
 import UIKit
 
 protocol ErrorViewProtocol {
+    // MARK: - Methods
     func showError(error: Error?)
     func hideError()
 }
 
 enum ErrorState {
+    // MARK: Cases
     case error
     case noError
 }
 
 enum ErrorViewOutput {
+    // MARK: Cases
     case retry
 }
 
 protocol ErrorViewDelegate: AnyObject {
+    // MARK: - Methods
     func handleOutput(_ output: ErrorViewOutput)
 }
 
 final class ErrorView: UIView, ErrorViewProtocol {
     
+    // MARK: Dependency Properties
+    
+    weak var delegate: ErrorViewDelegate?
+    
+    // MARK: - Properties
+    
+    private var state: ErrorState = .noError {
+        didSet {
+            switch state {
+            case .error:
+                DispatchQueue.main.async { [weak self] in
+                    guard let self = self else { return }
+                    isHidden = false
+                }
+            case .noError:
+                DispatchQueue.main.async { [weak self] in
+                    guard let self = self else { return }
+                    isHidden = true
+                }
+            }
+        }
+    }
+    
     // MARK: - UI Components
+    
     private lazy var errorImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = Constants.Icon.errorIcon
@@ -65,28 +93,9 @@ final class ErrorView: UIView, ErrorViewProtocol {
         return button
     }()
     
-    // MARK: - Properties
-    private var state: ErrorState = .noError {
-        didSet {
-            switch state {
-            case .error:
-                DispatchQueue.main.async { [weak self] in
-                    guard let self = self else { return }
-                    self.isHidden = false
-                }
-            case .noError:
-                DispatchQueue.main.async { [weak self] in
-                    guard let self = self else { return }
-                    self.isHidden = true
-                }
-            }
-        }
-    }
-    
-    // MARK: Dependency Properties
-    weak var delegate: ErrorViewDelegate?
     
     // MARK: - Initializers
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupLayout()
@@ -97,12 +106,14 @@ final class ErrorView: UIView, ErrorViewProtocol {
     }
     
     // MARK: - Lifecycle
+    
     override func layoutSubviews() {
         super.layoutSubviews()
         setupConstraints()
     }
     
     // MARK: - Layout
+    
     private func setupLayout() {
         addSubviews(errorImageView, errorTitleLabel, errorDescriptionLabel, retryButton)
     }
@@ -129,18 +140,20 @@ final class ErrorView: UIView, ErrorViewProtocol {
     }
     
     // MARK: - Actions
+    
     @objc private func tryAgainButtonTapped() {
         hideError()
         notify(.retry)
     }
     
     // MARK: - Delegate Methods
+    
     func showError(error: Error? = nil) {
         state = .error
         if let error = error {
             DispatchQueue.main.async { [weak self] in
                 guard let self = self else { return }
-                self.errorDescriptionLabel.text = error.localizedDescription
+                errorDescriptionLabel.text = error.localizedDescription
             }
         }
     }
@@ -150,6 +163,7 @@ final class ErrorView: UIView, ErrorViewProtocol {
     }
     
     // MARK: - Helpers
+    
     private func notify(_ output: ErrorViewOutput) {
         delegate?.handleOutput(output)
     }

@@ -10,15 +10,19 @@ import Foundation
 final class FavoriteManager: FavoriteService{
     
     // MARK: - Properties(Singleton)
+    
     static let shared = FavoriteManager()
     
     // MARK: - Properties
+    
     private let userDefaults = UserDefaults.standard
     
     // MARK: - Private Initializer
+    
     private init() {}
     
     // MARK: - Methods
+    
     func addFavorite(_ university: UniversityRepresentation) {
         userDefaults.set(object: university, forKey: university.name)
     }
