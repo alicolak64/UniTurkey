@@ -84,7 +84,7 @@ final class ErrorView: UIView, ErrorViewProtocol {
     
     private lazy var retryButton: UIButton = {
         let button = UIButton()
-        button.setTitle("Retry", for: .normal)
+        button.setTitle(Constants.Text.retryText, for: .normal)
         button.setTitleColor(Constants.Color.whiteColor, for: .normal)
         button.backgroundColor = Constants.Color.lightRedColor
         button.layer.cornerRadius = 8

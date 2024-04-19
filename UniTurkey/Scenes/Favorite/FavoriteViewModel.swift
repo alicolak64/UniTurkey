@@ -135,7 +135,7 @@ extension FavoriteViewModel: FavoriteViewModelProtocol {
     private func toogleExpand(at indexPath: IndexPath) {
         guard let university = universities[safe: indexPath.row] else { return }
         guard !university.details.isEmpty else {
-            notify(.showAlert(AlertMessage(title: "Warning! No Detail", message: "There is no detail for this university.")))
+            notify(.showAlert(AlertMessage(title: Constants.Text.warningNoDetailTitleText, message: Constants.Text.warningNoDetailMessageText)))
             return
         }
         university.toggleExpand()

@@ -217,7 +217,7 @@ extension HomeViewModel: HomeViewModelProtocol {
         guard let province = provinces[safe: index] else { return }
         
         guard !province.universities.isEmpty else {
-            delegate?.handleOutput(.showAlert(AlertMessage(title: "Warning! No University", message: "There is no university in this province.")))
+            notify(.showAlert(AlertMessage(title: Constants.Text.warningNoUniversityTitleText, message: Constants.Text.warningNoUniversityMessageText)))
             return
         }
         
@@ -229,7 +229,7 @@ extension HomeViewModel: HomeViewModelProtocol {
         guard let university = provinces[safe: indexPath.section]?.universities[safe: indexPath.row - 1] else { return }
         
         guard !university.details.isEmpty else {
-            delegate?.handleOutput(.showAlert(AlertMessage(title: "Warning! No Detail", message: "There is no detail for this university.")))
+            notify(.showAlert(AlertMessage(title: Constants.Text.warningNoDetailTitleText, message: Constants.Text.warningNoDetailMessageText)))
             return
         }
         
