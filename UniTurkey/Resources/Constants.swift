@@ -93,7 +93,9 @@ enum Constants {
         static let rectorIcon = UIImage(systemName: "person.fill")
         static let refreshIcon = UIImage(systemName: "arrow.clockwise")
         static let shareIcon = UIImage(systemName: "square.and.arrow.up")
+        static let scroolTopIcon = UIImage(systemName: "chevron.up.square")
         static let errorIcon = UIImage(named: "error")
+        static let scaleDownIcon = UIImage(named: "scale-down")
     }
     
 }
