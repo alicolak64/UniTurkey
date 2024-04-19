@@ -61,5 +61,20 @@ extension UIColor {
         return image
     }
     
+    // MARK: - Dynamic Color
+    
+    static func dynamicColor(light: UIColor, dark: UIColor) -> UIColor {
+        if #available(iOS 13.0, *) {
+            return UIColor { (traitCollection: UITraitCollection) -> UIColor in
+                if traitCollection.userInterfaceStyle == .dark {
+                    return dark
+                } else {
+                    return light
+                }
+            }
+        } else {
+            return light
+        }
+    }
     
 }
