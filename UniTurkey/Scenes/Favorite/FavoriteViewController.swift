@@ -10,18 +10,20 @@ import UIKit
 final class FavoriteViewController: UIViewController {
     
     // MARK: Dependency Properties
+    
     private let viewModel: FavoriteViewModel
     
     // MARK: - Properties
+    
     private var universities = Array<UniversityRepresentation>()
     
     // MARK: - UI Components
+    
     private lazy var navigationBarBackButton: UIBarButtonItem = {
         
         let backButton = UIButton(type: .custom)
         
         let backIcon = Constants.Icon.arrowBackIcon
-        let backIconSize = CGSize(width: 24, height: 24)
         backButton.setImage(backIcon, for: .normal)
         backButton.tintColor = Constants.Color.blackColor
         
@@ -35,10 +37,27 @@ final class FavoriteViewController: UIViewController {
     
     private lazy var navigationBarTitle: UILabel = {
         let label = UILabel()
-        label.text = Constants.Text.homeTitleText
         label.font = Constants.Font.subtitleBoldFont
         label.textColor = Constants.Color.blackColor
         return label
+    }()
+    
+    private lazy var scaleDownNavigationBarItem: UIBarButtonItem = {
+        
+        let scaleDownButton = UIButton(type: .custom)
+        
+        let scaleDownIcon = Constants.Icon.scaleDownIcon?.resizeImage(targetSize: CGSize(width: 35, height: 35))
+        let tintedIcon = scaleDownIcon?.withRenderingMode(.alwaysTemplate)
+        scaleDownButton.setImage(tintedIcon, for: .normal)
+        scaleDownButton.tintColor = .systemBlue
+        
+        
+        scaleDownButton.addTarget(self, action: #selector(scaleDownButtonTapped), for: .touchUpInside)
+        
+        let scaleDownButtonItem = UIBarButtonItem(customView: scaleDownButton)
+        
+        return scaleDownButtonItem
+        
     }()
     
     private lazy var universityTableView: UITableView = {
@@ -48,6 +67,15 @@ final class FavoriteViewController: UIViewController {
         tableView.separatorStyle = .none
         tableView.showsVerticalScrollIndicator = false
         return tableView
+    }()
+    
+    private lazy var scrollTopButton: UIButton = {
+        let button = UIButton()
+        button.setImage(Constants.Icon.scroolTopIcon?.resizeImage(targetSize: CGSize(width: 50, height: 50)).withTintColor(.systemBlue), for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(scrollTopButtonTapped), for: .touchUpInside)
+        button.isHidden = true
+        return button
     }()
     
     private lazy var errorLabel: UILabel = {
@@ -61,6 +89,7 @@ final class FavoriteViewController: UIViewController {
     }()
     
     // MARK: Initializers
+    
     init(viewModel: FavoriteViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
@@ -71,6 +100,7 @@ final class FavoriteViewController: UIViewController {
     }
     
     // MARK: - Life Cycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         viewModel.delegate = self
@@ -84,6 +114,7 @@ final class FavoriteViewController: UIViewController {
     }
     
     // MARK: - Setup
+    
     private func initalSetup() {
         // fetch title
         viewModel.fetchTitle()
@@ -103,16 +134,18 @@ final class FavoriteViewController: UIViewController {
     }
     
     // MARK: - Layout
+    
     private func configureUI() {
         view.backgroundColor = Constants.Color.backgroundColor
         configureNavigationBar()
-        view.addSubviews(navigationBarTitle, universityTableView, errorLabel)
+        view.addSubviews(universityTableView, errorLabel,scrollTopButton)
     }
     
     private func configureNavigationBar() {
         navigationController?.navigationBar.addBorder(width: 2, color: Constants.Color.borderColor)
         navigationItem.titleView = navigationBarTitle
         navigationItem.leftBarButtonItem = navigationBarBackButton
+        navigationItem.rightBarButtonItem = scaleDownNavigationBarItem
     }
     
     private func setConstraints() {
@@ -122,39 +155,56 @@ final class FavoriteViewController: UIViewController {
             universityTableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -10),
             universityTableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -10),
             
+            scrollTopButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
+            scrollTopButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
+            
             errorLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             errorLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
     }
     
+    // MARK: - Actions
+    
+    @objc private func backButtonTapped() {
+        viewModel.navigate(to: .back)
+    }
+    
+    @objc private func scaleDownButtonTapped() {
+        let indexSet = universities.enumerated().compactMap { $0.element.isExpanded ? $0.offset : nil }
+        universities.forEach { $0.isExpanded = false }
+        universityTableView.reloadRows(at: indexSet.map { IndexPath(row: $0, section: 0) }, with: .fade)
+    }
+    
+    @objc private func scrollTopButtonTapped() {
+        universityTableView.setContentOffset(.zero, animated: true)
+    }
+    
     // MARK: - Helpers
+    
     private func showEmptyState() {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
-            self.errorLabel.isHidden = false
-            self.universityTableView.isHidden = true
+            errorLabel.isHidden = false
+            universityTableView.isHidden = true
         }
     }
     
     private func hideEmptyState() {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
-            self.errorLabel.isHidden = true
-            self.universityTableView.isHidden = false
+            errorLabel.isHidden = true
+            universityTableView.isHidden = false
         }
-    }
-    
-    // MARK: - Actions
-    @objc private func backButtonTapped() {
-        viewModel.navigate(to: .back)
     }
     
 }
 
 // MARK: - UITableViewDelegate, UITableViewDataSource
+
 extension FavoriteViewController: UITableViewDelegate, UITableViewDataSource{
     
     // MARK: - TableView DataSource
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return universities.count
     }
@@ -168,8 +218,9 @@ extension FavoriteViewController: UITableViewDelegate, UITableViewDataSource{
     }
     
     // MARK: - TableView Delegate
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        self.universityTableView.deselectRow(at: indexPath, animated: true)
+        universityTableView.deselectRow(at: indexPath, animated: true)
         guard let university = universities[safe: indexPath.row] else { return }
         guard !university.details.isEmpty else {
             showAlert(title: "Warning! No Detail", message: "There is no detail for this university.", actionTitle: "OK")
@@ -189,33 +240,40 @@ extension FavoriteViewController: UITableViewDelegate, UITableViewDataSource{
 
     }
     
+    // MARK: - ScrollView Delegate
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        
+        if scrollTopButton.isHidden && scrollView.contentOffset.y > 100  {
+            scrollTopButton.isHidden = false
+        } else if scrollView.contentOffset.y < 100 && !scrollTopButton.isHidden {
+            scrollTopButton.isHidden = true
+        }
+        
+    }
+    
 }
 
 // MARK: - Favorite View Model Delegate
+
 extension FavoriteViewController: FavoriteViewModelDelegate {
     
     func handleOutput(_ output: FavoriteViewModelOutput) {
         switch output {
         case .updateTitle(let title):
-            DispatchQueue.main.async { [weak self] in
-                guard let self = self else { return }
-                self.navigationBarTitle.text = title
-                self.navigationBarTitle.adjustsFontSizeToFitWidth = true
-            }
+            navigationBarTitle.text = title
+            navigationBarTitle.adjustsFontSizeToFitWidth = true
         case .updateUniversity(let universities):
             self.universities = universities
             DispatchQueue.main.async { [weak self] in
                 guard let self = self else { return }
-                universities.isEmpty ? self.showEmptyState() : self.hideEmptyState()
+                universities.isEmpty ? showEmptyState() : hideEmptyState()
             }
         }
     }
-    
-    func navigate(to route: FavoriteRoute) {
-        
-    }
-    
 }
+
+// MARK: - University Cell Delegate
 
 extension FavoriteViewController: UniversityCellDelegate{
     
@@ -223,17 +281,23 @@ extension FavoriteViewController: UniversityCellDelegate{
         switch output {
         case .didSelectFavorite(let university):
             didTapFavoriteButton(with: university)
-        case .didSelectDetail(_, let detail):
+        case .didSelectDetail(let university, let detail):
             switch detail.category {
             case .phone:
-                print("Phone: \(detail.value)")
+                callPhone(with: detail.value)
             case .website:
-                print("Website: \(detail.value)")
+                viewModel.navigate(to: .detail(university))
             case .email:
-                print("Email: \(detail.value)")
-            default:
-                print("Detail: \(detail.value)")
+                sendEmail(with: detail.value)
+            case .address:
+                openMapAddress(with: detail.value)
+            case .rector:
+                searchTextSafari(with: detail.value)
+            case .fax:
+                showAlert(title: "Fax", message: detail.value, actionTitle: "OK")
             }
+        case .didShareDetail(let text):
+            share(items: [text])
         }
     }
     
