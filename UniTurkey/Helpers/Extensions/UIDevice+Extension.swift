@@ -10,7 +10,9 @@ import UIKit
 extension UIDevice {
     
     // MARK: - Enums
+    
     enum Orientation {
+        // MARK: Cases
         case portrait
         case landscape
     }

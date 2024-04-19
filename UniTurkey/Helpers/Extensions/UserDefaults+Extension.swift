@@ -10,6 +10,7 @@ import Foundation
 extension UserDefaults {
     
     // MARK: Subscript
+    
     subscript(key: String) -> Any? {
         get {
             return object(forKey: key)
@@ -20,6 +21,7 @@ extension UserDefaults {
     }
     
     // MARK: Methods
+    
     func object<T: Codable>(_ type: T.Type, with key: String, usingDecoder decoder: JSONDecoder = JSONDecoder()) -> T? {
         guard let data = value(forKey: key) as? Data else { return nil }
         return try? decoder.decode(type.self, from: data)

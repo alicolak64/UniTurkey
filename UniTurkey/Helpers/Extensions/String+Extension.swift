@@ -10,6 +10,7 @@ import Foundation
 extension String {
     
     // MARK: - Properties
+    
     var capitalCased: String {
         let components = self.components(separatedBy: " ")
         let capitalized = components.map { $0.capitalized }
@@ -37,6 +38,7 @@ extension String {
     }
     
     // MARK: - Methods
+    
     @discardableResult
     mutating func capitalCase() -> String {
         self = self.capitalCased
@@ -46,9 +48,11 @@ extension String {
 }
 
 // MARK: - API String Extension
+
 extension String {
     
     // MARK: - Properties
+    
     var apiCapitaledTrimmed: String {
         return self == Constants.Network.notAvaliableAPIText
         ? Constants.Text.notAvaliableText
@@ -73,7 +77,11 @@ extension String {
 }
 
 // MARK: - Detail String Extension
+
 extension String {
+    
+    // MARK: - Properties
+    
     var phoneUrl: URL? {
         return URL(string: "tel://\(self)")
     }
@@ -85,4 +93,51 @@ extension String {
     var safariUrl: URL? {
         return URL(string: "x-web-search://?\(self)")
     }
+    
+}
+
+// MARK: - WebWiew String Extension
+
+extension String {
+    
+    // MARK: - Properties
+    
+    var httpsUrl: URL? {
+        // if it doesn't start  https:// add it
+        
+        // if it start  https but wrong format
+        if self.hasPrefix("https") {
+            if self.contains("https://") {
+                return URL(string: self)
+            } else if self.contains("https:/") {
+                return URL(string: self.replacingOccurrences(of: "https:/", with: "https://"))
+            } else if self.contains("https:") {
+                return URL(string: self.replacingOccurrences(of: "https:", with: "https://"))
+            } else{
+                return URL(string: self.replacingOccurrences(of: "https", with: "https://"))
+            }
+        }
+        
+        // if it starts with http
+        if self.hasPrefix("http") {
+            
+            if self.contains("http://") {
+                return URL(string: self.replacingOccurrences(of: "http://", with: "https://"))
+            } else if self.contains("http:/") {
+                return URL(string: self.replacingOccurrences(of: "http:/", with: "https://"))
+            } else if self.contains("http:") {
+                return URL(string: self.replacingOccurrences(of: "http:", with: "https:"))
+            } else {
+                return URL(string: self.replacingOccurrences(of: "http", with: "https://"))
+            }
+            
+        }
+        
+        if !self.hasPrefix("https") {
+            return URL(string: "https://\(self)")
+        }
+        
+        return URL(string: self)
+    }
+    
 }

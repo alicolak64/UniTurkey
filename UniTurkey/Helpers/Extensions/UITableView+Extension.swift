@@ -10,11 +10,13 @@ import UIKit
 extension UITableView {
     
     // MARK: - Register
+    
     func register<T: UITableViewCell>(_: T.Type) where T: ReusableView {
         register(T.self, forCellReuseIdentifier: T.identifier)
     }
     
     // MARK: - Dequeue
+    
     func dequeueReusableCell<T: UITableViewCell>(for indexPath: IndexPath) -> T where T: ReusableView {
         guard let cell = dequeueReusableCell(withIdentifier: T.identifier, for: indexPath) as? T
         else {

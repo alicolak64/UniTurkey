@@ -8,7 +8,9 @@
 import UIKit
 
 extension UIColor {
+    
     // MARK: - Hex
+    
     convenience init(red: Int, green: Int, blue: Int) {
         assert(red >= 0 && red <= 255, "Invalid red component")
         assert(green >= 0 && green <= 255, "Invalid green component")
@@ -49,6 +51,7 @@ extension UIColor {
     }
     
     // MARK: - 1 point Image
+    
     func as1ptImage() -> UIImage {
         UIGraphicsBeginImageContext(CGSize(width: 1, height: 1))
         setFill()

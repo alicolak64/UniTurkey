@@ -10,6 +10,7 @@ import UIKit
 extension UICollectionView {
     
     // MARK: - Register
+    
     func register<T: UICollectionViewCell>(_: T.Type) where T: ReusableView {
         register(T.self, forCellWithReuseIdentifier: T.identifier)
     }
@@ -23,6 +24,7 @@ extension UICollectionView {
     }
     
     // MARK: - Dequeue
+    
     func dequeueReusableCell<T: UICollectionViewCell>(for indexPath: IndexPath) -> T where T: ReusableView {
         guard let cell = dequeueReusableCell(withReuseIdentifier: T.identifier, for: indexPath) as? T else {
             fatalError("Could not dequeue cell with identifier: \(T.identifier)")

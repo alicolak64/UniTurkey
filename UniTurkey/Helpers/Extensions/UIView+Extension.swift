@@ -10,6 +10,7 @@ import UIKit
 extension UIView {
     
     // MARK: - Add Subviews
+    
     func addSubviews(_ views: [UIView]){
         views.forEach { view in
             self.addSubview(view)
@@ -21,6 +22,7 @@ extension UIView {
     }
     
     // MARK: - Add Constraints
+    
     func addConstraints(_ constraints: [NSLayoutConstraint]){
         NSLayoutConstraint.activate(constraints)
     }
@@ -30,6 +32,7 @@ extension UIView {
     }
     
     // MARK: - Add Border, Corner Radius, Shadow
+    
     func addBorder(width: CGFloat, color: UIColor){
         layer.borderWidth = width
         layer.borderColor = color.cgColor
