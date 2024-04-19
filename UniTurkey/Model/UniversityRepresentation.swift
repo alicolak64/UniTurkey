@@ -10,7 +10,9 @@ import Foundation
 class UniversityRepresentation: Codable {
     
     // MARK: Enums
+    
     enum DetailCategory {
+        // MARK: Cases
         case phone
         case fax
         case website
@@ -20,12 +22,15 @@ class UniversityRepresentation: Codable {
     }
     
     // MARK: - Structs
+    
     struct Detail {
+        // MARK: - Properties
         let category: DetailCategory
         let value: String
     }
     
     // MARK: - Properties
+    
     let name: String
     let phone: String
     let fax: String
@@ -41,6 +46,7 @@ class UniversityRepresentation: Codable {
     let index: Int
     
     // MARK: - Computed Properties
+    
     var details: [Detail] {
         return [
             Detail(category: .phone, value: phone),
@@ -54,6 +60,7 @@ class UniversityRepresentation: Codable {
     
     
     // MARK: - Init
+    
     init(university: UniversityResponse, provinceId: Int, index: Int) {
         
         self.provinceId = provinceId
@@ -70,6 +77,7 @@ class UniversityRepresentation: Codable {
     }
     
     // MARK: - Methods
+    
     func toggleExpand() {
         isExpanded.toggle()
     }
@@ -83,12 +91,14 @@ class UniversityRepresentation: Codable {
 class UniversityProvinceRepresentation: Codable {
     
     // MARK: - Properties
+    
     let id: Int
     let name: String
     var universities = [UniversityRepresentation]()
     var isExpanded: Bool = false
     
     // MARK: - Init
+    
     init(province: UniversityProvinceResponse) {
         self.id = province.id
         self.name = province.province.apiCapitaledTrimmed
@@ -97,6 +107,7 @@ class UniversityProvinceRepresentation: Codable {
     }
     
     // MARK: - Methods
+    
     func toggleExpand() {
         isExpanded.toggle()
     }
