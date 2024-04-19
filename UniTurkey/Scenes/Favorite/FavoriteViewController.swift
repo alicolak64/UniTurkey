@@ -138,7 +138,7 @@ final class FavoriteViewController: UIViewController {
     }
     
     private func configureNavigationBar() {
-        navigationController?.navigationBar.addBorder(width: 2, color: Constants.Color.borderColor)
+        navigationController?.navigationBar.addRoundedBorder(width: 2, color: Constants.Color.borderColor)
         navigationItem.titleView = navigationBarTitle
         navigationItem.leftBarButtonItem = navigationBarBackButton
         navigationItem.rightBarButtonItem = scaleDownNavigationBarItem
