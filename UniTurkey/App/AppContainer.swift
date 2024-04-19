@@ -14,6 +14,7 @@ let app = AppContainer()
 final class AppContainer {
     
     // MARK: - Properties
+    
     let router = AppRouter()
     let navigationController = UINavigationController()
     let universityService = UniversityManager.shared
