@@ -17,7 +17,6 @@ final class HomeViewController: UIViewController {
     
     private lazy var navigationBarTitle: UILabel = {
         let label = UILabel()
-        label.text = Constants.Text.homeTitleText
         label.font = Constants.Font.subtitleBoldFont
         label.textColor = Constants.Color.blackColor
         return label

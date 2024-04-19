@@ -76,7 +76,7 @@ final class FavoriteViewController: UIViewController {
     
     private lazy var errorLabel: UILabel = {
         let label = UILabel()
-        label.text = Constants.Text.noFavoriteText
+        label.text = Constants.Text.noFavorite
         label.font = Constants.Font.subtitleBoldFont
         label.textColor = Constants.Color.blackColor
         label.isHidden = true

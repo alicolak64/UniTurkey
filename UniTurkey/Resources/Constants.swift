@@ -38,21 +38,29 @@ enum Constants {
     // MARK: - Text Constant
     
     enum Text {
-        static let homeTitleText = "Universities"
-        static let favoritesTitleText = "My Favorites"
-        static let notAvaliableText = "Not Avaliable"
-        static let errorTitleText = "Oops! An Error Occurred"
-        static let noUniversityText = "No University"
-        static let noFavoriteText = "No Favorite"
-        static let timeoutErrorText = "The website is taking too long to load. Please try again."
+        static let homeTitle = NSLocalizedString("homeTitle", comment: "")
+        static let favoritesTitle = NSLocalizedString("homeTitle", comment: "")
+        static let notAvaliable = "Not Avaliable"
+        static let errorTitle = NSLocalizedString("errorTitle", comment: "")
+        static let noUniversity = NSLocalizedString("noUniversity", comment: "")
+        static let noFavorite = NSLocalizedString("noFavorite", comment: "")
+        static let timeoutError = NSLocalizedString("timeoutError", comment: "")
+        static let multipleUniversity = NSLocalizedString("multipleUniversity", comment: "")
+        static let singleUniversity = NSLocalizedString("singleUniversity", comment: "")
+        static let retry = NSLocalizedString("retry", comment: "")
+        static let warningNoDetailTitle = NSLocalizedString("warningNoDetailTitle", comment: "")
+        static let warningNoDetailMessage = NSLocalizedString("warningNoDetailMessage", comment: "")
+        static let warningNoUniversityTitle = NSLocalizedString("warningNoUniversityTitle", comment: "")
+        static let warningNoUniversityMessage = NSLocalizedString("warningNoUniversityMessage", comment: "")
     }
     
     // MARK: - Color Constant
     
     enum Color {
-        static let backgroundColor = UIColor(hex: "FFFFFF")
-        static let blackColor = UIColor(hex: "000000")
-        static let whiteColor = UIColor(hex: "FFFFFF")
+        // adapt background color to dark mode and light mode
+        static let backgroundColor = UIColor.dynamicColor(light: .white, dark: .black)
+        static let blackColor = UIColor.dynamicColor(light: .black, dark: .white)
+        static let whiteColor = UIColor.dynamicColor(light: .white, dark: .black)
         static let lightRedColor = UIColor(hex: "F44336")
         static let darkRedColor = UIColor(hex: "D62121")
         static let grayColor = UIColor(hex: "F5F5F5")

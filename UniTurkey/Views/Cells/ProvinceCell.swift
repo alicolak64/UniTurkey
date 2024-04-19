@@ -117,7 +117,7 @@ final class ProvinceCell: UITableViewCell,ProvinceCellProtocol {
     }
     
     private func updateUniveristyCountLabel (universityCount: Int) {
-        universityCountLabel.text = universityCount > 1 ? "\(universityCount) \(Constants.Text.multipleUniversityText)" : ( universityCount == 1 ? "\(universityCount) \(Constants.Text.singleUniversityText)" : Constants.Text.noUniversityText)
+        universityCountLabel.text = universityCount > 1 ? "\(universityCount) \(Constants.Text.multipleUniversity)" : ( universityCount == 1 ? "\(universityCount) \(Constants.Text.singleUniversity)" : Constants.Text.noUniversity)
     }
     
 }

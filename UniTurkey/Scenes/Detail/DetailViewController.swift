@@ -29,7 +29,7 @@ extension WebViewError: LocalizedError {
         case .webKitError(let error):
             return error.localizedDescription
         case .timeoutError:
-            return Constants.Text.timeoutErrorText
+            return Constants.Text.timeoutError
         }
     }
 }

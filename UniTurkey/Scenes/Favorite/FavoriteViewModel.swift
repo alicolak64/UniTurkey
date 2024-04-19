@@ -70,7 +70,7 @@ extension FavoriteViewModel: FavoriteViewModelProtocol {
     // MARK: - Methods
     
     func fetchTitle() {
-        notify(.updateTitle(Constants.Text.favoritesTitleText))
+        notify(.updateTitle(Constants.Text.favoritesTitle))
     }
     
     func fetchUniversities() {
@@ -135,7 +135,7 @@ extension FavoriteViewModel: FavoriteViewModelProtocol {
     private func toogleExpand(at indexPath: IndexPath) {
         guard let university = universities[safe: indexPath.row] else { return }
         guard !university.details.isEmpty else {
-            notify(.showAlert(AlertMessage(title: Constants.Text.warningNoDetailTitleText, message: Constants.Text.warningNoDetailMessageText)))
+            notify(.showAlert(AlertMessage(title: Constants.Text.warningNoDetailTitle, message: Constants.Text.warningNoDetailMessage)))
             return
         }
         university.toggleExpand()

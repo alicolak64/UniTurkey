@@ -55,24 +55,24 @@ extension String {
     
     var apiCapitaledTrimmed: String {
         return self == Constants.Network.notAvaliableAPIText
-        ? Constants.Text.notAvaliableText
+        ? Constants.Text.notAvaliable
         : self.englishToTurkish.capitalCased.trimmed
     }
     
     var apiLowercasedTrimmed: String {
         return self == Constants.Network.notAvaliableAPIText
-        ? Constants.Text.notAvaliableText
+        ? Constants.Text.notAvaliable
         : self.lowercased().trimmed
     }
     
     var apiTrimmed: String {
         return self == Constants.Network.notAvaliableAPIText
-        ? Constants.Text.notAvaliableText
+        ? Constants.Text.notAvaliable
         : self.trimmed
     }
     
     var isNotAvaliable: Bool {
-        return self == Constants.Text.notAvaliableText
+        return self == Constants.Text.notAvaliable
     }
 }
 

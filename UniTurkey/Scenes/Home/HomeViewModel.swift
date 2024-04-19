@@ -97,7 +97,7 @@ extension HomeViewModel: HomeViewModelProtocol {
     // MARK: - Methods
     
     func fetchTitle() {
-        notify(.updateTitle(Constants.Text.homeTitleText))
+        notify(.updateTitle(Constants.Text.homeTitle))
     }
     
     func isProvincesEmpty() -> Bool {
@@ -217,7 +217,7 @@ extension HomeViewModel: HomeViewModelProtocol {
         guard let province = provinces[safe: index] else { return }
         
         guard !province.universities.isEmpty else {
-            notify(.showAlert(AlertMessage(title: Constants.Text.warningNoUniversityTitleText, message: Constants.Text.warningNoUniversityMessageText)))
+            notify(.showAlert(AlertMessage(title: Constants.Text.warningNoUniversityTitle, message: Constants.Text.warningNoUniversityMessage)))
             return
         }
         
@@ -229,7 +229,7 @@ extension HomeViewModel: HomeViewModelProtocol {
         guard let university = provinces[safe: indexPath.section]?.universities[safe: indexPath.row - 1] else { return }
         
         guard !university.details.isEmpty else {
-            notify(.showAlert(AlertMessage(title: Constants.Text.warningNoDetailTitleText, message: Constants.Text.warningNoDetailMessageText)))
+            notify(.showAlert(AlertMessage(title: Constants.Text.warningNoDetailTitle, message: Constants.Text.warningNoDetailMessage)))
             return
         }
         
