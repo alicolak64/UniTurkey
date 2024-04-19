@@ -10,6 +10,7 @@ import UIKit
 enum Constants {
     
     // MARK: - UI Constants
+    
     enum UI {
         static let infinityScrollPercentage = 0.9
         static let infinityScrollLateLimitSecond = 1.0
@@ -18,6 +19,7 @@ enum Constants {
     }
     
     // MARK: - Layout Constant
+    
     enum Layout {
         static let provinceCellMargins = UIEdgeInsets(top: 0, left: 0, bottom: 10, right: 0)
         static let universityCellMargins = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 0)
@@ -25,6 +27,7 @@ enum Constants {
     }
     
     // MARK: - Network Constant
+    
     enum Network {
         static let baseURL = "https://storage.googleapis.com/invio-com/usg-challenge/universities-at-turkey/"
         static let page = "page-"
@@ -33,6 +36,7 @@ enum Constants {
     }
     
     // MARK: - Text Constant
+    
     enum Text {
         static let homeTitleText = "Universities"
         static let favoritesTitleText = "My Favorites"
@@ -40,9 +44,11 @@ enum Constants {
         static let errorTitleText = "Oops! An Error Occurred"
         static let noUniversityText = "No University"
         static let noFavoriteText = "No Favorite"
+        static let timeoutErrorText = "The website is taking too long to load. Please try again."
     }
     
     // MARK: - Color Constant
+    
     enum Color {
         static let backgroundColor = UIColor(hex: "FFFFFF")
         static let blackColor = UIColor(hex: "000000")
@@ -54,6 +60,7 @@ enum Constants {
     }
     
     // MARK: - Font Constant
+    
     enum Font {
         static let titleBoldFont = UIFont.systemFont(ofSize: 32, weight: .bold)
         static let titleFont = UIFont.systemFont(ofSize: 32, weight: .regular)
@@ -70,6 +77,7 @@ enum Constants {
     }
     
     // MARK: - Icon Constant
+    
     enum Icon {
         private static let largeConfig = UIImage.SymbolConfiguration(pointSize: 30)
         static let arrowBackIcon = UIImage(systemName: "arrowshape.backward.fill")
@@ -83,6 +91,8 @@ enum Constants {
         static let addressIcon = UIImage(systemName: "location.fill")
         static let emailIcon = UIImage(systemName: "envelope.fill")
         static let rectorIcon = UIImage(systemName: "person.fill")
+        static let refreshIcon = UIImage(systemName: "arrow.clockwise")
+        static let shareIcon = UIImage(systemName: "square.and.arrow.up")
         static let errorIcon = UIImage(named: "error")
     }
     
