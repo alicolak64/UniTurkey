@@ -118,11 +118,11 @@ final class DetailCell: UITableViewCell, DetailCellProtocol {
     func configure(with model: Model) {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
-            setIcon(with: model.category)
-            adjustFontSize(for: model.value)
+            self.setIcon(with: model.category)
+            self.adjustFontSize(for: model.value)
             
-            detailLabel.text = model.value
-            detailIcon.tintColor = Constants.Color.blackColor
+            self.detailLabel.text = model.value
+            self.detailIcon.tintColor = Constants.Color.blackColor
         }
     }
     

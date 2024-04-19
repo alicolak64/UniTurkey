@@ -19,7 +19,7 @@ extension UIViewController {
             guard let self = self else { return }
             let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: actionTitle, style: .default, handler: nil))
-            present(alert, animated: true, completion: nil)
+            self.present(alert, animated: true, completion: nil)
         }
     }
     

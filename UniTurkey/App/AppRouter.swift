@@ -31,7 +31,7 @@ final class AppRouter {
             let homeViewController = HomeBuilder().build()
             let navigationController = app.navigationController
             navigationController.viewControllers = [homeViewController]
-            window.rootViewController = navigationController
+            self.window.rootViewController = navigationController
         }
         
     }

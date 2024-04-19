@@ -23,14 +23,17 @@ protocol HomeRouterProtocol {
 final class HomeRouter: HomeRouterProtocol {
     
     // MARK: - Dependency Properties
+    
     weak var navigationController: UINavigationController?
     
     // MARK: - Init
+    
     init(navigationController: UINavigationController) {
         self.navigationController = navigationController
     }
     
     // MARK: - Methods
+    
     func navigate(to route: HomeRoute) {
         guard let navigationController = navigationController else { return }
         switch route {

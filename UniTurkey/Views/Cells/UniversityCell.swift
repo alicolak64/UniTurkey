@@ -179,13 +179,13 @@ final class UniversityCell: UITableViewCell,UniversityCellProtocol {
         
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
-            universityNameLabel.text = model.name
-            updateFavoriteFeature(isFavorite: model.isFavorite)
+            self.universityNameLabel.text = model.name
+            self.updateFavoriteFeature(isFavorite: model.isFavorite)
             if model.details.isEmpty {
-                expandIcon.image = nil
-                hideDetails()
+                self.expandIcon.image = nil
+                self.hideDetails()
             } else {
-                updateExpansionFeature(isExpanded: model.isExpanded)
+                self.updateExpansionFeature(isExpanded: model.isExpanded)
             }
         }
         

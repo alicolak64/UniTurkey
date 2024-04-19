@@ -43,12 +43,12 @@ final class ErrorView: UIView, ErrorViewProtocol {
             case .error:
                 DispatchQueue.main.async { [weak self] in
                     guard let self = self else { return }
-                    isHidden = false
+                    self.isHidden = false
                 }
             case .noError:
                 DispatchQueue.main.async { [weak self] in
                     guard let self = self else { return }
-                    isHidden = true
+                    self.isHidden = true
                 }
             }
         }

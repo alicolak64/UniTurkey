@@ -29,12 +29,12 @@ final class LoadingView: UIView, LoadingViewProtocol {
             case .loading:
                 DispatchQueue.main.async { [weak self] in
                     guard let self = self else { return }
-                    activityIndicator.startAnimating()
+                    self.activityIndicator.startAnimating()
                 }
             case .loaded:
                 DispatchQueue.main.async { [weak self] in
                     guard let self = self else { return }
-                    activityIndicator.stopAnimating()
+                    self.activityIndicator.stopAnimating()
                 }
             }
         }
