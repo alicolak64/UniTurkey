@@ -13,11 +13,6 @@ final class HomeViewController: UIViewController {
     
     private let viewModel: HomeViewModel
     
-    // MARK: - Properties
-    
-    private var lastScrollTime: Date?
-    private var provinces = Array<UniversityProvinceRepresentation>()
-    
     // MARK: - UI Components
     
     private lazy var navigationBarTitle: UILabel = {
@@ -122,9 +117,7 @@ final class HomeViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        if errorView.isHidden{
-            viewModel.checkFavorites(with: provinces)
-        }
+        viewModel.checkFavorites()
     }
     
     override func viewDidLayoutSubviews() {
@@ -145,8 +138,8 @@ final class HomeViewController: UIViewController {
     
     private func tableViewSetup() {
         // MARK: - TableView Dependencies
-        provincesTableView.delegate = self
-        provincesTableView.dataSource = self
+        provincesTableView.delegate = viewModel
+        provincesTableView.dataSource = viewModel
         
         // MARK: - Register Cells
         provincesTableView.register(ProvinceCell.self)
@@ -199,24 +192,7 @@ final class HomeViewController: UIViewController {
     }
     
     @objc private func scaleDownButtonTapped() {
-        
-        let indexSetProvinces = provinces.enumerated().compactMap {
-            $0.element.isExpanded ? $0.offset : nil
-        }
-        
-        provinces.forEach { $0.isExpanded = false }
-        
-        let indexPathsUniversities = provinces.enumerated().compactMap { $0.element.universities.enumerated().compactMap {
-            $0.element.isExpanded ? IndexPath(row: $0.offset, section: $0.offset) : nil
-            }
-        }.flatMap { $0 }
-        
-        provinces.forEach { $0.universities.forEach { $0.isExpanded = false } }
-        
-        provincesTableView.reloadSections(IndexSet(indexSetProvinces), with: .fade)
-        provincesTableView.reloadRows(at: indexPathsUniversities, with: .fade)
-        
-        
+        viewModel.toggleAllExpanded()
     }
     
     @objc private func scrollTopButtonTapped() {
@@ -241,127 +217,6 @@ final class HomeViewController: UIViewController {
     
 }
 
-// MARK: - Error View Delegate
-
-extension HomeViewController: ErrorViewDelegate {
-    
-    func handleOutput(_ output: ErrorViewOutput) {
-        switch output {
-        case .retry:
-            viewModel.didTryAgain()
-        }
-    }
-    
-}
-
-
-// MARK: - TableView Delegate
-
-extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
-    
-    // MARK: - TableView DataSource
-    
-    func numberOfSections(in tableView: UITableView) -> Int {
-        provinces.count
-    }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        guard let province = provinces[safe: section] else { return 0 }
-        return province.isExpanded ? province.universities.count + 1 : 1
-    }
-    
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        guard let province = provinces[safe: indexPath.section] else { return UITableViewCell() }
-        
-        if indexPath.row == 0 {
-            let cell: ProvinceCell = tableView.dequeueReusableCell(for: indexPath)
-            cell.configure(with: province)
-            return cell
-        } else {
-            guard let university = province.universities[safe: indexPath.row - 1] else { return UITableViewCell() }
-            let cell: UniversityCell = tableView.dequeueReusableCell(for: indexPath)
-            cell.configure(with: university)
-            cell.delegate = self
-            return cell
-        }
-        
-    }
-    
-    // MARK: - TableView Delegate
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        provincesTableView.deselectRow(at: indexPath, animated: true)
-        guard let province = provinces[safe: indexPath.section] else { return }
-        if indexPath.row == 0 {
-            guard !province.universities.isEmpty else {
-                showAlert(title: "Warning! No University", message: "There is no university in this province.", actionTitle: "OK")
-                return
-            }
-            province.toggleExpand()
-            provincesTableView.reloadSections([indexPath.section], with: .fade)
-        } else {
-            guard let university = province.universities[safe: indexPath.row - 1] else { return }
-            guard !university.details.isEmpty else {
-                showAlert(title: "Warning! No Detail", message: "There is no detail for this university.", actionTitle: "OK")
-                return
-            }
-            university.toggleExpand()
-            provincesTableView.reloadRows(at: [indexPath], with: .fade)
-        }
-    }
-    
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if indexPath.row == 0 {
-            return 60
-        } else {
-            guard let province = provinces[safe: indexPath.section],
-                  let university = province.universities[safe: indexPath.row - 1]
-            else {
-                return 0
-            }
-            return CGFloat(
-                university.isExpanded && !university.details.isEmpty ?
-                           60 + (Constants.UI.detailCellHeight * university.details.count)
-                           : 60
-            )
-        }
-    }
-    
-    // MARK: - ScrollView Delegate
-    
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        
-        if scrollTopButton.isHidden && scrollView.contentOffset.y > 100  {
-            scrollTopButton.isHidden = false
-        } else if scrollView.contentOffset.y < 100 && !scrollTopButton.isHidden {
-            scrollTopButton.isHidden = true
-        }
-        
-        let contentHeight = scrollView.contentSize.height
-        let visibleHeight = scrollView.bounds.height
-        let scrollOffset = scrollView.contentOffset.y
-        
-        let scrollPercentage = (scrollOffset + visibleHeight) / contentHeight
-        
-        if scrollPercentage >= Constants.UI.infinityScrollPercentage && !provinces.isEmpty {
-            
-            let now = Date()
-            if let lastRequestTime = lastScrollTime, now.timeIntervalSince(lastRequestTime) < Constants.UI.infinityScrollLateLimitSecond {
-                return
-            }
-            
-            viewModel.fetchProvinces()
-            
-            self.lastScrollTime = now
-            
-        }
-        
-        
-    }
-    
-}
 
 // MARK: - ViewModel Delegate
 
@@ -372,19 +227,26 @@ extension HomeViewController : HomeViewModelDelegate {
             guard let self = self else { return }
             switch output {
             case .updateTitle(let title):
-                navigationBarTitle.text = title
-            case .updateProvinces(let provinces):
-                self.provinces = provinces
-                provincesTableView.isHidden = false
-                provincesTableView.reloadData()
+                self.navigationBarTitle.text = title
             case .updateLoading(let loading):
-                if provinces.isEmpty {
-                    loading ? startLoading() : stopLoading()
+                if self.viewModel.isProvincesEmpty() {
+                    loading ? self.startLoading() : self.stopLoading()
                 } else {
-                    loading ? paginationLoadingView.showLoading() : paginationLoadingView.hideLoading()
+                    loading ? self.paginationLoadingView.showLoading() : self.paginationLoadingView.hideLoading()
                 }
             case .updateError(let error):
-                showError(error)
+                self.showError(error)
+            case .reloadTableView:
+                self.provincesTableView.isHidden = false
+                self.provincesTableView.reloadData()
+            case .reloadSections(let section):
+                self.provincesTableView.reloadSections(section, with: .automatic)
+            case .reloadRows(let indexPaths):
+                self.provincesTableView.reloadRows(at: indexPaths, with: .automatic)
+            case .updateScrollToTopVisible(let visible):
+                self.scrollTopButton.isHidden = !visible
+            case .showAlert(let alertMessage):
+                self.showAlert(title: alertMessage.title, message: alertMessage.message, actionTitle: "OK")
             }
         }
     }
@@ -419,16 +281,21 @@ extension HomeViewController: UniversityCellDelegate {
     }
     
     
-    func didTapFavoriteButton(with university: UniversityRepresentation) {
-        guard
-            let university = provinces.first(where: { $0.id == university.provinceId })?.universities[safe: university.index],
-            let provinceIndex = provinces.firstIndex(where: { $0.id == university.provinceId })
-        else {
-            return
+    private func didTapFavoriteButton(with university: UniversityRepresentation) {
+        viewModel.toggleFavorite(with: university)
+    }
+    
+}
+
+// MARK: - Error View Delegate
+
+extension HomeViewController: ErrorViewDelegate {
+    
+    func handleOutput(_ output: ErrorViewOutput) {
+        switch output {
+        case .retry:
+            viewModel.didTryAgain()
         }
-        university.toggleFavorite()
-        provincesTableView.reloadRows(at: [IndexPath(row: university.index + 1, section: provinceIndex)], with: .fade)
-        viewModel.didTapFavoriteButton(with: university)
     }
     
 }

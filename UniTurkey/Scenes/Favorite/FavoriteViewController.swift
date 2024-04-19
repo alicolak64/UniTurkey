@@ -12,11 +12,7 @@ final class FavoriteViewController: UIViewController {
     // MARK: Dependency Properties
     
     private let viewModel: FavoriteViewModel
-    
-    // MARK: - Properties
-    
-    private var universities = Array<UniversityRepresentation>()
-    
+            
     // MARK: - UI Components
     
     private lazy var navigationBarBackButton: UIBarButtonItem = {
@@ -126,8 +122,8 @@ final class FavoriteViewController: UIViewController {
     
     private func tableViewSetup() {
         // MARK: - TableView Dependencies
-        universityTableView.delegate = self
-        universityTableView.dataSource = self
+        universityTableView.delegate = viewModel
+        universityTableView.dataSource = viewModel
         
         // MARK: - Register Cells
         universityTableView.register(UniversityCell.self)
@@ -170,9 +166,7 @@ final class FavoriteViewController: UIViewController {
     }
     
     @objc private func scaleDownButtonTapped() {
-        let indexSet = universities.enumerated().compactMap { $0.element.isExpanded ? $0.offset : nil }
-        universities.forEach { $0.isExpanded = false }
-        universityTableView.reloadRows(at: indexSet.map { IndexPath(row: $0, section: 0) }, with: .fade)
+        viewModel.toggleAllExpanded()
     }
     
     @objc private func scrollTopButtonTapped() {
@@ -184,93 +178,45 @@ final class FavoriteViewController: UIViewController {
     private func showEmptyState() {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
-            errorLabel.isHidden = false
-            universityTableView.isHidden = true
+            self.errorLabel.isHidden = false
+            self.universityTableView.isHidden = true
         }
     }
     
     private func hideEmptyState() {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
-            errorLabel.isHidden = true
-            universityTableView.isHidden = false
+            self.errorLabel.isHidden = true
+            self.universityTableView.isHidden = false
         }
     }
     
 }
-
-// MARK: - UITableViewDelegate, UITableViewDataSource
-
-extension FavoriteViewController: UITableViewDelegate, UITableViewDataSource{
-    
-    // MARK: - TableView DataSource
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return universities.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let university = universities[safe: indexPath.row] else { return UITableViewCell() }
-        let cell: UniversityCell = tableView.dequeueReusableCell(for: indexPath)
-        cell.configure(with: university)
-        cell.delegate = self
-        return cell
-    }
-    
-    // MARK: - TableView Delegate
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        universityTableView.deselectRow(at: indexPath, animated: true)
-        guard let university = universities[safe: indexPath.row] else { return }
-        guard !university.details.isEmpty else {
-            showAlert(title: "Warning! No Detail", message: "There is no detail for this university.", actionTitle: "OK")
-            return
-        }
-        university.toggleExpand()
-        universityTableView.reloadRows(at: [indexPath], with: .fade)
-    }
-    
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        guard let university = universities[safe: indexPath.row] else { return 0 }
-        return CGFloat(
-            university.isExpanded && !university.details.isEmpty
-            ? Constants.UI.nonExpandCellHeight + (Constants.UI.detailCellHeight * university.details.count)
-            : Constants.UI.nonExpandCellHeight
-        )
-
-    }
-    
-    // MARK: - ScrollView Delegate
-    
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        
-        if scrollTopButton.isHidden && scrollView.contentOffset.y > 100  {
-            scrollTopButton.isHidden = false
-        } else if scrollView.contentOffset.y < 100 && !scrollTopButton.isHidden {
-            scrollTopButton.isHidden = true
-        }
-        
-    }
-    
-}
-
-// MARK: - Favorite View Model Delegate
 
 extension FavoriteViewController: FavoriteViewModelDelegate {
     
     func handleOutput(_ output: FavoriteViewModelOutput) {
-        switch output {
-        case .updateTitle(let title):
-            navigationBarTitle.text = title
-            navigationBarTitle.adjustsFontSizeToFitWidth = true
-        case .updateUniversity(let universities):
-            self.universities = universities
-            DispatchQueue.main.async { [weak self] in
-                guard let self = self else { return }
-                universities.isEmpty ? showEmptyState() : hideEmptyState()
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            switch output {
+            case .updateTitle(let title):
+                self.navigationBarTitle.text = title
+            case .updateEmptyState(let isEmptyFavorite):
+                isEmptyFavorite ? self.showEmptyState() : self.hideEmptyState()
+            case .reloadTableView:
+                self.universityTableView.reloadData()
+            case .reloadRows(let indexPaths):
+                self.universityTableView.reloadRows(at: indexPaths, with: .automatic)
+            case .deleteRows(let indexPaths):
+                self.universityTableView.deleteRows(at: indexPaths, with: .left)
+            case .updateScrollToTopVisible(let visible):
+                self.scrollTopButton.isHidden = !visible
+            case .showAlert(let alertMessage):
+                self.showAlert(title: alertMessage.title, message: alertMessage.message, actionTitle: "OK")
             }
         }
     }
+    
 }
 
 // MARK: - University Cell Delegate
@@ -302,14 +248,6 @@ extension FavoriteViewController: UniversityCellDelegate{
     }
     
     private func didTapFavoriteButton(with university: UniversityRepresentation) {
-        guard
-            let universityIndex = universities.firstIndex(where: { $0.provinceId == university.provinceId && $0.index == university.index }),
-            let university = universities[safe: universityIndex]
-        else {
-            return
-        }
-        universities.remove(at: universityIndex)
-        universityTableView.deleteRows(at: [IndexPath(row: universityIndex, section: 0)], with: .left)
         viewModel.removeFavorite(with: university)
     }
     

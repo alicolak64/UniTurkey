@@ -353,8 +353,8 @@
 		E6A673302BC5FE8900B96352 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
-				E696C0842BCE03FB00CA91A3 /* DetailCell.swift */,
 				E6D642042BC92655000F6FF2 /* ProvinceCell.swift */,
+				E696C0842BCE03FB00CA91A3 /* DetailCell.swift */,
 				E6E827052BC9F3AB00FEDFC5 /* UniversityCell.swift */,
 			);
 			path = Cells;
