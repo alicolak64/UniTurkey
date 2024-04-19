@@ -7,23 +7,41 @@
 
 import UIKit
 
-protocol DetailCellProtocol: ReusableView {
-    
+enum DetailCellOutput {
+    // MARK: - Cases
+    case didShareButton(String)
 }
 
-final class DetailCell: UITableViewCell, DetailCellProtocol{
+protocol DetailCellDelegate: AnyObject {
+    // MARK: - Methods
+    func handleOutput(_ output: DetailCellOutput)
+}
+
+protocol DetailCellProtocol: ReusableView {
+    // MARK: - Dependency Properties
+    var delegate: DetailCellDelegate? { get set }
+}
+
+final class DetailCell: UITableViewCell, DetailCellProtocol {
+    
     // MARK: - Typealias
+    
     typealias Model = UniversityRepresentation.Detail
     
+    // MARK: - Dependency Properties
+    
+    weak var delegate: DetailCellDelegate?
+    
     // MARK: - UI Components
-    private lazy var icon: UIImageView = {
+    
+    private lazy var detailIcon: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
         return imageView
     }()
     
-    private lazy var label: UILabel = {
+    private lazy var detailLabel: UILabel = {
         let label = UILabel()
         label.font = Constants.Font.bodyFont
         label.textColor = Constants.Color.blackColor
@@ -32,7 +50,17 @@ final class DetailCell: UITableViewCell, DetailCellProtocol{
         return label
     }()
     
+    private lazy var shareButton: UIButton = {
+        let button = UIButton()
+        button.setImage(Constants.Icon.shareIcon, for: .normal)
+        button.tintColor = Constants.Color.blackColor
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(shareButtonTapped), for: .touchUpInside)
+        return button
+    }()
+    
     // MARK: - Initializers
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
@@ -44,6 +72,7 @@ final class DetailCell: UITableViewCell, DetailCellProtocol{
     }
     
     // MARK: Lifecycle
+    
     override func layoutSubviews() {
         super.layoutSubviews()
         contentView.frame = contentView.frame.inset(by: Constants.Layout.detailCellMargins)
@@ -52,76 +81,95 @@ final class DetailCell: UITableViewCell, DetailCellProtocol{
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        icon.image = nil
-        label.text = nil
+        detailIcon.image = nil
+        detailLabel.text = nil
     }
     
     // MARK: - Layout
+    
     private func setupUI() {
         backgroundColor = Constants.Color.whiteColor
         selectionStyle = .none
         contentView.addRoundedBorder(width: 1, color: UIColor.lightGray)
-        contentView.addSubviews(icon, label)
+        contentView.addSubviews(detailIcon, detailLabel, shareButton)
     }
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
-            icon.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            icon.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
-            icon.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
-            icon.heightAnchor.constraint(equalToConstant: 24),
-            icon.widthAnchor.constraint(equalToConstant: 18),
+            detailIcon.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            detailIcon.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
+            detailIcon.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
+            detailIcon.heightAnchor.constraint(equalToConstant: 24),
+            detailIcon.widthAnchor.constraint(equalToConstant: 18),
             
-            label.centerYAnchor .constraint(equalTo: contentView.centerYAnchor),
-            label.leadingAnchor.constraint(equalTo: icon.trailingAnchor, constant: 15),
-            label.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
+            detailLabel.centerYAnchor .constraint(equalTo: contentView.centerYAnchor),
+            detailLabel.leadingAnchor.constraint(equalTo: detailIcon.trailingAnchor, constant: 15),
+            detailLabel.trailingAnchor.constraint(equalTo: shareButton.leadingAnchor, constant: -8),
+            
+            shareButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
+            shareButton.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            shareButton.widthAnchor.constraint(equalToConstant: 24),
+            shareButton.heightAnchor.constraint(equalToConstant: 24),
         ])
     }
     
     // MARK: - Configure
+    
     func configure(with model: Model) {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
-            self.setIcon(with: model.category)
-            self.adjustFontSize(for: model.value)
-
-            self.label.text = model.value
-            self.icon.tintColor = Constants.Color.blackColor
+            setIcon(with: model.category)
+            adjustFontSize(for: model.value)
+            
+            detailLabel.text = model.value
+            detailIcon.tintColor = Constants.Color.blackColor
         }
     }
     
+    // MARK: - Actions
+    
+    @objc private func shareButtonTapped() {
+        guard let text = detailLabel.text else { return }
+        notify(.didShareButton(text))
+    }
+    
     // MARK: Helpers
+    
     private func setIcon(with category: UniversityRepresentation.DetailCategory) {
         switch category {
         case .phone:
-            icon.image = Constants.Icon.phoneIcon
+            detailIcon.image = Constants.Icon.phoneIcon
         case .fax:
-            icon.image = Constants.Icon.faxIcon
+            detailIcon.image = Constants.Icon.faxIcon
         case .website:
-            icon.image = Constants.Icon.websiteIcon
+            detailIcon.image = Constants.Icon.websiteIcon
         case .email:
-            icon.image = Constants.Icon.emailIcon
+            detailIcon.image = Constants.Icon.emailIcon
         case .address:
-            icon.image = Constants.Icon.addressIcon
+            detailIcon.image = Constants.Icon.addressIcon
         case .rector:
-            icon.image = Constants.Icon.rectorIcon
+            detailIcon.image = Constants.Icon.rectorIcon
         }
     }
     
     private func adjustFontSize(for text: String) {
-        if text.count < 40 {
-            label.font = Constants.Font.bodyFont
+        if text.count < 35 {
+            detailLabel.font = Constants.Font.bodyFont
             return
         }
         let baseFontSize = Constants.Font.bodyFont.pointSize
-        let targetWidth = contentView.frame.width - icon.frame.width - 16
+        let targetWidth = contentView.frame.width - detailIcon.frame.width - 16
         let estimatedSize = text.boundingRect(with: CGSize(width: targetWidth, height: CGFloat.greatestFiniteMagnitude), options: [.usesLineFragmentOrigin], attributes: [.font: Constants.Font.bodyFont], context: nil).size
-
+        
         if estimatedSize.height > contentView.frame.height {
             let scalingFactor = contentView.frame.height / estimatedSize.height
             let newFontSize = baseFontSize * scalingFactor
-            label.font = Constants.Font.bodyFont.withSize(newFontSize)
+            detailLabel.font = Constants.Font.bodyFont.withSize(newFontSize)
         }
+    }
+    
+    private func notify(_ output: DetailCellOutput) {
+        delegate?.handleOutput(output)
     }
     
 }
