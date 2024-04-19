@@ -40,6 +40,6 @@ extension ServiceError: LocalizedError {
 
 protocol UniversityService {
     // MARK: - Methods
-    func fetchProvinces(page: Int, completion: @escaping (Result<UniversitiesPageResponse, ServiceError>) -> Void)
+    func fetchProvinces(page: Int, completion: @escaping (Result<ProvincePageResponse, ServiceError>) -> Void)
 }
 

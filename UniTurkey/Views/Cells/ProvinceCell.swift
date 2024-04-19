@@ -16,7 +16,7 @@ final class ProvinceCell: UITableViewCell,ProvinceCellProtocol {
     
     // MARK: - Typealias
     
-    typealias Model = UniversityProvinceRepresentation
+    typealias Model = ProvinceRepresentation
     
     // MARK: - UI Components
     
@@ -97,14 +97,13 @@ final class ProvinceCell: UITableViewCell,ProvinceCellProtocol {
     
     // MARK: Configure
     
-    func configure(with model: UniversityProvinceRepresentation) {
+    func configure(with model: ProvinceRepresentation) {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
-            provinceNameLabel.text = model.name
-            updateExpansionFeature(isExpanded: model.isExpanded, isEmptyArray: model.universities.isEmpty)
-            updateUniveristyCountLabel(universityCount: model.universities.count)
+            self.provinceNameLabel.text = model.name
+            self.updateExpansionFeature(isExpanded: model.isExpanded, isEmptyArray: model.universities.isEmpty)
+            self.updateUniveristyCountLabel(universityCount: model.universities.count)
         }
-        
     }
     
     // MARK: - Update UI

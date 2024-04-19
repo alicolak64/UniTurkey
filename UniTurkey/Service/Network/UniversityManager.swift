@@ -19,7 +19,7 @@ final class UniversityManager: UniversityService {
     
     // MARK: - Methods
     
-    func fetchProvinces(page: Int, completion: @escaping (Result<UniversitiesPageResponse, ServiceError>) -> Void) {
+    func fetchProvinces(page: Int, completion: @escaping (Result<ProvincePageResponse, ServiceError>) -> Void) {
         
         guard let url = URL(string: "\(Constants.Network.baseURL)\(Constants.Network.page)\(page)\(Constants.Network.json)") else {
             completion(.failure(.invalidURLError))
@@ -39,7 +39,7 @@ final class UniversityManager: UniversityService {
             }
             
             do {
-                let universities = try JSONDecoder().decode(UniversitiesPageResponse.self, from: data)
+                let universities = try JSONDecoder().decode(ProvincePageResponse.self, from: data)
                 completion(.success(universities))
             } catch {
                 completion(.failure(.decodingError))

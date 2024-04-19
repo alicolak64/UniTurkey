@@ -7,7 +7,7 @@
 
 import Foundation
 
-class UniversityRepresentation: Codable {
+class UniversityRepresentation: Codable, Equatable {
     
     // MARK: Enums
     
@@ -86,9 +86,13 @@ class UniversityRepresentation: Codable {
         isFavorite.toggle()
     }
     
+    static func == (lhs: UniversityRepresentation, rhs: UniversityRepresentation) -> Bool {
+        return lhs.name == rhs.name
+    }
+    
 }
 
-class UniversityProvinceRepresentation: Codable {
+class ProvinceRepresentation: Codable {
     
     // MARK: - Properties
     
@@ -99,7 +103,7 @@ class UniversityProvinceRepresentation: Codable {
     
     // MARK: - Init
     
-    init(province: UniversityProvinceResponse) {
+    init(province: ProvinceResponse) {
         self.id = province.id
         self.name = province.province.apiCapitaledTrimmed
         self.universities = province.universities.enumerated().map { UniversityRepresentation(university: $0.element, provinceId: id, index: $0.offset)

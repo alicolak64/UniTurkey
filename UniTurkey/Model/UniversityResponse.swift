@@ -34,7 +34,7 @@ struct UniversityResponse: Codable {
     
 }
 
-struct UniversityProvinceResponse: Codable {
+struct ProvinceResponse: Codable {
     
     // MARK: - Properties
     
@@ -53,7 +53,7 @@ struct UniversityProvinceResponse: Codable {
 }
 
 
-struct UniversitiesPageResponse: Codable {
+struct ProvincePageResponse: Codable {
     
     // MARK: - Properties
     
@@ -62,7 +62,7 @@ struct UniversitiesPageResponse: Codable {
     let totalProvinces: Int
     let provincePerPage: Int
     let pageSize: Int
-    let provinces: [UniversityProvinceResponse]
+    let provinces: [ProvinceResponse]
     
     // MARK: - Coding Keys
     
