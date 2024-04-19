@@ -6,19 +6,20 @@
 //
 
 import UIKit
-import CoreLocation
-import MapKit
 
 final class HomeViewController: UIViewController {
     
     // MARK: - Dependency Properties
+    
     private let viewModel: HomeViewModel
     
     // MARK: - Properties
+    
     private var lastScrollTime: Date?
     private var provinces = Array<UniversityProvinceRepresentation>()
     
     // MARK: - UI Components
+    
     private lazy var navigationBarTitle: UILabel = {
         let label = UILabel()
         label.text = Constants.Text.homeTitleText
@@ -27,12 +28,11 @@ final class HomeViewController: UIViewController {
         return label
     }()
     
-    private lazy var navigationBarRightItem: UIBarButtonItem = {
+    private lazy var favoriteNavigationBarItem: UIBarButtonItem = {
         
         let favoriteButton = UIButton(type: .custom)
         
         let heartIcon = Constants.Icon.heartIcon
-        let heartIconSize = CGSize(width: 24, height: 24)
         favoriteButton.setImage(heartIcon, for: .normal)
         favoriteButton.tintColor = Constants.Color.lightRedColor ?? .systemRed
         
@@ -41,6 +41,24 @@ final class HomeViewController: UIViewController {
         let favoriteButtonItem = UIBarButtonItem(customView: favoriteButton)
         
         return favoriteButtonItem
+        
+    }()
+    
+    private lazy var scaleDownNavigationBarItem: UIBarButtonItem = {
+        
+        let scaleDownButton = UIButton(type: .custom)
+        
+        let scaleDownIcon = Constants.Icon.scaleDownIcon?.resizeImage(targetSize: CGSize(width: 35, height: 35))
+        let tintedIcon = scaleDownIcon?.withRenderingMode(.alwaysTemplate)
+        scaleDownButton.setImage(tintedIcon, for: .normal)
+        scaleDownButton.tintColor = .systemBlue
+        
+        
+        scaleDownButton.addTarget(self, action: #selector(scaleDownButtonTapped), for: .touchUpInside)
+        
+        let scaleDownButtonItem = UIBarButtonItem(customView: scaleDownButton)
+        
+        return scaleDownButtonItem
         
     }()
     
@@ -73,7 +91,17 @@ final class HomeViewController: UIViewController {
         return tableView
     }()
     
+    private lazy var scrollTopButton: UIButton = {
+        let button = UIButton()
+        button.setImage(Constants.Icon.scroolTopIcon?.resizeImage(targetSize: CGSize(width: 50, height: 50)).withTintColor(.systemBlue), for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(scrollTopButtonTapped), for: .touchUpInside)
+        button.isHidden = true
+        return button
+    }()
+    
     // MARK: - Initializers
+    
     init(viewModel: HomeViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
@@ -84,6 +112,7 @@ final class HomeViewController: UIViewController {
     }
     
     // MARK: - Life Cycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         viewModel.delegate = self
@@ -104,6 +133,7 @@ final class HomeViewController: UIViewController {
     }
     
     // MARK: - Setup
+    
     private func initalSetup() {
         // fetch title
         viewModel.fetchTitle()
@@ -124,16 +154,18 @@ final class HomeViewController: UIViewController {
     }
     
     // MARK: - Layout
+    
     private func configureUI() {
         view.backgroundColor = Constants.Color.backgroundColor
         configureNavigationBar()
-        view.addSubviews([loadingView,errorView,provincesTableView,paginationLoadingView])
+        view.addSubviews([loadingView,errorView,provincesTableView,paginationLoadingView,scrollTopButton])
     }
     
     private func configureNavigationBar() {
         navigationController?.navigationBar.addBorder(width: 2, color: Constants.Color.borderColor)
         navigationItem.titleView = navigationBarTitle
-        navigationItem.rightBarButtonItem = navigationBarRightItem
+        navigationItem.leftBarButtonItem = scaleDownNavigationBarItem
+        navigationItem.rightBarButtonItem = favoriteNavigationBarItem
     }
     
     private func setConstraints() {
@@ -151,13 +183,48 @@ final class HomeViewController: UIViewController {
             provincesTableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -10),
             provincesTableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             
+            scrollTopButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
+            scrollTopButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
+            
             paginationLoadingView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             paginationLoadingView.bottomAnchor.constraint(equalTo: provincesTableView.bottomAnchor, constant: -20)
             
         ])
     }
     
+    // MARK: - Actions
+    
+    @objc private func favoriteButtonTapped() {
+        viewModel.navigate(to: .favorites)
+    }
+    
+    @objc private func scaleDownButtonTapped() {
+        
+        let indexSetProvinces = provinces.enumerated().compactMap {
+            $0.element.isExpanded ? $0.offset : nil
+        }
+        
+        provinces.forEach { $0.isExpanded = false }
+        
+        let indexPathsUniversities = provinces.enumerated().compactMap { $0.element.universities.enumerated().compactMap {
+            $0.element.isExpanded ? IndexPath(row: $0.offset, section: $0.offset) : nil
+            }
+        }.flatMap { $0 }
+        
+        provinces.forEach { $0.universities.forEach { $0.isExpanded = false } }
+        
+        provincesTableView.reloadSections(IndexSet(indexSetProvinces), with: .fade)
+        provincesTableView.reloadRows(at: indexPathsUniversities, with: .fade)
+        
+        
+    }
+    
+    @objc private func scrollTopButtonTapped() {
+        provincesTableView.setContentOffset(.zero, animated: true)
+    }
+    
     // MARK: - Helpers
+    
     private func startLoading() {
         provincesTableView.isHidden = true
         loadingView.showLoading()
@@ -174,16 +241,8 @@ final class HomeViewController: UIViewController {
     
 }
 
-// MARK: - Actions
-extension HomeViewController {
-    
-    @objc private func favoriteButtonTapped() {
-        viewModel.navigate(to: .favorites)
-    }
-    
-}
-
 // MARK: - Error View Delegate
+
 extension HomeViewController: ErrorViewDelegate {
     
     func handleOutput(_ output: ErrorViewOutput) {
@@ -197,9 +256,11 @@ extension HomeViewController: ErrorViewDelegate {
 
 
 // MARK: - TableView Delegate
+
 extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     
     // MARK: - TableView DataSource
+    
     func numberOfSections(in tableView: UITableView) -> Int {
         provinces.count
     }
@@ -229,6 +290,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     // MARK: - TableView Delegate
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         provincesTableView.deselectRow(at: indexPath, animated: true)
         guard let province = provinces[safe: indexPath.section] else { return }
@@ -268,7 +330,14 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     // MARK: - ScrollView Delegate
+    
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        
+        if scrollTopButton.isHidden && scrollView.contentOffset.y > 100  {
+            scrollTopButton.isHidden = false
+        } else if scrollView.contentOffset.y < 100 && !scrollTopButton.isHidden {
+            scrollTopButton.isHidden = true
+        }
         
         let contentHeight = scrollView.contentSize.height
         let visibleHeight = scrollView.bounds.height
@@ -295,6 +364,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
 }
 
 // MARK: - ViewModel Delegate
+
 extension HomeViewController : HomeViewModelDelegate {
     
     func handleOutput(_ output: HomeViewModelOutput) {
@@ -302,16 +372,16 @@ extension HomeViewController : HomeViewModelDelegate {
             guard let self = self else { return }
             switch output {
             case .updateTitle(let title):
-                self.navigationBarTitle.text = title
+                navigationBarTitle.text = title
             case .updateProvinces(let provinces):
                 self.provinces = provinces
-                self.provincesTableView.isHidden = false
-                self.provincesTableView.reloadData()
+                provincesTableView.isHidden = false
+                provincesTableView.reloadData()
             case .updateLoading(let loading):
-                if self.provinces.isEmpty {
-                    loading ? self.startLoading() : self.stopLoading()
+                if provinces.isEmpty {
+                    loading ? startLoading() : stopLoading()
                 } else {
-                    loading ? self.paginationLoadingView.showLoading() : self.paginationLoadingView.hideLoading()
+                    loading ? paginationLoadingView.showLoading() : paginationLoadingView.hideLoading()
                 }
             case .updateError(let error):
                 showError(error)
@@ -321,6 +391,7 @@ extension HomeViewController : HomeViewModelDelegate {
 }
 
 // MARK: - University Cell Delegate
+
 extension HomeViewController: UniversityCellDelegate {
     
     func handleOutput(_ output: UniversityCellOutput) {
@@ -336,12 +407,14 @@ extension HomeViewController: UniversityCellDelegate {
             case .email:
                 sendEmail(with: detail.value)
             case .address:
-                openMap(with: detail.value)
+                openMapAddress(with: detail.value)
             case .rector:
-                openSafari(with: detail.value)
+                searchTextSafari(with: detail.value)
             case .fax:
                 showAlert(title: "Fax", message: detail.value, actionTitle: "OK")
             }
+        case .didShareDetail(let text):
+            share(items: [text])
         }
     }
     
@@ -358,92 +431,6 @@ extension HomeViewController: UniversityCellDelegate {
         viewModel.didTapFavoriteButton(with: university)
     }
     
-    // MARK: - Helpers
-        
-    private func callPhone(with phone: String) {
-        guard let phoneURL = phone.phoneUrl else {
-            showAlert(title: "Warning! No Phone Number", message: "There is no phone number to call.", actionTitle: "OK")
-            return
-        }
-        guard UIApplication.shared.canOpenURL(phoneURL) else {
-            showAlert(title: "Warning! Invalid Phone Number", message: "The phone number is invalid.", actionTitle: "OK")
-            return
-        }
-        
-        if #available(iOS 10.0, *) {
-            UIApplication.shared.open(phoneURL, options: [:], completionHandler: nil)
-        } else {
-            UIApplication.shared.openURL(phoneURL)
-        }
-    
-    }
-    
-    private func sendEmail(with email: String) {
-        
-        guard let emailUrl = email.emailUrl else {
-            showAlert(title: "Warning! No Email Address", message: "There is no email address to send email.", actionTitle: "OK")
-            return
-        }
-        
-        guard UIApplication.shared.canOpenURL(emailUrl) else {
-            showAlert(title: "Warning! Invalid Email Address", message: "The email address is invalid.", actionTitle: "OK")
-            return
-        }
-        
-        if #available(iOS 10.0, *) {
-            UIApplication.shared.open(emailUrl, options: [:], completionHandler: nil)
-        } else {
-            UIApplication.shared.openURL(emailUrl)
-        }
-        
-    }
-    
-    private func openMap(with address: String) {
-        
-        let searchRequest = MKLocalSearch.Request()
-        searchRequest.naturalLanguageQuery = address
-        let search = MKLocalSearch(request: searchRequest)
-        search.start { [weak self] (response, error) in
-            guard let self = self else { return }
-            
-            if let error = error {
-                self.showAlert(title: "Error", message: "An error occurred while searching the address: \(error.localizedDescription)", actionTitle: "OK")
-                return
-            }
-            
-            guard let mapItems = response?.mapItems, let firstItem = mapItems.first else {
-                self.showAlert(title: "Warning! No Address Found", message: "The address could not be found.", actionTitle: "OK")
-                return
-            }
-            
-            let mapItem = MKMapItem(placemark: firstItem.placemark)
-            mapItem.name = address
-            mapItem.openInMaps(launchOptions: nil)
-            
-        }
-        
-        
-        
-    }
-    
-    private func openSafari(with text: String) {
-        
-        guard let url = text.safariUrl else {
-            showAlert(title: "Warning! Invalid URL", message: "The URL is invalid.", actionTitle: "OK")
-            return
-        }
-        
-        guard UIApplication.shared.canOpenURL(url) else {
-            showAlert(title: "Warning! Invalid URL", message: "The URL is invalid.", actionTitle: "OK")
-            return
-        }
-        
-        if #available(iOS 10.0, *) {
-            UIApplication.shared.open(url, options: [:], completionHandler: nil)
-        } else {
-            UIApplication.shared.openURL(url)
-        }
-    }
-    
 }
+
 
