@@ -53,7 +53,7 @@ final class DetailCell: UITableViewCell, DetailCellProtocol {
     private lazy var shareButton: UIButton = {
         let button = UIButton()
         button.setImage(Constants.Icon.share, for: .normal)
-        button.tintColor = Constants.Color.black
+        button.tintColor = Constants.Color.blue
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(shareButtonTapped), for: .touchUpInside)
         return button

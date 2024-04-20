@@ -45,7 +45,7 @@ final class FavoriteViewController: UIViewController {
         
         let scaleDownIcon = Constants.Icon.scaleDown
         scaleDownButton.setImage(scaleDownIcon, for: .normal)
-        scaleDownButton.tintColor = .systemBlue
+        scaleDownButton.tintColor = Constants.Color.blue
         
         scaleDownButton.addTarget(self, action: #selector(scaleDownButtonTapped), for: .touchUpInside)
         

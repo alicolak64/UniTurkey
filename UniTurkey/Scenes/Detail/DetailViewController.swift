@@ -95,7 +95,7 @@ final class DetailViewController: UIViewController {
         
         let refreshIcon = Constants.Icon.refresh
         refreshButton.setImage(refreshIcon, for: .normal)
-        refreshButton.tintColor = Constants.Color.black
+        refreshButton.tintColor = Constants.Color.orange
         
         refreshButton.addTarget(self, action: #selector(refreshButtonTapped), for: .touchUpInside)
         
@@ -111,7 +111,7 @@ final class DetailViewController: UIViewController {
         
         let shareIcon = Constants.Icon.share
         shareButton.setImage(shareIcon, for: .normal)
-        shareButton.tintColor = Constants.Color.black
+        shareButton.tintColor = Constants.Color.blue
         
         shareButton.addTarget(self, action: #selector(shareButtonTapped), for: .touchUpInside)
         
@@ -176,6 +176,8 @@ final class DetailViewController: UIViewController {
         let webConfiguration = WKWebViewConfiguration()
         webView = WKWebView(frame: .zero, configuration: webConfiguration)
         webView.navigationDelegate = self
+        webView.isOpaque = false
+        webView.backgroundColor = Constants.Color.background
         view = webView
     }
     
@@ -255,7 +257,7 @@ final class DetailViewController: UIViewController {
             errorView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 50),
             errorView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             errorView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            errorView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            errorView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
         
         errorView.showError(error: error)

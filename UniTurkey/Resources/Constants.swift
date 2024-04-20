@@ -65,7 +65,9 @@ enum Constants {
         static let lightRed = UIColor(hex: "F44336")
         static let darkRed = UIColor(hex: "D62121")
         static let gray = UIColor(hex: "F5F5F5")
+        static let orange = UIColor(hex: "FF6F02")
         static let border = UIColor.lightGray
+        static let blue = UIColor.systemBlue
     }
     
     // MARK: - Font Constant
