@@ -58,7 +58,7 @@ final class DetailViewController: UIViewController {
     }
     
     private var timeoutTimer: Timer?
-    private var timeoutInterval: TimeInterval = 30
+    private var timeoutInterval: TimeInterval = Constants.Network.timeoutInterval
     
     // MARK: UI Components
     
