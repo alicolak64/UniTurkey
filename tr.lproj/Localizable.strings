@@ -9,7 +9,7 @@
 "homeTitle" = "Üniversiteler";
 "favoritesTitle" = "Favorilerim";
 "errorTitle" = "Oops! Bir hata oluştu.";
-"noUniversity" = "Üniversite bulunamadı";
+"noUniversity" = "Üniversite yok";
 "noFavorite" = "Favori listeniz boş";
 "timeoutError" = "Web sitesine bağlanılamıyor. Lütfen internet bağlantınızı kontrol edin. Ya da url'yi kontrol edin.";
 "multipleUniversity" = "üniversite";
