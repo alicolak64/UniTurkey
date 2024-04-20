@@ -66,9 +66,9 @@ final class DetailViewController: UIViewController {
         
         let backButton = UIButton(type: .custom)
         
-        let backIcon = Constants.Icon.arrowBackIcon
+        let backIcon = Constants.Icon.back
         backButton.setImage(backIcon, for: .normal)
-        backButton.tintColor = Constants.Color.blackColor
+        backButton.tintColor = Constants.Color.black
         
         backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
         
@@ -80,8 +80,8 @@ final class DetailViewController: UIViewController {
     
     private lazy var navigationBarTitle: UILabel = {
         let label = UILabel()
-        label.font = Constants.Font.subtitleBoldFont
-        label.textColor = Constants.Color.blackColor
+        label.font = Constants.Font.subtitleBold
+        label.textColor = Constants.Color.black
         label.adjustsFontSizeToFitWidth = true
         label.minimumScaleFactor = 0.5
         label.sizeToFit()
@@ -93,9 +93,9 @@ final class DetailViewController: UIViewController {
         
         let refreshButton = UIButton(type: .custom)
         
-        let refreshIcon = Constants.Icon.refreshIcon
+        let refreshIcon = Constants.Icon.refresh
         refreshButton.setImage(refreshIcon, for: .normal)
-        refreshButton.tintColor = Constants.Color.blackColor
+        refreshButton.tintColor = Constants.Color.black
         
         refreshButton.addTarget(self, action: #selector(refreshButtonTapped), for: .touchUpInside)
         
@@ -109,9 +109,9 @@ final class DetailViewController: UIViewController {
         
         let shareButton = UIButton(type: .custom)
         
-        let shareIcon = Constants.Icon.shareIcon
+        let shareIcon = Constants.Icon.share
         shareButton.setImage(shareIcon, for: .normal)
-        shareButton.tintColor = Constants.Color.blackColor
+        shareButton.tintColor = Constants.Color.black
         
         shareButton.addTarget(self, action: #selector(shareButtonTapped), for: .touchUpInside)
         
@@ -182,13 +182,12 @@ final class DetailViewController: UIViewController {
     // MARK: - Layout
     
     private func configureUI() {
-        view.backgroundColor = Constants.Color.backgroundColor
+        view.backgroundColor = Constants.Color.background
         configureNavigationBar()
         view.addSubviews()
     }
     
     private func configureNavigationBar() {
-        navigationController?.navigationBar.addRoundedBorder(width: 2, color: Constants.Color.borderColor)
         navigationItem.titleView = navigationBarTitle
         navigationItem.leftBarButtonItem = navigationBarBackButton
         navigationItem.rightBarButtonItems = [navigationBarRefreshButton, navigationBarShareButton]

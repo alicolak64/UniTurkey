@@ -45,24 +45,24 @@ final class UniversityCell: UITableViewCell,UniversityCellProtocol {
     
     private lazy var expandIcon: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = Constants.Icon.plusIcon ?? UIImage()
-        imageView.tintColor = Constants.Color.blackColor
+        imageView.image = Constants.Icon.plus ?? UIImage()
+        imageView.tintColor = Constants.Color.black
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
     
     private lazy var universityNameLabel: UILabel = {
         let label = UILabel()
-        label.font = Constants.Font.bodyBoldFont
-        label.textColor = Constants.Color.blackColor
+        label.font = Constants.Font.bodyBold
+        label.textColor = Constants.Color.black
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
     private lazy var favoriteButton: UIButton = {
         let button = UIButton()
-        button.setImage(Constants.Icon.heartIcon, for: .normal)
-        button.tintColor = Constants.Color.darkRedColor
+        button.setImage(Constants.Icon.heart, for: .normal)
+        button.tintColor = Constants.Color.darkRed
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(favoriteButtonTapped), for: .touchUpInside)
         return button
@@ -71,7 +71,7 @@ final class UniversityCell: UITableViewCell,UniversityCellProtocol {
     private lazy var detailTableView: UITableView = {
         let tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.backgroundColor = Constants.Color.backgroundColor
+        tableView.backgroundColor = Constants.Color.background
         tableView.separatorStyle = .none
         tableView.showsVerticalScrollIndicator = false
         tableView.isScrollEnabled = false
@@ -106,7 +106,7 @@ final class UniversityCell: UITableViewCell,UniversityCellProtocol {
         super.prepareForReuse()
         university = nil
         universityNameLabel.text = nil
-        expandIcon.image = Constants.Icon.plusIcon
+        expandIcon.image = Constants.Icon.plus
         detailTableView.reloadData()
     }
     
@@ -131,10 +131,10 @@ final class UniversityCell: UITableViewCell,UniversityCellProtocol {
     // MARK: Layout
     
     private func setupUI() {
-        backgroundColor = Constants.Color.whiteColor
+        backgroundColor = Constants.Color.white
         selectionStyle = .none
         
-        titleView.addRoundedBorder(width: 1, color: Constants.Color.borderColor)
+        titleView.addRoundedBorder(width: 1, color: Constants.Color.border)
         titleView.addSubviews(expandIcon, universityNameLabel, favoriteButton)
         
         contentView.addSubviews(titleView, detailTableView)
@@ -196,13 +196,13 @@ final class UniversityCell: UITableViewCell,UniversityCellProtocol {
     // MARK: - Update UI
     
     private func updateExpansionFeature(isExpanded: Bool) {
-        expandIcon.image = isExpanded ? Constants.Icon.minusIcon : Constants.Icon.plusIcon
+        expandIcon.image = isExpanded ? Constants.Icon.minus : Constants.Icon.plus
         showDetails()
         detailTableView.reloadData()
     }
     
     private func updateFavoriteFeature(isFavorite: Bool) {
-        favoriteButton.setImage(isFavorite ? Constants.Icon.heartFillIcon : Constants.Icon.heartIcon, for: .normal)
+        favoriteButton.setImage(isFavorite ? Constants.Icon.heartFill : Constants.Icon.heart, for: .normal)
     }
     
     // MARK: - Actions

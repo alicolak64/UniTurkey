@@ -43,8 +43,8 @@ final class DetailCell: UITableViewCell, DetailCellProtocol {
     
     private lazy var detailLabel: UILabel = {
         let label = UILabel()
-        label.font = Constants.Font.bodyFont
-        label.textColor = Constants.Color.blackColor
+        label.font = Constants.Font.body
+        label.textColor = Constants.Color.black
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 0
         return label
@@ -52,8 +52,8 @@ final class DetailCell: UITableViewCell, DetailCellProtocol {
     
     private lazy var shareButton: UIButton = {
         let button = UIButton()
-        button.setImage(Constants.Icon.shareIcon, for: .normal)
-        button.tintColor = Constants.Color.blackColor
+        button.setImage(Constants.Icon.share, for: .normal)
+        button.tintColor = Constants.Color.black
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(shareButtonTapped), for: .touchUpInside)
         return button
@@ -88,7 +88,7 @@ final class DetailCell: UITableViewCell, DetailCellProtocol {
     // MARK: - Layout
     
     private func setupUI() {
-        backgroundColor = Constants.Color.whiteColor
+        backgroundColor = Constants.Color.white
         selectionStyle = .none
         contentView.addRoundedBorder(width: 1, color: UIColor.lightGray)
         contentView.addSubviews(detailIcon, detailLabel, shareButton)
@@ -122,7 +122,7 @@ final class DetailCell: UITableViewCell, DetailCellProtocol {
             self.adjustFontSize(for: model.value)
             
             self.detailLabel.text = model.value
-            self.detailIcon.tintColor = Constants.Color.blackColor
+            self.detailIcon.tintColor = Constants.Color.black
         }
     }
     
@@ -138,33 +138,33 @@ final class DetailCell: UITableViewCell, DetailCellProtocol {
     private func setIcon(with category: UniversityRepresentation.DetailCategory) {
         switch category {
         case .phone:
-            detailIcon.image = Constants.Icon.phoneIcon
+            detailIcon.image = Constants.Icon.phone
         case .fax:
-            detailIcon.image = Constants.Icon.faxIcon
+            detailIcon.image = Constants.Icon.fax
         case .website:
-            detailIcon.image = Constants.Icon.websiteIcon
+            detailIcon.image = Constants.Icon.website
         case .email:
-            detailIcon.image = Constants.Icon.emailIcon
+            detailIcon.image = Constants.Icon.email
         case .address:
-            detailIcon.image = Constants.Icon.addressIcon
+            detailIcon.image = Constants.Icon.address
         case .rector:
-            detailIcon.image = Constants.Icon.rectorIcon
+            detailIcon.image = Constants.Icon.rector
         }
     }
     
     private func adjustFontSize(for text: String) {
         if text.count < 35 {
-            detailLabel.font = Constants.Font.bodyFont
+            detailLabel.font = Constants.Font.body
             return
         }
-        let baseFontSize = Constants.Font.bodyFont.pointSize
+        let baseFontSize = Constants.Font.body.pointSize
         let targetWidth = contentView.frame.width - detailIcon.frame.width - 16
-        let estimatedSize = text.boundingRect(with: CGSize(width: targetWidth, height: CGFloat.greatestFiniteMagnitude), options: [.usesLineFragmentOrigin], attributes: [.font: Constants.Font.bodyFont], context: nil).size
+        let estimatedSize = text.boundingRect(with: CGSize(width: targetWidth, height: CGFloat.greatestFiniteMagnitude), options: [.usesLineFragmentOrigin], attributes: [.font: Constants.Font.body], context: nil).size
         
         if estimatedSize.height > contentView.frame.height {
             let scalingFactor = contentView.frame.height / estimatedSize.height
             let newFontSize = baseFontSize * scalingFactor
-            detailLabel.font = Constants.Font.bodyFont.withSize(newFontSize)
+            detailLabel.font = Constants.Font.body.withSize(newFontSize)
         }
     }
     

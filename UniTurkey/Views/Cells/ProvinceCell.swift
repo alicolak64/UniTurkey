@@ -22,24 +22,24 @@ final class ProvinceCell: UITableViewCell,ProvinceCellProtocol {
     
     private lazy var expandIcon: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = Constants.Icon.plusIcon ?? UIImage()
-        imageView.tintColor = Constants.Color.blackColor
+        imageView.image = Constants.Icon.plus ?? UIImage()
+        imageView.tintColor = Constants.Color.black
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
     
     private lazy var provinceNameLabel: UILabel = {
         let label = UILabel()
-        label.font = Constants.Font.subtitleFont
-        label.textColor = Constants.Color.blackColor
+        label.font = Constants.Font.subtitle
+        label.textColor = Constants.Color.black
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
     private lazy var universityCountLabel: UILabel = {
         let label = UILabel()
-        label.font = Constants.Font.captionFont
-        label.textColor = Constants.Color.blackColor
+        label.font = Constants.Font.caption
+        label.textColor = Constants.Color.black
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -74,7 +74,7 @@ final class ProvinceCell: UITableViewCell,ProvinceCellProtocol {
     // MARK: Layout
     
     private func setupUI() {
-        backgroundColor = Constants.Color.whiteColor
+        backgroundColor = Constants.Color.white
         selectionStyle = .none
         contentView.addRoundedBorder(width: 1, color: UIColor.lightGray)
         contentView.addSubviews(expandIcon, provinceNameLabel, universityCountLabel)
@@ -112,7 +112,7 @@ final class ProvinceCell: UITableViewCell,ProvinceCellProtocol {
         if isEmptyArray {
             expandIcon.image = nil
         } else {
-            expandIcon.image = isExpanded ? Constants.Icon.minusIcon : Constants.Icon.plusIcon
+            expandIcon.image = isExpanded ? Constants.Icon.minus : Constants.Icon.plus
         }
     }
     

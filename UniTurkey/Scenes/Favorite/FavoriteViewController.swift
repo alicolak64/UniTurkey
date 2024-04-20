@@ -19,9 +19,9 @@ final class FavoriteViewController: UIViewController {
         
         let backButton = UIButton(type: .custom)
         
-        let backIcon = Constants.Icon.arrowBackIcon
+        let backIcon = Constants.Icon.back
         backButton.setImage(backIcon, for: .normal)
-        backButton.tintColor = Constants.Color.blackColor
+        backButton.tintColor = Constants.Color.black
         
         backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
         
@@ -33,8 +33,9 @@ final class FavoriteViewController: UIViewController {
     
     private lazy var navigationBarTitle: UILabel = {
         let label = UILabel()
-        label.font = Constants.Font.subtitleBoldFont
-        label.textColor = Constants.Color.blackColor
+        label.font = Constants.Font.subtitleBold
+        label.textColor = Constants.Color.black
+        label.text = Constants.Text.favoritesTitle
         return label
     }()
     
@@ -42,11 +43,9 @@ final class FavoriteViewController: UIViewController {
         
         let scaleDownButton = UIButton(type: .custom)
         
-        let scaleDownIcon = Constants.Icon.scaleDownIcon?.resizeImage(targetSize: CGSize(width: 35, height: 35))
-        let tintedIcon = scaleDownIcon?.withRenderingMode(.alwaysTemplate)
-        scaleDownButton.setImage(tintedIcon, for: .normal)
+        let scaleDownIcon = Constants.Icon.scaleDown
+        scaleDownButton.setImage(scaleDownIcon, for: .normal)
         scaleDownButton.tintColor = .systemBlue
-        
         
         scaleDownButton.addTarget(self, action: #selector(scaleDownButtonTapped), for: .touchUpInside)
         
@@ -59,7 +58,7 @@ final class FavoriteViewController: UIViewController {
     private lazy var universityTableView: UITableView = {
         let tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.backgroundColor = Constants.Color.backgroundColor
+        tableView.backgroundColor = Constants.Color.background
         tableView.separatorStyle = .none
         tableView.showsVerticalScrollIndicator = false
         return tableView
@@ -67,7 +66,7 @@ final class FavoriteViewController: UIViewController {
     
     private lazy var scrollTopButton: UIButton = {
         let button = UIButton()
-        button.setImage(Constants.Icon.scroolTopIcon?.resizeImage(targetSize: CGSize(width: 50, height: 50)).withTintColor(.systemBlue), for: .normal)
+        button.setImage(Constants.Icon.scroolTop?.resizeImage(targetSize: CGSize(width: 50, height: 50)).withTintColor(.systemBlue), for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(scrollTopButtonTapped), for: .touchUpInside)
         button.isHidden = true
@@ -77,8 +76,8 @@ final class FavoriteViewController: UIViewController {
     private lazy var errorLabel: UILabel = {
         let label = UILabel()
         label.text = Constants.Text.noFavorite
-        label.font = Constants.Font.subtitleBoldFont
-        label.textColor = Constants.Color.blackColor
+        label.font = Constants.Font.subtitleBold
+        label.textColor = Constants.Color.black
         label.isHidden = true
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -132,13 +131,12 @@ final class FavoriteViewController: UIViewController {
     // MARK: - Layout
     
     private func configureUI() {
-        view.backgroundColor = Constants.Color.backgroundColor
+        view.backgroundColor = Constants.Color.background
         configureNavigationBar()
         view.addSubviews(universityTableView, errorLabel,scrollTopButton)
     }
     
     private func configureNavigationBar() {
-        navigationController?.navigationBar.addRoundedBorder(width: 2, color: Constants.Color.borderColor)
         navigationItem.titleView = navigationBarTitle
         navigationItem.leftBarButtonItem = navigationBarBackButton
         navigationItem.rightBarButtonItem = scaleDownNavigationBarItem

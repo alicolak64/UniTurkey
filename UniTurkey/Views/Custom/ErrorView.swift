@@ -58,7 +58,7 @@ final class ErrorView: UIView, ErrorViewProtocol {
     
     private lazy var errorImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = Constants.Icon.errorIcon
+        imageView.image = Constants.Icon.error
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -66,16 +66,16 @@ final class ErrorView: UIView, ErrorViewProtocol {
     private lazy var errorTitleLabel: UILabel = {
         let label = UILabel()
         label.text = Constants.Text.errorTitle
-        label.font = Constants.Font.subtitleBoldFont
-        label.textColor = Constants.Color.blackColor
+        label.font = Constants.Font.subtitleBold
+        label.textColor = Constants.Color.black
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
     private lazy var errorDescriptionLabel: UILabel = {
         let label = UILabel()
-        label.font = Constants.Font.bodyFont
-        label.textColor = Constants.Color.blackColor
+        label.font = Constants.Font.body
+        label.textColor = Constants.Color.black
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textAlignment = .center
         label.numberOfLines = 0
@@ -85,8 +85,8 @@ final class ErrorView: UIView, ErrorViewProtocol {
     private lazy var retryButton: UIButton = {
         let button = UIButton()
         button.setTitle(Constants.Text.retry, for: .normal)
-        button.setTitleColor(Constants.Color.whiteColor, for: .normal)
-        button.backgroundColor = Constants.Color.lightRedColor
+        button.setTitleColor(Constants.Color.white, for: .normal)
+        button.backgroundColor = Constants.Color.lightRed
         button.layer.cornerRadius = 8
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(tryAgainButtonTapped), for: .touchUpInside)

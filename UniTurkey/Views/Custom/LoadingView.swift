@@ -44,7 +44,7 @@ final class LoadingView: UIView, LoadingViewProtocol {
     
     private lazy var activityIndicator: UIActivityIndicatorView = {
         let indicator = UIActivityIndicatorView(style: .large)
-        indicator.color = Constants.Color.blackColor
+        indicator.color = Constants.Color.black
         indicator.hidesWhenStopped = true
         indicator.translatesAutoresizingMaskIntoConstraints = false
         return indicator
