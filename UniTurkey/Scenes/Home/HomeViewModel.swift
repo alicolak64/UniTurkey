@@ -168,20 +168,10 @@ extension HomeViewModel: HomeViewModelProtocol {
     
     func toggleFavorite(with university: UniversityRepresentation) {
         
-        guard
-            let university = provinces.first(where: { $0.id == university.provinceId })?.universities[safe: university.index],
-            let provinceIndex = provinces.firstIndex(where: { $0.id == university.provinceId }),
-            let universityIndex = provinces[provinceIndex].universities.firstIndex(where: { $0 == university })
-        else {
-            return
-        }
-        
-        let indexPath = IndexPath(row: universityIndex + 1, section: provinceIndex)
-        
+        guard let university = provinces.first(where: { $0.id == university.provinceId })?.universities[safe: university.index] else { return }
+                
         university.toggleFavorite()
-        
-        notify(.reloadRows([indexPath]))
-        
+                
         postFavorite(university)
         
     }
