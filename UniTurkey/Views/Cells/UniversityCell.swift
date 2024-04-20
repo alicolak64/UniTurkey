@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import QuartzCore
 
 enum UniversityCellOutput {
     // MARK: Cases
@@ -66,6 +67,13 @@ final class UniversityCell: UITableViewCell,UniversityCellProtocol {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(favoriteButtonTapped), for: .touchUpInside)
         return button
+    }()
+    
+    private lazy var favoriteButtonAnimation: CAKeyframeAnimation = {
+        let animation = CAKeyframeAnimation(keyPath: Constants.Animation.Favorite.keyPath)
+        animation.keyTimes = Constants.Animation.Favorite.keyTimes
+        animation.duration = Constants.Animation.Favorite.duration
+        return animation
     }()
     
     private lazy var detailTableView: UITableView = {
@@ -189,8 +197,6 @@ final class UniversityCell: UITableViewCell,UniversityCellProtocol {
             }
         }
         
-        
-        
     }
     
     // MARK: - Update UI
@@ -209,7 +215,9 @@ final class UniversityCell: UITableViewCell,UniversityCellProtocol {
     
     @objc private func favoriteButtonTapped() {
         guard let university = university else { return }
+        let isFavorite = university.isFavorite
         notify(output: .didSelectFavorite(university))
+        addFavoriteButtonAnimation(isFavorite: isFavorite)
     }
     
     // MARK: Helpers
@@ -220,6 +228,16 @@ final class UniversityCell: UITableViewCell,UniversityCellProtocol {
     
     private func showDetails() {
         detailTableView.isHidden = false
+    }
+    
+    private func addFavoriteButtonAnimation(isFavorite: Bool) {
+        favoriteButton.setImage(Constants.Icon.heartFill, for: .normal)
+        favoriteButtonAnimation.values = Constants.Animation.Favorite.getValues(isFavorite: isFavorite)
+        // finish animation run updateFavoriteFeature(isFavorite: !isFavorite)
+        favoriteButton.layer.add(favoriteButtonAnimation, forKey: nil)
+        DispatchQueue.main.asyncAfter(deadline: .now() + Constants.Animation.Favorite.duration) { [weak self] in
+            self?.updateFavoriteFeature(isFavorite: !isFavorite)
+        }
     }
     
     private func notify (output: UniversityCellOutput) {

@@ -33,6 +33,7 @@ enum Constants {
         static let page = "page-"
         static let json = ".json"
         static let notAvaliableAPIText = "-"
+        static let timeoutInterval = 30.0
     }
     
     // MARK: - Text Constant
@@ -104,6 +105,22 @@ enum Constants {
         static let scroolTop = UIImage(systemName: "chevron.up.square.fill")
         static let scaleDown = UIImage(systemName: "arrow.down.right.and.arrow.up.left.square", withConfiguration: largeConfig)
         static let error = UIImage(named: "error")
+    }
+    
+    // MARK: - Animation
+    enum Animation {
+        
+        // MARK: - Favorite
+        
+        enum Favorite {
+            static let keyPath = "transform.scale"
+            static let duration = 0.3
+            static let keyTimes = [0, 0.25, 0.75, 1.0].map { NSNumber(value: $0) }
+            static func getValues(isFavorite: Bool) -> [CGFloat] {
+                return isFavorite ? [1.0, 0.7, 0.4, 0.1] : [1.0, 1.5, 0.9, 1.0]
+            }
+        }
+        
     }
     
 }
