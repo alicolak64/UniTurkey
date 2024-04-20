@@ -1,0 +1,21 @@
+/*
+  Localizable.strings
+  UniTurkey
+
+  Created by Ali Çolak on 20.04.2024.
+  
+*/
+
+"homeTitle" = "Üniversiteler";
+"favoritesTitle" = "Favorilerim";
+"errorTitle" = "Oops! Bir hata oluştu.";
+"noUniversity" = "Üniversite bulunamadı";
+"noFavorite" = "Favori listeniz boş";
+"timeoutError" = "Web sitesine bağlanılamıyor. Lütfen internet bağlantınızı kontrol edin. Ya da url'yi kontrol edin.";
+"multipleUniversity" = "üniversite";
+"singleUniversity" = "üniversite";
+"retry" = "Tekrar Dene";
+"warningNoDetailTitle" = "Uyarı! Detay Yok";
+"warningNoDetailMessage" = "Bu üniversite için detay bilgi bulunamadı.";
+"warningNoUniversityTitle" = "Uyarı! Üniversite Yok";
+"warningNoUniversityMessage" = "Bu şehirde üniversite bulunamadı.";
