@@ -5,7 +5,7 @@
 //  Created by Ali Çolak on 5.04.2024.
 //
 
-import UIKit
+import Foundation
 
 enum HomeViewModelOutput {
     // MARK: Cases
@@ -17,11 +17,10 @@ enum HomeViewModelOutput {
     case reloadSections(IndexSet)
     case reloadRows([IndexPath])
     
-    case updateScrollToTopVisible(Bool)
     case showAlert(AlertMessage)
 }
 
-protocol HomeViewModelDelegate: AnyObject, UniversityCellDelegate {
+protocol HomeViewModelDelegate: AnyObject {
     // MARK: - Methods
     func handleOutput(_ output: HomeViewModelOutput)
 }
@@ -31,22 +30,34 @@ protocol HomeViewModelProtocol {
     // MARK: - Dependency Properties
     var delegate: HomeViewModelDelegate? { get set }
     
-    // MARK: - Methods
+    // MARK: - Main Methods
     
     func fetchTitle()
     func fetchProvinces()
-    func isProvincesEmpty() -> Bool
     func didTryAgain()
     func checkFavorites()
     
-    func navigate(to route: HomeRoute)
+    // MARK: - Data Source Methods
     
+    func numberOfProvinces() -> Int
+    func numberOfUniversities(at index: Int) -> Int
+    func province(at index: Int) -> ProvinceRepresentation?
+    func university(at indexPath: IndexPath) -> UniversityRepresentation?
+    func isExpanded(at index: Int) -> Bool
+    func isExpanded(at indexPath: IndexPath) -> Bool
+    func toogleExpand(at index: Int)
+    func toogleExpand(at indexPath: IndexPath)
+    func numberOfDetails(at indexPath: IndexPath) -> Int
     func toggleFavorite(with university: UniversityRepresentation)
     func toggleAllExpanded()
     
+    // MARK: - Navigation Methods
+    
+    func navigate(to route: HomeRoute)
+    
 }
 
-final class HomeViewModel: NSObject {
+final class HomeViewModel {
     
     // MARK: - Dependency Properties
     
@@ -61,7 +72,6 @@ final class HomeViewModel: NSObject {
     private var currentPage: Int = 0
     private var provinces = Array<ProvinceRepresentation>()
     private var favorites = Array<UniversityRepresentation>()
-    private var lastScrollTime: Date?
     
     private var loading: Bool = false {
         didSet {
@@ -82,7 +92,6 @@ final class HomeViewModel: NSObject {
         self.universityService = universityService
         self.favoriteService = favoriteService
         self.router = router
-        super.init()
         getFavorites()
     }
     
@@ -99,11 +108,6 @@ extension HomeViewModel: HomeViewModelProtocol {
     func fetchTitle() {
         notify(.updateTitle(Constants.Text.homeTitle))
     }
-    
-    func isProvincesEmpty() -> Bool {
-        return provinces.isEmpty
-    }
-    
     
     func fetchProvinces() {
         guard currentPage < totalPages && !loading else {  return }
@@ -166,6 +170,63 @@ extension HomeViewModel: HomeViewModelProtocol {
         fetchProvinces()
     }
     
+    func numberOfProvinces() -> Int {
+        provinces.count
+    }
+    
+    func numberOfUniversities(at index: Int) -> Int {
+        guard let province = provinces[safe: index] else { return 0 }
+        return province.universities.count
+    }
+    
+    func province(at index: Int) -> ProvinceRepresentation? {
+        provinces[safe: index]
+    }
+    
+    func university(at indexPath: IndexPath) -> UniversityRepresentation? {
+        guard let province = province(at: indexPath.section) else { return nil }
+        return province.universities[safe: indexPath.row]
+    }
+    
+    func numberOfDetails(at indexPath: IndexPath) -> Int {
+        guard let university = university(at: indexPath) else { return 0 }
+        return university.isExpanded ? university.details.count : 0
+    }
+    
+    func isExpanded(at index: Int) -> Bool {
+        guard let province = provinces[safe: index] else { return false }
+        return province.isExpanded
+    }
+    
+    func isExpanded(at indexPath: IndexPath) -> Bool {
+        guard let university = university(at: indexPath) else { return false }
+        return university.isExpanded
+    }
+    
+    func toogleExpand(at index: Int) {
+        guard let province = provinces[safe: index] else { return }
+        
+        guard !province.universities.isEmpty else {
+            notify(.showAlert(AlertMessage(title: Constants.Text.warningNoUniversityTitle, message: Constants.Text.warningNoUniversityMessage)))
+            return
+        }
+        
+        province.toggleExpand()
+        notify(.reloadSections(IndexSet(integer: index)))
+    }
+    
+    func toogleExpand(at indexPath: IndexPath) {
+        guard let university = provinces[safe: indexPath.section]?.universities[safe: indexPath.row] else { return }
+        
+        guard !university.details.isEmpty else {
+            notify(.showAlert(AlertMessage(title: Constants.Text.warningNoDetailTitle, message: Constants.Text.warningNoDetailMessage)))
+            return
+        }
+        
+        university.toggleExpand()
+        notify(.reloadRows([indexPath]))
+    }
+    
     func toggleFavorite(with university: UniversityRepresentation) {
         
         guard let university = provinces.first(where: { $0.id == university.provinceId })?.universities[safe: university.index] else { return }
@@ -177,7 +238,7 @@ extension HomeViewModel: HomeViewModelProtocol {
     }
     
     func toggleAllExpanded() {
-        // convert IndexSet
+
         let indexSetProvinces = provinces.enumerated().compactMap {
             $0.element.isExpanded ? $0.offset : nil
         }
@@ -203,30 +264,6 @@ extension HomeViewModel: HomeViewModelProtocol {
     
     // MARK: - Helpers
     
-    private func toogleExpand(at index: Int) {
-        guard let province = provinces[safe: index] else { return }
-        
-        guard !province.universities.isEmpty else {
-            notify(.showAlert(AlertMessage(title: Constants.Text.warningNoUniversityTitle, message: Constants.Text.warningNoUniversityMessage)))
-            return
-        }
-        
-        province.toggleExpand()
-        notify(.reloadSections(IndexSet(integer: index)))
-    }
-    
-    private func toogleExpand(at indexPath: IndexPath) {
-        guard let university = provinces[safe: indexPath.section]?.universities[safe: indexPath.row - 1] else { return }
-        
-        guard !university.details.isEmpty else {
-            notify(.showAlert(AlertMessage(title: Constants.Text.warningNoDetailTitle, message: Constants.Text.warningNoDetailMessage)))
-            return
-        }
-        
-        university.toggleExpand()
-        notify(.reloadRows([indexPath]))
-    }
-    
     private func getFavorites() {
         favorites = favoriteService.getFavorites()
     }
@@ -236,10 +273,10 @@ extension HomeViewModel: HomeViewModelProtocol {
         let favoriteUniversity = UniversityRepresentation(university: UniversityResponse(name: university.name, phone: university.phone, fax: university.fax, website: university.website, email: university.email, address: university.address, rector: university.rector), provinceId: university.provinceId, index: university.index)
         
         favoriteUniversity.toggleFavorite()
-        favoriteUniversity.isExpanded ? favoriteUniversity.toggleExpand() : nil
         
-        favoriteService.isFavorite(favoriteUniversity) ?             favoriteService.removeFavorite(with: favoriteUniversity) :
-        favoriteService.addFavorite(favoriteUniversity)
+        favoriteService.isFavorite(favoriteUniversity)
+        ? favoriteService.removeFavorite(with: favoriteUniversity)
+        : favoriteService.addFavorite(favoriteUniversity)
         
         getFavorites()
         
@@ -251,100 +288,9 @@ extension HomeViewModel: HomeViewModelProtocol {
     
 }
 
-// MARK: - TableView Delegate
-
-extension HomeViewModel: UITableViewDelegate, UITableViewDataSource {
-    
-    // MARK: - TableView DataSource
-    
-    func numberOfSections(in tableView: UITableView) -> Int {
-        provinces.count
-    }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        guard let province = provinces[safe: section] else { return 0 }
-        return province.isExpanded ? province.universities.count + 1 : 1
-    }
-    
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        guard let province = provinces[safe: indexPath.section] else { return UITableViewCell() }
-        
-        if indexPath.row == 0 {
-            let cell: ProvinceCell = tableView.dequeueReusableCell(for: indexPath)
-            cell.configure(with: province)
-            return cell
-        } else {
-            guard let university = province.universities[safe: indexPath.row - 1] else { return UITableViewCell() }
-            let cell: UniversityCell = tableView.dequeueReusableCell(for: indexPath)
-            cell.configure(with: university)
-            cell.delegate = delegate
-            return cell
-        }
-    }
-    
-    // MARK: - TableView Delegate
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
-        if indexPath.row == 0 {
-            toogleExpand(at: indexPath.section)
-        } else {
-            toogleExpand(at: indexPath)
-        }
-    }
-    
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if indexPath.row == 0 {
-            return CGFloat(Constants.UI.nonExpandCellHeight)
-        } else {
-            guard let province = provinces[safe: indexPath.section],
-                  let university = province.universities[safe: indexPath.row - 1]
-            else {
-                return 0
-            }
-            return CGFloat(
-                university.isExpanded && !university.details.isEmpty
-                ? Constants.UI.nonExpandCellHeight + (Constants.UI.detailCellHeight * university.details.count)
-                : Constants.UI.nonExpandCellHeight
-            )
-        }
-    }
-    
-    // MARK: - ScrollView Delegate
-    
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        
-        if scrollView.contentOffset.y > 100 {
-            notify(.updateScrollToTopVisible(true))
-        } else {
-            notify(.updateScrollToTopVisible(false))
-        }
-        
-        let contentHeight = scrollView.contentSize.height
-        let visibleHeight = scrollView.bounds.height
-        let scrollOffset = scrollView.contentOffset.y
-        
-        let scrollPercentage = (scrollOffset + visibleHeight) / contentHeight
-        
-        if scrollPercentage >= Constants.UI.infinityScrollPercentage && !provinces.isEmpty {
-            
-            let now = Date()
-            if let lastRequestTime = lastScrollTime, now.timeIntervalSince(lastRequestTime) < Constants.UI.infinityScrollLateLimitSecond {
-                return
-            }
-            
-            fetchProvinces()
-            
-            self.lastScrollTime = now
-            
-        }
-        
-    }
-}
-
 struct AlertMessage {
     let title: String
     let message: String
 }
+
+

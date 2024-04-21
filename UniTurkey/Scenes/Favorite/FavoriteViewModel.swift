@@ -5,7 +5,7 @@
 //  Created by Ali Çolak on 17.04.2024.
 //
 
-import UIKit
+import Foundation
 
 enum FavoriteViewModelOutput {
     // MARK: - Cases
@@ -16,11 +16,10 @@ enum FavoriteViewModelOutput {
     case reloadRows([IndexPath])
     case deleteRows([IndexPath])
     
-    case updateScrollToTopVisible(Bool)
     case showAlert(AlertMessage)
 }
 
-protocol FavoriteViewModelDelegate: AnyObject, UniversityCellDelegate {
+protocol FavoriteViewModelDelegate: AnyObject {
     // MARK: - Methods
     func handleOutput(_ output: FavoriteViewModelOutput)
 }
@@ -31,18 +30,28 @@ protocol FavoriteViewModelProtocol {
     
     var  delegate: FavoriteViewModelDelegate? { get set }
     
-    // MARK: - Methods
+    // MARK: - Main Methods
     
     func fetchTitle()
     func fetchUniversities()
+    
+    // MARK: - Data Source Methods
+    
+    func numberOfUniversities() -> Int
+    func university(at index: Int) -> UniversityRepresentation?
+    func numberOfDetails(at index: Int) -> Int
+    func isExpanded(at index: Int) -> Bool
+    func toogleExpand(at index: Int)
     func removeFavorite(with university: UniversityRepresentation)
     func toggleAllExpanded()
+    
+    // MARK: - Navigation Methods
     
     func navigate(to route: FavoriteRoute)
     
 }
 
-final class FavoriteViewModel: NSObject {
+final class FavoriteViewModel {
     
     // MARK: - Dependency Properties
     
@@ -84,6 +93,32 @@ extension FavoriteViewModel: FavoriteViewModelProtocol {
             notify(.updateEmptyState(false))
             notify(.reloadTableView)
         }
+    }
+    
+    func numberOfUniversities() -> Int {
+        universities.count
+    }
+    
+    func university(at index: Int) -> UniversityRepresentation? {
+        universities[safe: index]
+    }
+    
+    func numberOfDetails(at index: Int) -> Int {
+        universities[safe: index]?.details.count ?? 0
+    }
+    
+    func isExpanded(at index: Int) -> Bool {
+        universities[safe: index]?.isExpanded ?? false
+    }
+    
+    func toogleExpand(at index: Int) {
+        guard let university = universities[safe: index] else { return }
+        guard !university.details.isEmpty else {
+            notify(.showAlert(AlertMessage(title: Constants.Text.warningNoDetailTitle, message: Constants.Text.warningNoDetailMessage)))
+            return
+        }
+        university.toggleExpand()
+        notify(.reloadRows([IndexPath(row: index, section: 0)]))
     }
     
     func removeFavorite(with university: UniversityRepresentation) {
@@ -132,67 +167,13 @@ extension FavoriteViewModel: FavoriteViewModelProtocol {
         }
     }
     
-    private func toogleExpand(at indexPath: IndexPath) {
-        guard let university = universities[safe: indexPath.row] else { return }
-        guard !university.details.isEmpty else {
-            notify(.showAlert(AlertMessage(title: Constants.Text.warningNoDetailTitle, message: Constants.Text.warningNoDetailMessage)))
-            return
-        }
-        university.toggleExpand()
-        notify(.reloadRows([indexPath]))
-    }
+    
     
     private func notify(_ output: FavoriteViewModelOutput) {
         delegate?.handleOutput(output)
     }
-}
-
-// MARK: - UITableViewDelegate, UITableViewDataSource
-
-extension FavoriteViewModel: UITableViewDelegate, UITableViewDataSource{
-    
-    // MARK: - TableView DataSource
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return universities.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let university = universities[safe: indexPath.row] else { return UITableViewCell() }
-        let cell: UniversityCell = tableView.dequeueReusableCell(for: indexPath)
-        cell.configure(with: university)
-        cell.delegate = delegate
-        return cell
-    }
-    
-    // MARK: - TableView Delegate
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        toogleExpand(at: indexPath)
-    }
-    
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        guard let university = universities[safe: indexPath.row] else { return 0 }
-        return CGFloat(
-            university.isExpanded && !university.details.isEmpty
-            ? Constants.UI.nonExpandCellHeight + (Constants.UI.detailCellHeight * university.details.count)
-            : Constants.UI.nonExpandCellHeight
-        )
-        
-    }
-    
-    // MARK: - ScrollView Delegate
-    
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        
-        if scrollView.contentOffset.y > 100 {
-            notify(.updateScrollToTopVisible(true))
-        } else {
-            notify(.updateScrollToTopVisible(false))
-        }
-        
-    }
     
 }
+
 
 

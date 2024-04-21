@@ -121,8 +121,8 @@ final class FavoriteViewController: UIViewController {
     
     private func tableViewSetup() {
         // MARK: - TableView Dependencies
-        universityTableView.delegate = viewModel
-        universityTableView.dataSource = viewModel
+        universityTableView.delegate = self
+        universityTableView.dataSource = self
         
         // MARK: - Register Cells
         universityTableView.register(UniversityCell.self)
@@ -189,6 +189,10 @@ final class FavoriteViewController: UIViewController {
         }
     }
     
+    private func setScroolButtonVisible(_ isHidden: Bool) {
+        scrollTopButton.isHidden = isHidden
+    }
+    
 }
 
 extension FavoriteViewController: FavoriteViewModelDelegate {
@@ -207,8 +211,6 @@ extension FavoriteViewController: FavoriteViewModelDelegate {
                 self.universityTableView.reloadRows(at: indexPaths, with: .automatic)
             case .deleteRows(let indexPaths):
                 self.universityTableView.deleteRows(at: indexPaths, with: .left)
-            case .updateScrollToTopVisible(let visible):
-                self.scrollTopButton.isHidden = !visible
             case .showAlert(let alertMessage):
                 self.showAlert(title: alertMessage.title, message: alertMessage.message, actionTitle: "OK")
             }
@@ -251,3 +253,42 @@ extension FavoriteViewController: UniversityCellDelegate{
     
     
 }
+
+// MARK: - UITableViewDelegate, UITableViewDataSource
+
+extension FavoriteViewController: UITableViewDelegate, UITableViewDataSource{
+    
+    // MARK: - TableView DataSource
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        viewModel.numberOfUniversities()
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let university = viewModel.university(at: indexPath.row) else { return UITableViewCell() }
+        let cell: UniversityCell = tableView.dequeueReusableCell(for: indexPath)
+        cell.configure(with: university)
+        cell.delegate = self
+        return cell
+    }
+    
+    // MARK: - TableView Delegate
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        viewModel.toogleExpand(at: indexPath.row)
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        viewModel.isExpanded(at: indexPath.row)
+        ? CGFloat ( Constants.UI.nonExpandCellHeight + (Constants.UI.detailCellHeight * viewModel.numberOfDetails(at: indexPath.row)))
+        : CGFloat(Constants.UI.nonExpandCellHeight)
+    }
+    
+    // MARK: - ScrollView Delegate
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        scrollView.contentOffset.y > 100 ? setScroolButtonVisible(false) : setScroolButtonVisible(true)
+    }
+    
+}
+

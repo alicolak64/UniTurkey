@@ -94,6 +94,9 @@ final class HomeViewController: UIViewController {
         return button
     }()
     
+    // MARK: - Properties
+    private var lastScrollTime: Date?
+    
     // MARK: - Initializers
     
     init(viewModel: HomeViewModel) {
@@ -137,8 +140,8 @@ final class HomeViewController: UIViewController {
     
     private func tableViewSetup() {
         // MARK: - TableView Dependencies
-        provincesTableView.delegate = viewModel
-        provincesTableView.dataSource = viewModel
+        provincesTableView.delegate = self
+        provincesTableView.dataSource = self
         
         // MARK: - Register Cells
         provincesTableView.register(ProvinceCell.self)
@@ -213,6 +216,10 @@ final class HomeViewController: UIViewController {
         errorView.showError(error: error)
     }
     
+    private func setScroolButtonVisible(_ isHidden: Bool) {
+        scrollTopButton.isHidden = isHidden
+    }
+    
 }
 
 
@@ -227,7 +234,7 @@ extension HomeViewController : HomeViewModelDelegate {
             case .updateTitle(let title):
                 self.navigationBarTitle.text = title
             case .updateLoading(let loading):
-                if self.viewModel.isProvincesEmpty() {
+                if self.viewModel.numberOfProvinces() == 0 {
                     loading ? self.startLoading() : self.stopLoading()
                 } else {
                     loading ? self.paginationLoadingView.showLoading() : self.paginationLoadingView.hideLoading()
@@ -241,8 +248,6 @@ extension HomeViewController : HomeViewModelDelegate {
                 self.provincesTableView.reloadSections(section, with: .automatic)
             case .reloadRows(let indexPaths):
                 self.provincesTableView.reloadRows(at: indexPaths, with: .automatic)
-            case .updateScrollToTopVisible(let visible):
-                self.scrollTopButton.isHidden = !visible
             case .showAlert(let alertMessage):
                 self.showAlert(title: alertMessage.title, message: alertMessage.message, actionTitle: "OK")
             }
@@ -296,6 +301,87 @@ extension HomeViewController: ErrorViewDelegate {
         }
     }
     
+}
+
+// MARK: - TableView Delegate
+
+extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
+    
+    // MARK: - TableView DataSource
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        viewModel.numberOfProvinces()
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        viewModel.isExpanded(at: section)
+        ? tableView.numberOfRowsWithSection(numberOfRows: viewModel.numberOfUniversities(at: section))
+        : 1
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        if tableView.isSection(at: indexPath) {
+            guard let province = viewModel.province(at: indexPath.section) else { return UITableViewCell() }
+            let cell: ProvinceCell = tableView.dequeueReusableCell(for: indexPath)
+            cell.configure(with: province)
+            return cell
+        } else {
+            guard let university = viewModel.university(at: tableView.indexWithoutSection(from: indexPath)) else { return UITableViewCell() }
+            let cell: UniversityCell = tableView.dequeueReusableCell(for: indexPath)
+            cell.configure(with: university)
+            cell.delegate = self
+            return cell
+        }
+        
+    }
+    
+    // MARK: - TableView Delegate
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        tableView.isSection(at: indexPath)
+        ? viewModel.toogleExpand(at: indexPath.section)
+        : viewModel.toogleExpand(at: tableView.indexWithoutSection(from: indexPath))
+        
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if tableView.isSection(at: indexPath) {
+            return CGFloat(Constants.UI.nonExpandCellHeight)
+        } else {
+            return viewModel.isExpanded(at: tableView.indexWithoutSection(from: indexPath))
+            ? CGFloat ( Constants.UI.nonExpandCellHeight + (Constants.UI.detailCellHeight * viewModel.numberOfDetails(at: tableView.indexWithoutSection(from: indexPath))))
+            : CGFloat(Constants.UI.nonExpandCellHeight)
+        }
+    }
+    
+    // MARK: - ScrollView Delegate
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        
+        scrollView.contentOffset.y > 100 ? setScroolButtonVisible(false) : setScroolButtonVisible(true)
+        
+        let contentHeight = scrollView.contentSize.height
+        let visibleHeight = scrollView.bounds.height
+        let scrollOffset = scrollView.contentOffset.y
+        
+        let scrollPercentage = (scrollOffset + visibleHeight) / contentHeight
+        
+        if scrollPercentage >= Constants.UI.infinityScrollPercentage && viewModel.numberOfProvinces() > 0 {
+            
+            let now = Date()
+            if let lastRequestTime = lastScrollTime, now.timeIntervalSince(lastRequestTime) < Constants.UI.infinityScrollLateLimitSecond {
+                return
+            }
+            
+            viewModel.fetchProvinces()
+            
+            lastScrollTime = now
+            
+        }
+        
+    }
 }
 
 
