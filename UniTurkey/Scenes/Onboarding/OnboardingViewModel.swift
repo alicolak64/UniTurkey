@@ -9,8 +9,7 @@ import PaperOnboarding
 import UIKit
 
 enum OnboardingOutput {
-    // MARK: - Cases
-    case updateOnboardingItem([OnboardingItemInfo])
+    
 }
 
 protocol OnboardingViewModelDelegate: AnyObject {
@@ -23,8 +22,8 @@ protocol OnboardingViewModelProtocol {
     // MARK: - Dependency Properties
     var delegate: OnboardingViewModelDelegate? { get set }
     
-    // MARK: - Methods
-    func fetchItems()
+    func numberOfItems() -> Int
+    func item(at index: Int) -> OnboardingItemInfo
     
     func navigate(to route: OnboardingRoute)
     
@@ -85,18 +84,32 @@ final class OnboardingViewModel {
 
 extension OnboardingViewModel: OnboardingViewModelProtocol {
     
-    // MARK: - Methods
-    
-    func fetchItems() {
-        notify(.updateOnboardingItem(items))
+    func numberOfItems() -> Int {
+        items.count
     }
+    
+    func item(at index: Int) -> OnboardingItemInfo{
+        guard let item = items[safe: index] else {
+            return OnboardingItemInfo(informationImage: UIImage(),
+                                      title: "",
+                                      description: "",
+                                      pageIcon: UIImage(),
+                                      color: .white,
+                                      titleColor: .black,
+                                      descriptionColor: .black,
+                                      titleFont: .systemFont(ofSize: 24, weight: .semibold),
+                                      descriptionFont: .systemFont(ofSize: 18, weight: .regular))
+        }
+        return item
+    }
+    
     
     func navigate(to route: OnboardingRoute) {
         app.stroageService.setOnBoardingSeen()
         router.navigate(to: route)
     }
     
-    func notify(_ output: OnboardingOutput) {
+    private func notify(_ output: OnboardingOutput) {
         delegate?.handleOutput(output)
     }
     

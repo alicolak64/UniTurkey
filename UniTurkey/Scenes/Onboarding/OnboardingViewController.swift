@@ -14,10 +14,6 @@ final class OnboardingViewController: UIViewController {
     
     private let viewModel: OnboardingViewModel
     
-    // MARK: - Properties
-    
-    private var items = Array<OnboardingItemInfo>()
-    
     // MARK: - UI Components
     
     private lazy var onboarding: PaperOnboarding = {
@@ -65,9 +61,7 @@ final class OnboardingViewController: UIViewController {
     // MARK: - Setup
     
     private func initalSetup() {
-        // fetch provinces
-        viewModel.fetchItems()
-        // tableview setup
+        // onboardingSetup()
         onboardingSetup()
     }
     
@@ -104,35 +98,29 @@ final class OnboardingViewController: UIViewController {
     
 }
 
-extension OnboardingViewController: OnboardingViewModelDelegate {
-    
-    func handleOutput(_ output: OnboardingOutput) {
-        switch output {
-        case .updateOnboardingItem(let items):
-            self.items = items
-        }
-    }
-    
-}
-
 extension OnboardingViewController: PaperOnboardingDataSource,PaperOnboardingDelegate {
     
     func onboardingWillTransitonToIndex(_ index: Int) {
-        if index == items.count - 1 {
-            skipButton.isHidden = false
-        } else {
-            skipButton.isHidden = true
-        }
+        index == viewModel.numberOfItems() - 1 ? (skipButton.isHidden = false) : (skipButton.isHidden = true)
     }
     
     
     func onboardingItem(at index: Int) -> OnboardingItemInfo {
-        return items[index]
+        viewModel.item(at: index)
     }
     
     func onboardingItemsCount() -> Int {
-        return items.count
+        viewModel.numberOfItems()
     }
     
 }
+
+extension OnboardingViewController: OnboardingViewModelDelegate {
+    
+    func handleOutput(_ output: OnboardingOutput) {
+        
+    }
+    
+}
+
 
