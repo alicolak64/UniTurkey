@@ -39,7 +39,7 @@ final class DetailViewModel {
     
     weak var delegate: DetailViewModelDelegate?
     private let router: DetailRouterProtocol
-
+    
     // MARK: - Properties
     
     let university: UniversityRepresentation

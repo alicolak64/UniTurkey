@@ -12,7 +12,7 @@ final class FavoriteViewController: UIViewController {
     // MARK: Dependency Properties
     
     private let viewModel: FavoriteViewModel
-            
+    
     // MARK: - UI Components
     
     private lazy var navigationBarBackButton: UIBarButtonItem = {

@@ -32,4 +32,5 @@ extension UIApplication {
         let buildVersion = " b. " + appBuild
         return releaseVersion + buildVersion
     }
+    
 }

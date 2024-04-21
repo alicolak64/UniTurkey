@@ -32,6 +32,7 @@ final class AppRouter {
         }
         
     }
+    
     func checkOnboarding() {
         if app.stroageService.isOnBoardingSeen() {
             startHome()
@@ -52,4 +53,3 @@ final class AppRouter {
     }
     
 }
-

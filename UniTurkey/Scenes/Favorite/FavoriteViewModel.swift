@@ -37,7 +37,7 @@ protocol FavoriteViewModelProtocol {
     func fetchUniversities()
     func removeFavorite(with university: UniversityRepresentation)
     func toggleAllExpanded()
-
+    
     func navigate(to route: FavoriteRoute)
     
 }
@@ -49,7 +49,7 @@ final class FavoriteViewModel: NSObject {
     weak var delegate: FavoriteViewModelDelegate?
     private let favoriteService: FavoriteService
     private let router: FavoriteRouterProtocol
-
+    
     // MARK: - Data Source Properties
     
     private var universities = Array<UniversityRepresentation>()
@@ -85,7 +85,7 @@ extension FavoriteViewModel: FavoriteViewModelProtocol {
             notify(.reloadTableView)
         }
     }
-
+    
     func removeFavorite(with university: UniversityRepresentation) {
         
         guard
@@ -178,7 +178,7 @@ extension FavoriteViewModel: UITableViewDelegate, UITableViewDataSource{
             ? Constants.UI.nonExpandCellHeight + (Constants.UI.detailCellHeight * university.details.count)
             : Constants.UI.nonExpandCellHeight
         )
-
+        
     }
     
     // MARK: - ScrollView Delegate

@@ -169,9 +169,9 @@ extension HomeViewModel: HomeViewModelProtocol {
     func toggleFavorite(with university: UniversityRepresentation) {
         
         guard let university = provinces.first(where: { $0.id == university.provinceId })?.universities[safe: university.index] else { return }
-                
+        
         university.toggleFavorite()
-                
+        
         postFavorite(university)
         
     }
@@ -186,7 +186,7 @@ extension HomeViewModel: HomeViewModelProtocol {
         
         let indexPathsUniversities = provinces.enumerated().compactMap { $0.element.universities.enumerated().compactMap {
             $0.element.isExpanded ? IndexPath(row: $0.offset, section: $0.offset) : nil
-            }
+        }
         }.flatMap { $0 }
         
         provinces.forEach { $0.universities.forEach { $0.isExpanded = false } }
@@ -239,7 +239,7 @@ extension HomeViewModel: HomeViewModelProtocol {
         favoriteUniversity.isExpanded ? favoriteUniversity.toggleExpand() : nil
         
         favoriteService.isFavorite(favoriteUniversity) ?             favoriteService.removeFavorite(with: favoriteUniversity) :
-                favoriteService.addFavorite(favoriteUniversity)
+        favoriteService.addFavorite(favoriteUniversity)
         
         getFavorites()
         
@@ -336,11 +336,10 @@ extension HomeViewModel: UITableViewDelegate, UITableViewDataSource {
             }
             
             fetchProvinces()
-                        
+            
             self.lastScrollTime = now
             
         }
-        
         
     }
 }

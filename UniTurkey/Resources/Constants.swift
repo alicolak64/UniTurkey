@@ -151,8 +151,5 @@ enum Constants {
         static let titleColor = UIColor.white
         static let descriptionColor = UIColor.white
     }
-
     
 }
-
-

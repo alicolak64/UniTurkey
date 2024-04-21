@@ -10,7 +10,6 @@ import UIKit
 // MARK: - App Container Instance
 let app = AppContainer()
 
-
 final class AppContainer {
     
     // MARK: - Properties

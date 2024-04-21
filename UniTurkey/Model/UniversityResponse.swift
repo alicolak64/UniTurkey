@@ -50,6 +50,7 @@ struct ProvinceResponse: Codable {
         case province = "province"
         case universities = "universities"
     }
+    
 }
 
 
@@ -75,6 +76,7 @@ struct ProvincePageResponse: Codable {
         case pageSize = "pageSize"
         case provinces = "data"
     }
+    
 }
 
 

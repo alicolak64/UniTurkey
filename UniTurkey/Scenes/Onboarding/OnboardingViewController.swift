@@ -124,7 +124,7 @@ extension OnboardingViewController: PaperOnboardingDataSource,PaperOnboardingDel
             skipButton.isHidden = true
         }
     }
-
+    
     
     func onboardingItem(at index: Int) -> OnboardingItemInfo {
         return items[index]

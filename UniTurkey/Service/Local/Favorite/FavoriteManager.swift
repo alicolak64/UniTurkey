@@ -32,7 +32,7 @@ final class FavoriteManager: FavoriteService{
     }
     
     func getFavorites() -> [UniversityRepresentation] {
-                
+        
         return userDefaults.dictionaryRepresentation().compactMap { key, value in
             guard let data = value as? Data,
                   let university = try? JSONDecoder().decode(UniversityRepresentation.self, from: data) else { return nil }

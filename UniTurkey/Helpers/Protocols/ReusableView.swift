@@ -11,10 +11,10 @@ protocol ReusableView {
     
     // MARK: - Associated Type
     associatedtype Model
-
+    
     // MARK: - Static Properties
     static var identifier: String { get }
-
+    
     // MARK: - Methods
     func configure(with model: Model)
 }

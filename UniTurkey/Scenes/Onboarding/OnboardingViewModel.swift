@@ -29,7 +29,7 @@ protocol OnboardingViewModelProtocol {
     func navigate(to route: OnboardingRoute)
     
 }
-    
+
 final class OnboardingViewModel {
     
     // MARK: - Dependency Properties
@@ -40,7 +40,7 @@ final class OnboardingViewModel {
     // MARK: - Properties
     
     private var items = Array<OnboardingItemInfo>()
-
+    
     // MARK: - Init
     
     init(router: OnboardingRouterProtocol) {
@@ -80,7 +80,7 @@ final class OnboardingViewModel {
     }
     
 }
-    
+
 // MARK: - Onboarding ViewModel Delegate
 
 extension OnboardingViewModel: OnboardingViewModelProtocol {

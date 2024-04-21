@@ -32,7 +32,7 @@ extension UIViewController {
     }
     
     // MARK: - Call Phone
-        
+    
     func callPhone(with phone: String) {
         guard let phoneURL = phone.phoneUrl else {
             showAlert(title: "Warning! No Phone Number", message: "There is no phone number to call.", actionTitle: "OK")
@@ -48,7 +48,7 @@ extension UIViewController {
         } else {
             UIApplication.shared.openURL(phoneURL)
         }
-    
+        
     }
     
     // MARK: - Send Email
