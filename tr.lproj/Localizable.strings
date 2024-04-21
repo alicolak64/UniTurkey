@@ -19,3 +19,19 @@
 "warningNoDetailMessage" = "Bu üniversite için detay bilgi bulunamadı.";
 "warningNoUniversityTitle" = "Uyarı! Üniversite Yok";
 "warningNoUniversityMessage" = "Bu şehirde üniversite bulunamadı.";
+
+"onboardingPage1Title" = "UniTurkey'ye Hoş Geldiniz";
+"onboardingPage1Description" = "Türkiye'deki üniversiteleri keşfedin";
+"onboardingPage2Title" = "İllere Göre Üniversiteleri Keşfedin";
+"onboardingPage2Description" = "Üniversiteleri görmek için bir il seçin";
+"onboardingPage3Title" = "Favorilere Ekle";
+"onboardingPage3Description" = "Favori üniversitelerinizi ekleyin";
+"onboardingPage4Title" = "Üniversite Detaylarını Keşfedin ve Paylaşın";
+"onboardingPage4Description" = "Üniversite detaylarını görüntüleyin ve arkadaşlarınızla paylaşın";
+"onboardingPage5Title" = "Üniversitelerin Web Sitesine Erişim";
+"onboardingPage5Description" = "Üniversitelerin web sitesini ziyaret edin";
+"onboardingPage6Title" = "Arama E-Posta Harita Safari";
+"onboardingPage6Description" = "Arama, e-posta, konum ve safari için ayrıntılara tıklayın";
+"onboardingPage7Title" = "Başlayın";
+"onboardingPage7Description" = "Üniversiteleri keşfetmeye başlayın";
+"onboardingSkip" = "Atla";

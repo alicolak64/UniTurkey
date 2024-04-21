@@ -6,6 +6,8 @@
   
 */
 
+
+
 "homeTitle" = "Universities";
 "favoritesTitle" = "My Favorites";
 "errorTitle" = "Oops! An Error Occurred";
@@ -19,3 +21,22 @@
 "warningNoDetailMessage" = "There is no detail for this university.";
 "warningNoUniversityTitle" = "Warning! No University";
 "warningNoUniversityMessage" = "There is no university for this province.";
+
+
+"onboardingPage1Title" = "Welcome to UniTurkey";
+"onboardingPage1Description" = "Discover Universities in Turkey";
+"onboardingPage2Title" = "Explore universities by province";
+"onboardingPage2Description" = "Select a province to see universities";
+"onboardingPage3Title" = "Add to Favorites";
+"onboardingPage3Description" = "Add your favorite universities";
+"onboardingPage4Title" = "Explore and share university details";
+"onboardingPage4Description" = "View universities details and share with your friends";
+"onboardingPage5Title" = "Access to universities website";
+"onboardingPage5Description" = "Visit universities website";
+"onboardingPage6Title" = "Call Mail Map Safari";
+"onboardingPage6Description" = "Click to details for call, email, location and safari";
+"onboardingPage7Title" = "Get Started";
+"onboardingPage7Description" = "Start exploring universities";
+"onboardingSkip" = "Skip";
+
+
