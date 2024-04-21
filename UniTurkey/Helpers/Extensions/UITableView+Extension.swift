@@ -33,4 +33,20 @@ extension UITableView {
         return cell
     }
     
+    func isSection(at indexPath: IndexPath) -> Bool {
+        return indexPath.row == 0
+    }
+    
+    func numberOfRowsWithSection(numberOfRows: Int) -> Int {
+        return numberOfRows + 1
+    }
+    
+    func indexWithSection(from indexPath: IndexPath) -> IndexPath {
+        return IndexPath(row: indexPath.row + 1, section: indexPath.section)
+    }
+    
+    func indexWithoutSection(from indexPath: IndexPath) -> IndexPath {
+        return IndexPath(row: indexPath.row - 1, section: indexPath.section)
+    }
+    
 }
