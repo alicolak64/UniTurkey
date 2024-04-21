@@ -19,5 +19,6 @@ final class AppContainer {
     let navigationController = UINavigationController()
     let universityService = UniversityManager.shared
     let favoriteService = FavoriteManager.shared
+    let stroageService = AppStroageManager()
     
 }

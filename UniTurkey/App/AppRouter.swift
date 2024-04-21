@@ -26,14 +26,29 @@ final class AppRouter {
         window.rootViewController = UIStoryboard(name: "LaunchScreen", bundle: nil).instantiateInitialViewController()
         window.makeKeyAndVisible()
         
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 3) { [weak self] in // Wait 3 seconds for launch screen
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2) { [weak self] in // Wait 2 seconds for launch screen
             guard let self = self else { return }
-            let homeViewController = HomeBuilder().build()
-            let navigationController = app.navigationController
-            navigationController.viewControllers = [homeViewController]
-            self.window.rootViewController = navigationController
+            self.checkOnboarding()
         }
         
+    }
+    func checkOnboarding() {
+        if app.stroageService.isOnBoardingSeen() {
+            startHome()
+        } else {
+            startOnboarding()
+        }
+    }
+    
+    func startOnboarding() {
+        window.rootViewController = OnboardingBuilder().build()
+    }
+    
+    func startHome() {
+        let homeViewController = HomeBuilder().build()
+        let navigationController = app.navigationController
+        navigationController.viewControllers = [homeViewController]
+        window.rootViewController = navigationController
     }
     
 }

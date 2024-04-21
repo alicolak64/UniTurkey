@@ -116,7 +116,7 @@ enum Constants {
         
         enum Favorite {
             static let keyPath = "transform.scale"
-            static let duration = 0.3
+            static let duration = 0.5
             static let keyTimes = [0, 0.25, 0.75, 1.0].map { NSNumber(value: $0) }
             static func getValues(isFavorite: Bool) -> [CGFloat] {
                 return isFavorite ? [1.0, 0.7, 0.4, 0.1] : [1.0, 1.5, 0.9, 1.0]
@@ -124,6 +124,34 @@ enum Constants {
         }
         
     }
+    
+    // MARK: - Onboarding
+    enum Onboarding {
+        static let title1 = NSLocalizedString("onboardingPage1Title", comment: "")
+        static let description1 = NSLocalizedString("onboardingPage1Description", comment: "")
+        static let title2 = NSLocalizedString("onboardingPage2Title", comment: "")
+        static let description2 = NSLocalizedString("onboardingPage2Description", comment: "")
+        static let title3 = NSLocalizedString("onboardingPage3Title", comment: "")
+        static let description3 = NSLocalizedString("onboardingPage3Description", comment: "")
+        static let title4 = NSLocalizedString("onboardingPage4Title", comment: "")
+        static let description4 = NSLocalizedString("onboardingPage4Description", comment: "")
+        static let title5 = NSLocalizedString("onboardingPage5Title", comment: "")
+        static let description5 = NSLocalizedString("onboardingPage5Description", comment: "")
+        static let title6 = NSLocalizedString("onboardingPage6Title", comment: "")
+        static let description6 = NSLocalizedString("onboardingPage6Description", comment: "")
+        static let title7 = NSLocalizedString("onboardingPage7Title", comment: "")
+        static let description7 = NSLocalizedString("onboardingPage7Description", comment: "")
+        static let skip = NSLocalizedString("onboardingSkip", comment: "")
+        static let titles = [title1, title2, title3, title4, title5, title6, title7]
+        static let descriptions = [description1, description2, description3, description4, description5, description6, description7]
+        static let icons = [UIImage(named: "onboarding1"), UIImage(named: "onboarding2"), UIImage(named: "onboarding3"), UIImage(named: "onboarding4"), UIImage(named: "onboarding5"), UIImage(named: "onboarding6"), UIImage(named: "onboarding7")]
+        static let backgroundColors = [UIColor(hex: "FFD700"), UIColor(hex: "87CEEB"), UIColor(hex: "FFA07A"), UIColor(hex: "20B2AA"), UIColor(hex: "9370DB"), UIColor(hex: "FF6347"), UIColor(hex: "7FFF00")]
+        static let titleFont = Font.titleBold
+        static let descriptionFont = Font.body
+        static let titleColor = UIColor.white
+        static let descriptionColor = UIColor.white
+    }
+
     
 }
 

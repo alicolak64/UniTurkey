@@ -10,6 +10,13 @@
 		E60699492BC21B460062333F /* UniTurkeyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E60699482BC21B460062333F /* UniTurkeyTests.swift */; };
 		E60699532BC21B460062333F /* UniTurkeyUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E60699522BC21B460062333F /* UniTurkeyUITests.swift */; };
 		E60699552BC21B460062333F /* UniTurkeyUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E60699542BC21B460062333F /* UniTurkeyUITestsLaunchTests.swift */; };
+		E61A66D42BD47A590052EFDC /* OnboardingBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = E61A66D32BD47A590052EFDC /* OnboardingBuilder.swift */; };
+		E61A66D62BD47A660052EFDC /* OnboardingRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E61A66D52BD47A660052EFDC /* OnboardingRouter.swift */; };
+		E61A66D82BD47A710052EFDC /* OnboardingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E61A66D72BD47A710052EFDC /* OnboardingViewModel.swift */; };
+		E61A66DA2BD47A7F0052EFDC /* OnboardingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E61A66D92BD47A7F0052EFDC /* OnboardingViewController.swift */; };
+		E61A66DD2BD47C350052EFDC /* PaperOnboarding in Frameworks */ = {isa = PBXBuildFile; productRef = E61A66DC2BD47C350052EFDC /* PaperOnboarding */; };
+		E61A66E12BD47F820052EFDC /* AppStroageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E61A66E02BD47F820052EFDC /* AppStroageService.swift */; };
+		E61A66E32BD480310052EFDC /* AppStroageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E61A66E22BD480310052EFDC /* AppStroageManager.swift */; };
 		E63EC7282BCF4F6C0036FC87 /* FavoriteBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = E63EC7272BCF4F6C0036FC87 /* FavoriteBuilder.swift */; };
 		E63EC72A2BCF50E80036FC87 /* FavoriteRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E63EC7292BCF50E80036FC87 /* FavoriteRouter.swift */; };
 		E63EC72C2BCF50F50036FC87 /* FavoriteViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E63EC72B2BCF50F50036FC87 /* FavoriteViewModel.swift */; };
@@ -82,6 +89,12 @@
 		E606994E2BC21B460062333F /* UniTurkeyUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UniTurkeyUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E60699522BC21B460062333F /* UniTurkeyUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UniTurkeyUITests.swift; sourceTree = "<group>"; };
 		E60699542BC21B460062333F /* UniTurkeyUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UniTurkeyUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		E61A66D32BD47A590052EFDC /* OnboardingBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingBuilder.swift; sourceTree = "<group>"; };
+		E61A66D52BD47A660052EFDC /* OnboardingRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingRouter.swift; sourceTree = "<group>"; };
+		E61A66D72BD47A710052EFDC /* OnboardingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewModel.swift; sourceTree = "<group>"; };
+		E61A66D92BD47A7F0052EFDC /* OnboardingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewController.swift; sourceTree = "<group>"; };
+		E61A66E02BD47F820052EFDC /* AppStroageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStroageService.swift; sourceTree = "<group>"; };
+		E61A66E22BD480310052EFDC /* AppStroageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStroageManager.swift; sourceTree = "<group>"; };
 		E63EC7272BCF4F6C0036FC87 /* FavoriteBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteBuilder.swift; sourceTree = "<group>"; };
 		E63EC7292BCF50E80036FC87 /* FavoriteRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteRouter.swift; sourceTree = "<group>"; };
 		E63EC72B2BCF50F50036FC87 /* FavoriteViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteViewModel.swift; sourceTree = "<group>"; };
@@ -135,6 +148,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E61A66DD2BD47C350052EFDC /* PaperOnboarding in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -214,6 +228,35 @@
 				E63F3CC42BC21DCD0094A0D2 /* AppContainer.swift */,
 				E63F3CC22BC21DCD0094A0D2 /* AppDelegate.swift */,
 				E63F3CC32BC21DCD0094A0D2 /* AppRouter.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		E61A66D22BD47A300052EFDC /* Onboarding */ = {
+			isa = PBXGroup;
+			children = (
+				E61A66D32BD47A590052EFDC /* OnboardingBuilder.swift */,
+				E61A66D52BD47A660052EFDC /* OnboardingRouter.swift */,
+				E61A66D72BD47A710052EFDC /* OnboardingViewModel.swift */,
+				E61A66D92BD47A7F0052EFDC /* OnboardingViewController.swift */,
+			);
+			path = Onboarding;
+			sourceTree = "<group>";
+		};
+		E61A66DE2BD47F500052EFDC /* Favorite */ = {
+			isa = PBXGroup;
+			children = (
+				E696C07A2BCDCC4A00CA91A3 /* FavoriteService.swift */,
+				E696C07C2BCDCC5500CA91A3 /* FavoriteManager.swift */,
+			);
+			path = Favorite;
+			sourceTree = "<group>";
+		};
+		E61A66DF2BD47F610052EFDC /* App */ = {
+			isa = PBXGroup;
+			children = (
+				E61A66E02BD47F820052EFDC /* AppStroageService.swift */,
+				E61A66E22BD480310052EFDC /* AppStroageManager.swift */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -311,6 +354,7 @@
 		E63F3D062BC21FCC0094A0D2 /* Scenes */ = {
 			isa = PBXGroup;
 			children = (
+				E61A66D22BD47A300052EFDC /* Onboarding */,
 				E63F3D052BC21FCC0094A0D2 /* Home */,
 				E63F3D012BC21FCC0094A0D2 /* Favorite */,
 				E63F3D002BC21FCC0094A0D2 /* Detail */,
@@ -339,8 +383,8 @@
 		E696C0792BCDCC3200CA91A3 /* Local */ = {
 			isa = PBXGroup;
 			children = (
-				E696C07A2BCDCC4A00CA91A3 /* FavoriteService.swift */,
-				E696C07C2BCDCC5500CA91A3 /* FavoriteManager.swift */,
+				E61A66DF2BD47F610052EFDC /* App */,
+				E61A66DE2BD47F500052EFDC /* Favorite */,
 			);
 			path = Local;
 			sourceTree = "<group>";
@@ -389,6 +433,9 @@
 			dependencies = (
 			);
 			name = UniTurkey;
+			packageProductDependencies = (
+				E61A66DC2BD47C350052EFDC /* PaperOnboarding */,
+			);
 			productName = UniTurkey;
 			productReference = E606992E2BC21B440062333F /* UniTurkey.app */;
 			productType = "com.apple.product-type.application";
@@ -462,6 +509,9 @@
 				tr,
 			);
 			mainGroup = E60699252BC21B440062333F;
+			packageReferences = (
+				E61A66DB2BD47C350052EFDC /* XCRemoteSwiftPackageReference "paper-onboarding" */,
+			);
 			productRefGroup = E606992F2BC21B440062333F /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -532,17 +582,23 @@
 				E63EC72C2BCF50F50036FC87 /* FavoriteViewModel.swift in Sources */,
 				E68E70B62BD1619F00C1872F /* DetailRouter.swift in Sources */,
 				E63F3D0C2BC21FCC0094A0D2 /* UICollectionView+Extension.swift in Sources */,
+				E61A66DA2BD47A7F0052EFDC /* OnboardingViewController.swift in Sources */,
 				E68E70BA2BD161C600C1872F /* DetailViewController.swift in Sources */,
 				E68E70B82BD161B500C1872F /* DetailViewModel.swift in Sources */,
+				E61A66D62BD47A660052EFDC /* OnboardingRouter.swift in Sources */,
+				E61A66E12BD47F820052EFDC /* AppStroageService.swift in Sources */,
 				E63F3D092BC21FCC0094A0D2 /* ReusableView.swift in Sources */,
 				E690A0282BC35591003B2F83 /* UniversityService.swift in Sources */,
 				E63EC7282BCF4F6C0036FC87 /* FavoriteBuilder.swift in Sources */,
+				E61A66D42BD47A590052EFDC /* OnboardingBuilder.swift in Sources */,
 				E63F3D0E2BC21FCC0094A0D2 /* UIDevice+Extension.swift in Sources */,
 				E63F3D0F2BC21FCC0094A0D2 /* UITableView+Extension.swift in Sources */,
 				E63F3D0D2BC21FCC0094A0D2 /* UIColor+Extension.swift in Sources */,
+				E61A66E32BD480310052EFDC /* AppStroageManager.swift in Sources */,
 				E690A0372BC3914A003B2F83 /* HomeBuilder.swift in Sources */,
 				E6B249D92BC25C98009112EB /* UIImage+Extension.swift in Sources */,
 				E690A0312BC367E9003B2F83 /* UniversityResponse.swift in Sources */,
+				E61A66D82BD47A710052EFDC /* OnboardingViewModel.swift in Sources */,
 				E63EC72A2BCF50E80036FC87 /* FavoriteRouter.swift in Sources */,
 				E6B249D72BC25A39009112EB /* UIView+Extension.swift in Sources */,
 				E63F3D122BC21FCC0094A0D2 /* HomeViewModel.swift in Sources */,
@@ -888,6 +944,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		E61A66DB2BD47C350052EFDC /* XCRemoteSwiftPackageReference "paper-onboarding" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Ramotion/paper-onboarding.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.1.5;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		E61A66DC2BD47C350052EFDC /* PaperOnboarding */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E61A66DB2BD47C350052EFDC /* XCRemoteSwiftPackageReference "paper-onboarding" */;
+			productName = PaperOnboarding;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = E60699262BC21B440062333F /* Project object */;
 }
