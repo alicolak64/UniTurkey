@@ -26,7 +26,7 @@ final class AppRouter {
         window.rootViewController = UIStoryboard(name: "LaunchScreen", bundle: nil).instantiateInitialViewController()
         window.makeKeyAndVisible()
         
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2) { [weak self] in // Wait 2 seconds for launch screen
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1) { [weak self] in // Wait 1 seconds for launch screen
             guard let self = self else { return }
             self.checkOnboarding()
         }
