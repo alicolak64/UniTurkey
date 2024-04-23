@@ -55,6 +55,22 @@ final class FavoriteViewController: UIViewController {
         
     }()
     
+    private lazy var trashNavigationBarItem: UIBarButtonItem = {
+        
+        let trashButton = UIButton(type: .custom)
+        
+        let trashIcon = Constants.Icon.trash
+        trashButton.setImage(trashIcon, for: .normal)
+        trashButton.tintColor = Constants.Color.darkRed
+        
+        trashButton.addTarget(self, action: #selector(trashButtonTapped), for: .touchUpInside)
+        
+        let trashButtonItem = UIBarButtonItem(customView: trashButton)
+        
+        return trashButtonItem
+        
+    }()
+    
     private lazy var universityTableView: UITableView = {
         let tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -99,27 +115,17 @@ final class FavoriteViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         viewModel.delegate = self
-        initalSetup()
-        configureUI()
+        viewModel.viewDidLoad()
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        setConstraints()
+        viewModel.viewDidLayoutSubviews()
     }
     
     // MARK: - Setup
     
-    private func initalSetup() {
-        // fetch title
-        viewModel.fetchTitle()
-        // fetch provinces
-        viewModel.fetchUniversities()
-        // tableview setup
-        tableViewSetup()
-    }
-    
-    private func tableViewSetup() {
+    func prepareTableView() {
         // MARK: - TableView Dependencies
         universityTableView.delegate = self
         universityTableView.dataSource = self
@@ -130,19 +136,19 @@ final class FavoriteViewController: UIViewController {
     
     // MARK: - Layout
     
-    private func configureUI() {
+    func prepareUI() {
         view.backgroundColor = Constants.Color.background
-        configureNavigationBar()
         view.addSubviews(universityTableView, errorLabel,scrollTopButton)
     }
     
-    private func configureNavigationBar() {
+    func prepareNavigationBar(title: String) {
+        navigationBarTitle.text = title
         navigationItem.titleView = navigationBarTitle
         navigationItem.leftBarButtonItem = navigationBarBackButton
-        navigationItem.rightBarButtonItem = scaleDownNavigationBarItem
+        navigationItem.rightBarButtonItems = [scaleDownNavigationBarItem, trashNavigationBarItem]
     }
     
-    private func setConstraints() {
+    func prepareConstraints() {
         NSLayoutConstraint.activate([
             universityTableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
             universityTableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 10),
@@ -160,20 +166,26 @@ final class FavoriteViewController: UIViewController {
     // MARK: - Actions
     
     @objc private func backButtonTapped() {
-        viewModel.navigate(to: .back)
+        viewModel.backButtonTapped()
     }
     
     @objc private func scaleDownButtonTapped() {
-        viewModel.toggleAllExpanded()
+        viewModel.didScaleDownButtonTapped()
     }
     
     @objc private func scrollTopButtonTapped() {
-        universityTableView.setContentOffset(.zero, animated: true)
+        viewModel.didScrollToTopButtonTapped()
     }
     
-    // MARK: - Helpers
+    @objc private func trashButtonTapped() {
+        viewModel.didTrashButtonTapped()
+    }
+}
+
+extension FavoriteViewController: FavoriteViewProtocol {
     
-    private func showEmptyState() {
+    
+    func showEmptyState() {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
             self.errorLabel.isHidden = false
@@ -181,7 +193,7 @@ final class FavoriteViewController: UIViewController {
         }
     }
     
-    private func hideEmptyState() {
+    func hideEmptyState() {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
             self.errorLabel.isHidden = true
@@ -189,32 +201,94 @@ final class FavoriteViewController: UIViewController {
         }
     }
     
-    private func setScroolButtonVisible(_ isHidden: Bool) {
-        scrollTopButton.isHidden = isHidden
+    
+    func showAlert(alertMessage: AlertMessage) {
+        showAlert(title: alertMessage.title, message: alertMessage.message, actionTitle: "OK")
+    }
+    
+    func showActionSheet(alertMessage: AlertMessage, completion: (() -> Void)?) {
+        showActionSheet(title: alertMessage.title, message: alertMessage.message) {
+            completion?()
+        }
+    }
+    
+    func showScrollToTopButton() {
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            self.scrollTopButton.isHidden = false
+        }
+    }
+    
+    func hideScrollToTopButton() {
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            self.scrollTopButton.isHidden = true
+        }
+    }
+    
+    func scrollToTop() {
+        universityTableView.setContentOffset(.zero, animated: true)
+    }
+    
+    func reloadTableView() {
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            self.universityTableView.reloadData()
+        }
+    }
+    
+    func reloadRows(at indexPaths: [IndexPath]) {
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            self.universityTableView.reloadRows(at: indexPaths, with: .automatic)
+        }
+    }
+    
+    func deleteRows(at indexPaths: [IndexPath]) {
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            self.universityTableView.deleteRows(at: indexPaths, with: .left)
+        }
+    }
+    
+    func shareDetail(text: String) {
+        share(items: [text])
     }
     
 }
 
-extension FavoriteViewController: FavoriteViewModelDelegate {
+// MARK: - UITableViewDelegate, UITableViewDataSource
+
+extension FavoriteViewController: UITableViewDelegate, UITableViewDataSource{
     
-    func handleOutput(_ output: FavoriteViewModelOutput) {
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
-            switch output {
-            case .updateTitle(let title):
-                self.navigationBarTitle.text = title
-            case .updateEmptyState(let isEmptyFavorite):
-                isEmptyFavorite ? self.showEmptyState() : self.hideEmptyState()
-            case .reloadTableView:
-                self.universityTableView.reloadData()
-            case .reloadRows(let indexPaths):
-                self.universityTableView.reloadRows(at: indexPaths, with: .automatic)
-            case .deleteRows(let indexPaths):
-                self.universityTableView.deleteRows(at: indexPaths, with: .left)
-            case .showAlert(let alertMessage):
-                self.showAlert(title: alertMessage.title, message: alertMessage.message, actionTitle: "OK")
-            }
-        }
+    // MARK: - TableView DataSource
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        viewModel.numberOfRowsInSection(at: section)
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let row = viewModel.cellForRow(at: indexPath) else { return UITableViewCell() }
+        let cell: UniversityCell = tableView.dequeueReusableCell(for: indexPath)
+        cell.configure(with: row)
+        cell.delegate = self
+        return cell
+    }
+    
+    // MARK: - TableView Delegate
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        viewModel.didSelectRow(at: indexPath)
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        viewModel.heightForRow(at: indexPath)
+    }
+    
+    // MARK: - ScrollView Delegate
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        viewModel.scrollViewDidScroll(contentOffset: scrollView.contentOffset)
     }
     
 }
@@ -226,69 +300,12 @@ extension FavoriteViewController: UniversityCellDelegate{
     func handleOutput(_ output: UniversityCellOutput) {
         switch output {
         case .didSelectFavorite(let university):
-            didTapFavoriteButton(with: university)
-        case .didSelectDetail(let university, let detail):
-            switch detail.category {
-            case .phone:
-                callPhone(with: detail.value)
-            case .website:
-                viewModel.navigate(to: .detail(university))
-            case .email:
-                sendEmail(with: detail.value)
-            case .address:
-                openMapAddress(with: detail.value)
-            case .rector:
-                searchTextSafari(with: detail.value)
-            case .fax:
-                showAlert(title: "Fax", message: detail.value, actionTitle: "OK")
-            }
-        case .didShareDetail(let text):
-            share(items: [text])
+            viewModel.didSelectFavorite(university: university)
+        case .didSelectDetail(let universityIndexPath, let detailIndexPath):
+            viewModel.didSelectDetail(universityIndexPath: universityIndexPath, detailIndexPath: detailIndexPath)
+        case .didShareDetail(let universityIndexPath, let detailIndexPath):
+            viewModel.didSelectShare(universityIndexPath: universityIndexPath, detailIndexPath: detailIndexPath)
         }
     }
     
-    private func didTapFavoriteButton(with university: UniversityRepresentation) {
-        viewModel.removeFavorite(with: university)
-    }
-    
-    
 }
-
-// MARK: - UITableViewDelegate, UITableViewDataSource
-
-extension FavoriteViewController: UITableViewDelegate, UITableViewDataSource{
-    
-    // MARK: - TableView DataSource
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        viewModel.numberOfUniversities()
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let university = viewModel.university(at: indexPath.row) else { return UITableViewCell() }
-        let cell: UniversityCell = tableView.dequeueReusableCell(for: indexPath)
-        cell.configure(with: university)
-        cell.delegate = self
-        return cell
-    }
-    
-    // MARK: - TableView Delegate
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        viewModel.toogleExpand(at: indexPath.row)
-    }
-    
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        viewModel.isExpanded(at: indexPath.row)
-        ? CGFloat ( Constants.UI.nonExpandCellHeight + (Constants.UI.detailCellHeight * viewModel.numberOfDetails(at: indexPath.row)))
-        : CGFloat(Constants.UI.nonExpandCellHeight)
-    }
-    
-    // MARK: - ScrollView Delegate
-    
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        scrollView.contentOffset.y > 100 ? setScroolButtonVisible(false) : setScroolButtonVisible(true)
-    }
-    
-}
-

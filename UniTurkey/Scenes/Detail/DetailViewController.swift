@@ -8,32 +8,6 @@
 import UIKit
 import WebKit
 
-enum WebViewState {
-    // MARK: Cases
-    case loading
-    case loaded
-    case error(WebViewError)
-}
-
-enum WebViewError: Error {
-    // MARK: Cases
-    case webKitError(Error)
-    case timeoutError
-}
-
-// MARK: - LocalizedError
-
-extension WebViewError: LocalizedError {
-    var errorDescription: String? {
-        switch self {
-        case .webKitError(let error):
-            return error.localizedDescription
-        case .timeoutError:
-            return Constants.Text.timeoutError
-        }
-    }
-}
-
 final class DetailViewController: UIViewController {
     
     // MARK: Dependency Properties
@@ -43,22 +17,6 @@ final class DetailViewController: UIViewController {
     // MARK: Properties
     
     private var webView: WKWebView!
-    
-    private var webViewState: WebViewState = .loading {
-        didSet {
-            switch webViewState {
-            case .loading:
-                showLoadingView()
-            case .loaded:
-                showWebView()
-            case .error(let error):
-                showErrorView(error: error)
-            }
-        }
-    }
-    
-    private var timeoutTimer: Timer?
-    private var timeoutInterval: TimeInterval = Constants.Network.timeoutInterval
     
     // MARK: UI Components
     
@@ -148,31 +106,23 @@ final class DetailViewController: UIViewController {
     // MARK: - Life Cycle
     
     override func loadView() {
-        setupWebView()
+        viewModel.loadView()
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         viewModel.delegate = self
-        initalSetup()
-        configureUI()
+        viewModel.viewDidLoad()
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        setConstraints()
+        viewModel.viewDidLayoutSubviews()
     }
     
     // MARK: - Setup
     
-    private func initalSetup() {
-        // fetch title
-        viewModel.fetchTitle()
-        // fetch url
-        viewModel.fetchWebURL()
-    }
-    
-    private func setupWebView() {
+    func prepareWebView() {
         let webConfiguration = WKWebViewConfiguration()
         webView = WKWebView(frame: .zero, configuration: webConfiguration)
         webView.navigationDelegate = self
@@ -183,19 +133,18 @@ final class DetailViewController: UIViewController {
     
     // MARK: - Layout
     
-    private func configureUI() {
+    func prepareUI() {
         view.backgroundColor = Constants.Color.background
-        configureNavigationBar()
-        view.addSubviews()
     }
     
-    private func configureNavigationBar() {
+    func prepareNavigationBar(title: String) {
+        navigationBarTitle.text = title
         navigationItem.titleView = navigationBarTitle
         navigationItem.leftBarButtonItem = navigationBarBackButton
         navigationItem.rightBarButtonItems = [navigationBarRefreshButton, navigationBarShareButton]
     }
     
-    private func setConstraints() {
+    func prepareConstraints() {
         NSLayoutConstraint.activate([
             
         ])
@@ -204,28 +153,33 @@ final class DetailViewController: UIViewController {
     // MARK: - Actions
     
     @objc private func backButtonTapped() {
-        viewModel.navigate(to: .back)
+        viewModel.didBackButtonTapped()
     }
     
     @objc private func refreshButtonTapped() {
-        webView.reload()
+        viewModel.didRefreshButtonTapped()
     }
     
     @objc private func shareButtonTapped() {
-        guard let url = webView.url else {
-            return
-        }
-        
-        share(items: [url])
+        viewModel.didShareButtonTapped()
     }
     
-    @objc private func handleTimeout() {
-        webViewState = .error(WebViewError.timeoutError)
+}
+
+// MARK: - DetailViewModelDelegate
+
+extension DetailViewController: DetailViewProtocol {
+    
+    func loadWebView(with request: URLRequest) {
+        webView.load(request)
+        webView.allowsBackForwardNavigationGestures = true
     }
     
-    // MARK: Helpers
+    func reloadWebView() {
+        webView.reload()
+    }
     
-    private func showLoadingView() {
+    func showLoadingView() {
         view.addSubview(loadingView)
         NSLayoutConstraint.activate([
             loadingView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
@@ -235,22 +189,19 @@ final class DetailViewController: UIViewController {
             errorView.removeFromSuperview()
         }
         loadingView.showLoading()
-        startTimeoutTimer()
     }
     
-    private func showWebView() {
+    func showWebView() {
         loadingView.hideLoading()
         loadingView.removeFromSuperview()
-        timeoutTimer?.invalidate()
         if errorView.isDescendant(of: view) {
             errorView.removeFromSuperview()
         }
     }
     
-    private func showErrorView(error: WebViewError) {
+    func showErrorView(error: WebViewError) {
         loadingView.hideLoading()
         loadingView.removeFromSuperview()
-        timeoutTimer?.invalidate()
         view.addSubview(errorView)
         
         NSLayoutConstraint.activate([
@@ -263,47 +214,30 @@ final class DetailViewController: UIViewController {
         errorView.showError(error: error)
     }
     
-    private func startTimeoutTimer() {
-        timeoutTimer?.invalidate()
-        timeoutTimer = Timer.scheduledTimer(timeInterval: timeoutInterval, target: self, selector: #selector(handleTimeout), userInfo: nil, repeats: false)
+    func shareUrl(text: String) {
+        share(items: [text])
     }
     
 }
+
 
 // MARK: - WKNavigationDelegate
 
 extension DetailViewController: WKNavigationDelegate {
     
     func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
-        webViewState = .loading
+        viewModel.didStartProvisionalNavigation()
     }
     
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        webViewState = .loaded
+        viewModel.didFinishNavigation()
     }
     
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
-        webViewState = .error(WebViewError.webKitError(error))
+        viewModel.didFailNavigation(with: error)
     }
 }
 
-// MARK: - DetailViewModelDelegate
-
-extension DetailViewController: DetailViewModelDelegate {
-    
-    func handleOutput(_ output: DetailViewModelOutput) {
-        switch output {
-        case .updateTitle(let title):
-            navigationBarTitle.text = title
-        case .updateWebURL(let url):
-            let request = URLRequest(url: url)
-            webView.load(request)
-            webView.allowsBackForwardNavigationGestures = true
-        }
-        
-    }
-    
-}
 
 // MARK: - ErrorViewDelegate
 
@@ -312,14 +246,7 @@ extension DetailViewController: ErrorViewDelegate {
     func handleOutput(_ output: ErrorViewOutput) {
         switch output {
         case .retry:
-            retryButtonTapped()
+            viewModel.didRetryButtonTapped()
         }
     }
-    
-    private func retryButtonTapped() {
-        viewModel.fetchWebURL()
-    }
-    
 }
-
-

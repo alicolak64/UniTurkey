@@ -7,19 +7,6 @@
 
 import UIKit
 
-enum FavoriteRoute {
-    // MARK: Cases
-    case back
-    case detail(UniversityRepresentation)
-}
-
-protocol FavoriteRouterProtocol {
-    // MARK: Dependency Properties
-    var navigationController: UINavigationController? { get }
-    // MARK: Methods
-    func navigate(to route: FavoriteRoute)
-}
-
 final class FavoriteRouter: FavoriteRouterProtocol {
     
     // MARK: - Dependency Properties
@@ -39,8 +26,8 @@ final class FavoriteRouter: FavoriteRouterProtocol {
         switch route {
         case .back:
             navigationController.popViewController(animated: true)
-        case .detail(let university):
-            let detailViewController = DetailBuilder().build(with: university)
+        case .detail(let arguments):
+            let detailViewController = DetailBuilder().build(with: arguments)
             navigationController.pushViewController(detailViewController, animated: true)
         }
     }

@@ -7,48 +7,63 @@
 
 import Foundation
 
-enum DetailViewModelOutput {
-    // MARK: Cases
-    case updateTitle(String)
-    case updateWebURL(URL)
-}
-
-protocol DetailViewModelDelegate: AnyObject {
-    // MARK: - Methods
-    func handleOutput(_ output: DetailViewModelOutput)
-}
-
-protocol DetailViewModelProtocol {
-    
-    // MARK: - Dependency Properties
-    
-    var delegate: DetailViewModelDelegate? { get set }
-    
-    // MARK: - Methods
-    
-    func fetchTitle()
-    func fetchWebURL()
-    
-    func navigate(to route: DetailRoute)
-    
-}
-
 final class DetailViewModel {
     
     // MARK: - Dependency Properties
     
-    weak var delegate: DetailViewModelDelegate?
+    weak var delegate: DetailViewProtocol?
     private let router: DetailRouterProtocol
     
     // MARK: - Properties
     
-    let university: UniversityRepresentation
+    private let university: DetailArguments
+    
+    private var webViewState: WebViewState = .loading {
+        didSet {
+            switch webViewState {
+            case .loading:
+                delegate?.showLoadingView()
+                startTimeoutTimer()
+            case .loaded:
+                delegate?.showWebView()
+                timeoutTimer?.invalidate()
+            case .error(let error):
+                delegate?.showErrorView(error: error)
+                timeoutTimer?.invalidate()
+            }
+        }
+    }
+    
+    private var timeoutTimer: Timer?
+    private var timeoutInterval: TimeInterval = Constants.Network.timeoutInterval
     
     // MARK: - Init
     
-    init(router: DetailRouterProtocol, university: UniversityRepresentation) {
+    init(router: DetailRouterProtocol, university: DetailArguments) {
         self.router = router
         self.university = university
+    }
+    
+    private func loadWebView() {
+        guard let url = university.url.httpsUrl else {
+            webViewState = .error(.invalidURL)
+            return
+        }
+        
+        delegate?.loadWebView(with: URLRequest(url: url))
+    }
+    
+    private func navigate(to route: DetailRoute) {
+        router.navigate(to: route)
+    }
+    
+    private func startTimeoutTimer() {
+        timeoutTimer?.invalidate()
+        timeoutTimer = Timer.scheduledTimer(timeInterval: timeoutInterval, target: self, selector: #selector(handleTimeout), userInfo: nil, repeats: false)
+    }
+    
+    @objc private func handleTimeout() {
+        webViewState = .error(WebViewError.timeoutError)
     }
     
 }
@@ -57,26 +72,50 @@ final class DetailViewModel {
 
 extension DetailViewModel: DetailViewModelProtocol {
     
-    // MARK: - Methods
-    
-    func fetchTitle() {
-        notify(.updateTitle(university.name))
+    func loadView() {
+        delegate?.prepareWebView()
     }
     
-    func fetchWebURL() {
-        guard let url = university.website.httpsUrl else { return }
-        notify(.updateWebURL(url))
+    func viewDidLoad() {
+        delegate?.prepareNavigationBar(title: university.name)
+        delegate?.prepareUI()
+        loadWebView()
     }
     
-    
-    func navigate(to route: DetailRoute) {
-        router.navigate(to: route)
+    func viewDidLayoutSubviews() {
+        delegate?.prepareConstraints()
     }
     
-    // MARK: - Helpers
+    func didBackButtonTapped() {
+        navigate(to: .back)
+    }
     
-    private func notify(_ output: DetailViewModelOutput) {
-        delegate?.handleOutput(output)
+    func didRefreshButtonTapped() {
+        delegate?.reloadWebView()
+    }
+    
+    func didShareButtonTapped() {
+        guard let url = university.url.httpsUrl else {
+            delegate?.shareUrl(text: "Invalid URL")
+            return
+        }
+        delegate?.shareUrl(text: url.absoluteString)
+    }
+    
+    func didRetryButtonTapped() {
+        loadWebView()
+    }
+    
+    func didStartProvisionalNavigation() {
+        webViewState = .loading
+    }
+    
+    func didFinishNavigation() {
+        webViewState = .loaded
+    }
+    
+    func didFailNavigation(with error: Error) {
+        webViewState = .error(.webKitError(error))
     }
     
 }

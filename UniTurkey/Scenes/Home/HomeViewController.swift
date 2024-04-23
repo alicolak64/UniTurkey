@@ -89,13 +89,10 @@ final class HomeViewController: UIViewController {
         let button = UIButton()
         button.setImage(Constants.Icon.scroolTop?.resizeImage(targetSize: CGSize(width: 50, height: 50)).withTintColor(.systemBlue), for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.addTarget(self, action: #selector(scrollTopButtonTapped), for: .touchUpInside)
+        button.addTarget(self, action: #selector(scrollToTopButtonTapped), for: .touchUpInside)
         button.isHidden = true
         return button
     }()
-    
-    // MARK: - Properties
-    private var lastScrollTime: Date?
     
     // MARK: - Initializers
     
@@ -113,32 +110,22 @@ final class HomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         viewModel.delegate = self
-        initalSetup()
-        configureUI()
+        viewModel.viewDidLoad()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        viewModel.checkFavorites()
+        viewModel.viewWillAppear()
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        setConstraints()
+        viewModel.viewDidLayoutSubviews()
     }
     
     // MARK: - Setup
     
-    private func initalSetup() {
-        // fetch title
-        viewModel.fetchTitle()
-        // fetch provinces
-        viewModel.fetchProvinces()
-        // tableview setup
-        tableViewSetup()
-    }
-    
-    private func tableViewSetup() {
+    func prepareTableView() {
         // MARK: - TableView Dependencies
         provincesTableView.delegate = self
         provincesTableView.dataSource = self
@@ -150,19 +137,19 @@ final class HomeViewController: UIViewController {
     
     // MARK: - Layout
     
-    private func configureUI() {
+    func prepareUI() {
         view.backgroundColor = Constants.Color.background
-        configureNavigationBar()
         view.addSubviews([loadingView,errorView,provincesTableView,paginationLoadingView,scrollTopButton])
     }
     
-    private func configureNavigationBar() {
+    func prepareNavigationBar(title: String) {
+        navigationBarTitle.text = title
         navigationItem.titleView = navigationBarTitle
         navigationItem.leftBarButtonItem = scaleDownNavigationBarItem
         navigationItem.rightBarButtonItem = favoriteNavigationBarItem
     }
     
-    private func setConstraints() {
+    func prepareConstraints() {
         NSLayoutConstraint.activate([
             loadingView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             loadingView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
@@ -189,35 +176,15 @@ final class HomeViewController: UIViewController {
     // MARK: - Actions
     
     @objc private func favoriteButtonTapped() {
-        viewModel.navigate(to: .favorites)
+        viewModel.didFavoriteButtonTapped()
     }
     
     @objc private func scaleDownButtonTapped() {
-        viewModel.toggleAllExpanded()
+        viewModel.didScaleDownButtonTapped()
     }
     
-    @objc private func scrollTopButtonTapped() {
-        provincesTableView.setContentOffset(.zero, animated: true)
-    }
-    
-    // MARK: - Helpers
-    
-    private func startLoading() {
-        provincesTableView.isHidden = true
-        loadingView.showLoading()
-    }
-    
-    private func stopLoading() {
-        loadingView.hideLoading()
-    }
-    
-    private func showError(_ error: Error) {
-        provincesTableView.isHidden = true
-        errorView.showError(error: error)
-    }
-    
-    private func setScroolButtonVisible(_ isHidden: Bool) {
-        scrollTopButton.isHidden = isHidden
+    @objc private func scrollToTopButtonTapped() {
+        viewModel.didScrollToTopButtonTapped()
     }
     
 }
@@ -225,80 +192,92 @@ final class HomeViewController: UIViewController {
 
 // MARK: - ViewModel Delegate
 
-extension HomeViewController : HomeViewModelDelegate {
+extension HomeViewController : HomeViewProtocol {
     
-    func handleOutput(_ output: HomeViewModelOutput) {
+    func startLoading() {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
-            switch output {
-            case .updateTitle(let title):
-                self.navigationBarTitle.text = title
-            case .updateLoading(let loading):
-                if self.viewModel.numberOfProvinces() == 0 {
-                    loading ? self.startLoading() : self.stopLoading()
-                } else {
-                    loading ? self.paginationLoadingView.showLoading() : self.paginationLoadingView.hideLoading()
-                }
-            case .updateError(let error):
-                self.showError(error)
-            case .reloadTableView:
-                self.provincesTableView.isHidden = false
-                self.provincesTableView.reloadData()
-            case .reloadSections(let section):
-                self.provincesTableView.reloadSections(section, with: .automatic)
-            case .reloadRows(let indexPaths):
-                self.provincesTableView.reloadRows(at: indexPaths, with: .automatic)
-            case .showAlert(let alertMessage):
-                self.showAlert(title: alertMessage.title, message: alertMessage.message, actionTitle: "OK")
-            }
-        }
-    }
-}
-
-// MARK: - University Cell Delegate
-
-extension HomeViewController: UniversityCellDelegate {
-    
-    func handleOutput(_ output: UniversityCellOutput) {
-        switch output {
-        case .didSelectFavorite(let university):
-            didTapFavoriteButton(with: university)
-        case .didSelectDetail(let university, let detail):
-            switch detail.category {
-            case .phone:
-                callPhone(with: detail.value)
-            case .website:
-                viewModel.navigate(to: .detail(university))
-            case .email:
-                sendEmail(with: detail.value)
-            case .address:
-                openMapAddress(with: detail.value)
-            case .rector:
-                searchTextSafari(with: detail.value)
-            case .fax:
-                showAlert(title: "Fax", message: detail.value, actionTitle: "OK")
-            }
-        case .didShareDetail(let text):
-            share(items: [text])
+            self.provincesTableView.isHidden = true
+            self.loadingView.showLoading()
         }
     }
     
-    
-    private func didTapFavoriteButton(with university: UniversityRepresentation) {
-        viewModel.toggleFavorite(with: university)
+    func stopLoading() {
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            self.loadingView.hideLoading()
+        }
     }
     
-}
-
-// MARK: - Error View Delegate
-
-extension HomeViewController: ErrorViewDelegate {
-    
-    func handleOutput(_ output: ErrorViewOutput) {
-        switch output {
-        case .retry:
-            viewModel.didTryAgain()
+    func showError(_ error: Error) {
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            self.provincesTableView.isHidden = true
+            self.errorView.showError(error: error)
         }
+    }
+    
+    func startPaginationLoading() {
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            self.paginationLoadingView.showLoading()
+        }
+    }
+    
+    func stopPaginationLoading() {
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            self.paginationLoadingView.hideLoading()
+        }
+    }
+    
+    func showScrollToTopButton() {
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            self.scrollTopButton.isHidden = false
+        }
+    }
+    
+    func hideScrollToTopButton() {
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            self.scrollTopButton.isHidden = true
+        }
+    }
+    
+    func scrollToTop() {
+        provincesTableView.setContentOffset(.zero, animated: true)
+    }
+    
+    func showAlert(alertMessage: AlertMessage) {
+        showAlert(title: alertMessage.title, message: alertMessage.message, actionTitle: "OK")
+    }
+    
+    func reloadTableView() {
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            self.provincesTableView.isHidden = false
+            self.provincesTableView.reloadData()
+        }
+        
+    }
+    
+    func reloadSections(at indexSet: IndexSet) {
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            self.provincesTableView.reloadSections(indexSet, with: .automatic)
+        }
+    }
+    
+    func reloadRows(at indexPaths: [IndexPath]) {
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            self.provincesTableView.reloadRows(at: indexPaths, with: .automatic)
+        }
+    }
+    
+    func shareDetail(text: String) {
+        share(items: [text])
     }
     
 }
@@ -310,78 +289,73 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     // MARK: - TableView DataSource
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        viewModel.numberOfProvinces()
+        viewModel.numberOfSections()
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        viewModel.isExpanded(at: section)
-        ? tableView.numberOfRowsWithSection(numberOfRows: viewModel.numberOfUniversities(at: section))
-        : 1
+        viewModel.numberOfRowsInSection(at: section)
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        if tableView.isSection(at: indexPath) {
-            guard let province = viewModel.province(at: indexPath.section) else { return UITableViewCell() }
+        if indexPath.isSection {
+            guard let section = viewModel.cellForRow(at: indexPath.section) else { return UITableViewCell() }
             let cell: ProvinceCell = tableView.dequeueReusableCell(for: indexPath)
-            cell.configure(with: province)
+            cell.configure(with: section)
             return cell
         } else {
-            guard let university = viewModel.university(at: tableView.indexWithoutSection(from: indexPath)) else { return UITableViewCell() }
+            guard let row = viewModel.cellForRow(at: indexPath) else { return UITableViewCell() }
             let cell: UniversityCell = tableView.dequeueReusableCell(for: indexPath)
-            cell.configure(with: university)
+            cell.configure(with: row)
             cell.delegate = self
             return cell
         }
-        
     }
     
     // MARK: - TableView Delegate
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
-        tableView.isSection(at: indexPath)
-        ? viewModel.toogleExpand(at: indexPath.section)
-        : viewModel.toogleExpand(at: tableView.indexWithoutSection(from: indexPath))
-        
+        viewModel.didSelectRow(at: indexPath)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if tableView.isSection(at: indexPath) {
-            return CGFloat(Constants.UI.nonExpandCellHeight)
-        } else {
-            return viewModel.isExpanded(at: tableView.indexWithoutSection(from: indexPath))
-            ? CGFloat ( Constants.UI.nonExpandCellHeight + (Constants.UI.detailCellHeight * viewModel.numberOfDetails(at: tableView.indexWithoutSection(from: indexPath))))
-            : CGFloat(Constants.UI.nonExpandCellHeight)
-        }
+        viewModel.heightForRow(at: indexPath)
     }
     
     // MARK: - ScrollView Delegate
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        
-        scrollView.contentOffset.y > 100 ? setScroolButtonVisible(false) : setScroolButtonVisible(true)
-        
-        let contentHeight = scrollView.contentSize.height
-        let visibleHeight = scrollView.bounds.height
-        let scrollOffset = scrollView.contentOffset.y
-        
-        let scrollPercentage = (scrollOffset + visibleHeight) / contentHeight
-        
-        if scrollPercentage >= Constants.UI.infinityScrollPercentage && viewModel.numberOfProvinces() > 0 {
-            
-            let now = Date()
-            if let lastRequestTime = lastScrollTime, now.timeIntervalSince(lastRequestTime) < Constants.UI.infinityScrollLateLimitSecond {
-                return
-            }
-            
-            viewModel.fetchProvinces()
-            
-            lastScrollTime = now
-            
-        }
-        
+        viewModel.scrollViewDidScroll(contentOffset: scrollView.contentOffset, contentSize: scrollView.contentSize, bounds: scrollView.bounds)
     }
+    
 }
 
+// MARK: - University Cell Delegate
 
+extension HomeViewController: UniversityCellDelegate {
+    
+    
+    func handleOutput(_ output: UniversityCellOutput) {
+        switch output {
+        case .didSelectFavorite(let university):
+            viewModel.didSelectFavorite(university: university)
+        case .didSelectDetail(let universityIndexPath, let detailIndexPath):
+            viewModel.didSelectDetail(universityIndexPath: universityIndexPath, detailIndexPath: detailIndexPath)
+        case .didShareDetail(let universityIndexPath, let detailIndexPath):
+            viewModel.didSelectShare(universityIndexPath: universityIndexPath, detailIndexPath: detailIndexPath)
+        }
+    }
+    
+}
+
+// MARK: - Error View Delegate
+
+extension HomeViewController: ErrorViewDelegate {
+    
+    func handleOutput(_ output: ErrorViewOutput) {
+        switch output {
+        case .retry:
+            viewModel.didRertyButtonTapped()
+        }
+    }
+    
+}

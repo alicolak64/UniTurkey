@@ -7,12 +7,8 @@
 
 import UIKit
 
-protocol FavoriteBuildable {
-    // MARK: - Methods
-    func build() -> UIViewController
-}
 
-final class FavoriteBuilder: FavoriteBuildable {
+final class FavoriteBuilder: FavoriteBuilderProtocol {
     
     // MARK: - Methods
     

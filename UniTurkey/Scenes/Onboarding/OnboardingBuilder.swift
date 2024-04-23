@@ -7,12 +7,7 @@
 
 import UIKit
 
-protocol OnboardingBuildable {
-    // MARK: - Methods
-    func build() -> UIViewController
-}
-
-final class OnboardingBuilder: OnboardingBuildable {
+final class OnboardingBuilder: OnboardingBuilderProtocol {
     
     // MARK: - Methods
     

@@ -23,25 +23,29 @@ final class FavoriteManager: FavoriteService{
     
     // MARK: - Methods
     
-    func addFavorite(_ university: UniversityRepresentation) {
+    func addFavorite(_ university: University) {
         userDefaults.set(object: university, forKey: university.name)
     }
     
-    func removeFavorite(with university: UniversityRepresentation) {
+    func removeFavorite(with university: University) {
         userDefaults.set(nil, forKey: university.name)
     }
     
-    func getFavorites() -> [UniversityRepresentation] {
+    func removeAllFavorites(universities: [University]) {
+        universities.forEach { removeFavorite(with: $0) }
+    }
+    
+    func getFavorites() -> [University] {
         
         return userDefaults.dictionaryRepresentation().compactMap { key, value in
             guard let data = value as? Data,
-                  let university = try? JSONDecoder().decode(UniversityRepresentation.self, from: data) else { return nil }
+                  let university = try? JSONDecoder().decode(University.self, from: data) else { return nil }
             return university
         }
         
     }
     
-    func isFavorite(_ university: UniversityRepresentation) -> Bool {
+    func isFavorite(_ university: University) -> Bool {
         return userDefaults[university.name] != nil
     }
     

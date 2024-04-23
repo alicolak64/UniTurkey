@@ -7,18 +7,11 @@
 
 import UIKit
 
-protocol DetailBuildable {
-    
-    // MARK: - Methods
-    
-    func build(with university: UniversityRepresentation) -> UIViewController
-}
-
-final class DetailBuilder: DetailBuildable {
+final class DetailBuilder: DetailBuilderProtocol {
     
     // MARK: Methods
     
-    func build(with university: UniversityRepresentation) -> UIViewController {
+    func build(with university: DetailArguments) -> UIViewController {
         let navigationController = app.navigationController
         let router = DetailRouter(navigationController: navigationController)
         let viewModel = DetailViewModel(router: router, university: university)

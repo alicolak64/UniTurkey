@@ -7,12 +7,7 @@
 
 import UIKit
 
-protocol HomeBuildable {
-    // MARK: - Methods
-    func build() -> UIViewController
-}
-
-final class HomeBuilder: HomeBuildable {
+final class HomeBuilder: HomeBuilderProtocol {
     
     // MARK: - Methods
     
@@ -27,5 +22,3 @@ final class HomeBuilder: HomeBuildable {
     }
     
 }
-
-

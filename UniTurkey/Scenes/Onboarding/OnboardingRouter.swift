@@ -7,16 +7,6 @@
 
 import UIKit
 
-enum OnboardingRoute {
-    // MARK: Cases
-    case home
-}
-
-protocol OnboardingRouterProtocol {
-    // MARK: Methods
-    func navigate(to route: OnboardingRoute)
-}
-
 final class OnboardingRouter: OnboardingRouterProtocol {
     
     // MARK: - Methods

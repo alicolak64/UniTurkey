@@ -8,32 +8,12 @@
 import PaperOnboarding
 import UIKit
 
-enum OnboardingOutput {
-    
-}
-
-protocol OnboardingViewModelDelegate: AnyObject {
-    // MARK: - Methods
-    func handleOutput(_ output: OnboardingOutput)
-}
-
-protocol OnboardingViewModelProtocol {
-    
-    // MARK: - Dependency Properties
-    var delegate: OnboardingViewModelDelegate? { get set }
-    
-    func numberOfItems() -> Int
-    func item(at index: Int) -> OnboardingItemInfo
-    
-    func navigate(to route: OnboardingRoute)
-    
-}
 
 final class OnboardingViewModel {
     
     // MARK: - Dependency Properties
     
-    weak var delegate: OnboardingViewModelDelegate?
+    weak var delegate: OnboardingViewProtocol?
     private let router: OnboardingRouterProtocol
     
     // MARK: - Properties
@@ -78,17 +58,7 @@ final class OnboardingViewModel {
         }
     }
     
-}
-
-// MARK: - Onboarding ViewModel Delegate
-
-extension OnboardingViewModel: OnboardingViewModelProtocol {
-    
-    func numberOfItems() -> Int {
-        items.count
-    }
-    
-    func item(at index: Int) -> OnboardingItemInfo{
+    private func item(at index: Int) -> OnboardingItemInfo{
         guard let item = items[safe: index] else {
             return OnboardingItemInfo(informationImage: UIImage(),
                                       title: "",
@@ -104,13 +74,44 @@ extension OnboardingViewModel: OnboardingViewModelProtocol {
     }
     
     
-    func navigate(to route: OnboardingRoute) {
+    private func navigate(to route: OnboardingRoute) {
         app.stroageService.setOnBoardingSeen()
         router.navigate(to: route)
     }
     
-    private func notify(_ output: OnboardingOutput) {
-        delegate?.handleOutput(output)
+}
+
+// MARK: - Onboarding ViewModel Delegate
+
+extension OnboardingViewModel: OnboardingViewModelProtocol {
+    
+    func viewDidLoad() {
+        delegate?.prepareOnboarding()
+        delegate?.prepareUI()
+    }
+    
+    func viewDidLayoutSubviews() {
+        delegate?.prepareConstraints()
+    }
+    
+    func didSkipButtonTapped() {
+        navigate(to: .home)
+    }
+    
+    func numberOfPage() -> Int {
+        items.count
+    }
+    
+    func onboardingWillTransitonToIndex(at index: Int) {
+        if index == items.count - 1 {
+            delegate?.showSkipButton()
+        } else {
+            delegate?.hideSkipButton()
+        }
+    }
+    
+    func pageForItem(at index: Int) -> OnboardingItemInfo {
+        item(at: index)
     }
     
 }

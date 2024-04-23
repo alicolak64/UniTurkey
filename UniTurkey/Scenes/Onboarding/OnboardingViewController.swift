@@ -49,35 +49,29 @@ final class OnboardingViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         viewModel.delegate = self
-        initalSetup()
-        configureUI()
+        viewModel.viewDidLoad()
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        setConstraints()
+        viewModel.viewDidLayoutSubviews()
     }
     
     // MARK: - Setup
     
-    private func initalSetup() {
-        // onboardingSetup()
-        onboardingSetup()
-    }
-    
-    private func onboardingSetup() {
+    func prepareOnboarding() {
         onboarding.delegate = self
         onboarding.dataSource = self
     }
     
     // MARK: - Layout
     
-    private func configureUI() {
+    func prepareUI() {
         view.backgroundColor = Constants.Color.background
         view.addSubviews(onboarding,skipButton)
     }
     
-    private func setConstraints() {
+    func prepareConstraints() {
         NSLayoutConstraint.activate([
             onboarding.topAnchor.constraint(equalTo: view.topAnchor),
             onboarding.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -93,7 +87,7 @@ final class OnboardingViewController: UIViewController {
     // MARK: - Actions
     
     @objc private func didTapSkipButton() {
-        viewModel.navigate(to: .home)
+        viewModel.didSkipButtonTapped()
     }
     
 }
@@ -101,26 +95,34 @@ final class OnboardingViewController: UIViewController {
 extension OnboardingViewController: PaperOnboardingDataSource,PaperOnboardingDelegate {
     
     func onboardingWillTransitonToIndex(_ index: Int) {
-        index == viewModel.numberOfItems() - 1 ? (skipButton.isHidden = false) : (skipButton.isHidden = true)
+        viewModel.onboardingWillTransitonToIndex(at: index)
     }
     
     
     func onboardingItem(at index: Int) -> OnboardingItemInfo {
-        viewModel.item(at: index)
+        viewModel.pageForItem(at: index)
     }
     
     func onboardingItemsCount() -> Int {
-        viewModel.numberOfItems()
+        viewModel.numberOfPage()
     }
     
 }
 
-extension OnboardingViewController: OnboardingViewModelDelegate {
+// MARK: - Onboarding View Protocol
+
+extension OnboardingViewController: OnboardingViewProtocol {
     
-    func handleOutput(_ output: OnboardingOutput) {
-        
+    func showSkipButton() {
+        DispatchQueue.main.async { [weak self] in
+            self?.skipButton.isHidden = false
+        }
+    }
+    
+    func hideSkipButton() {
+        DispatchQueue.main.async { [weak self] in
+            self?.skipButton.isHidden = true
+        }
     }
     
 }
-
-
