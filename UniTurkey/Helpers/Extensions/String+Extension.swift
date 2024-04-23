@@ -72,7 +72,7 @@ extension String {
     }
     
     var isNotAvaliable: Bool {
-        return self == Constants.Text.notAvaliable
+        return self == Constants.Text.notAvaliable || self == Constants.Text.notAvaliable.lowercased()
     }
 }
 

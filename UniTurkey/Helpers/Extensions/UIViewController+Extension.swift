@@ -23,6 +23,20 @@ extension UIViewController {
         }
     }
     
+    func showActionSheet(title: String, message: String, completion: @escaping () -> Void) {
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .actionSheet)
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        alertController.addAction(cancelAction)
+        
+        let removeAction = UIAlertAction(title: "Remove All", style: .destructive) { _ in
+            completion()
+        }
+        alertController.addAction(removeAction)
+        
+        present(alertController, animated: true, completion: nil)
+    }
+    
     func share(items: [Any]) {
         let activityViewController = UIActivityViewController(activityItems: items, applicationActivities: nil)
         activityViewController.popoverPresentationController?.sourceView = self.view
