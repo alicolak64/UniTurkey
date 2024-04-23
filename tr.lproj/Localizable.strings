@@ -19,6 +19,10 @@
 "warningNoDetailMessage" = "Bu üniversite için detay bilgi bulunamadı.";
 "warningNoUniversityTitle" = "Uyarı! Üniversite Yok";
 "warningNoUniversityMessage" = "Bu şehirde üniversite bulunamadı.";
+"warningNoFavoriteTitle" = "Uyarı! Favori Yok";
+"warningNoFavoriteMessage" = "Favori listeniz boş.";
+"warningRemoveAllTitle" = "Uyarı! Favorileri Sil";
+"warningRemoveAllMessage" = "Tüm favorileri silmek istediğinize emin misiniz?";
 
 "onboardingPage1Title" = "UniTurkey'ye Hoş Geldiniz";
 "onboardingPage1Description" = "Türkiye'deki üniversiteleri keşfedin";

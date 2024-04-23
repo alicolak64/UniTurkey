@@ -21,7 +21,10 @@
 "warningNoDetailMessage" = "There is no detail for this university.";
 "warningNoUniversityTitle" = "Warning! No University";
 "warningNoUniversityMessage" = "There is no university for this province.";
-
+"warningNoFavoriteTitle" = "Warning! No Favorite";
+"warningNoFavoriteMessage" = "There is no favorite university.";
+"warningRemoveAllTitle" = "Warning! Remove All";
+"warningRemoveAllMessage" = "Are you sure you want to remove all favorites?";
 
 "onboardingPage1Title" = "Welcome to UniTurkey";
 "onboardingPage1Description" = "Discover Universities in Turkey";
