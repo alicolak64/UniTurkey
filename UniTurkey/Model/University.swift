@@ -7,7 +7,7 @@
 
 import Foundation
 
-class UniversityRepresentation: Codable, Equatable {
+class University: Expandable, Favoritable, Codable, Equatable {
     
     // MARK: Enums
     
@@ -39,9 +39,6 @@ class UniversityRepresentation: Codable, Equatable {
     let address: String
     let rector: String
     
-    var isExpanded: Bool = false
-    var isFavorite: Bool = false
-    
     let provinceId: Int
     let index: Int
     
@@ -58,6 +55,9 @@ class UniversityRepresentation: Codable, Equatable {
         ].filter { !$0.value.isNotAvaliable }
     }
     
+    var isExpanded: Bool = false
+    
+    var isFavorite: Bool = false
     
     // MARK: - Init
     
@@ -78,27 +78,27 @@ class UniversityRepresentation: Codable, Equatable {
     
     // MARK: - Methods
     
-    func toggleExpand() {
-        isExpanded.toggle()
-    }
-    
     func toggleFavorite() {
         isFavorite.toggle()
     }
     
-    static func == (lhs: UniversityRepresentation, rhs: UniversityRepresentation) -> Bool {
+    func toggleExpand() {
+        isExpanded.toggle()
+    }
+    
+    static func == (lhs: University, rhs: University) -> Bool {
         return lhs.name == rhs.name
     }
     
 }
 
-class ProvinceRepresentation: Codable {
+class Province: Expandable, Codable {
     
     // MARK: - Properties
     
     let id: Int
     let name: String
-    var universities = [UniversityRepresentation]()
+    var universities = [University]()
     var isExpanded: Bool = false
     
     // MARK: - Init
@@ -106,8 +106,7 @@ class ProvinceRepresentation: Codable {
     init(province: ProvinceResponse) {
         self.id = province.id
         self.name = province.province.apiCapitaledTrimmed
-        self.universities = province.universities.enumerated().map { UniversityRepresentation(university: $0.element, provinceId: id, index: $0.offset)
-        }
+        self.universities = province.universities.enumerated().map { University(university: $0.element, provinceId: id, index: $0.offset) }
     }
     
     // MARK: - Methods
@@ -115,5 +114,5 @@ class ProvinceRepresentation: Codable {
     func toggleExpand() {
         isExpanded.toggle()
     }
-    
 }
+
