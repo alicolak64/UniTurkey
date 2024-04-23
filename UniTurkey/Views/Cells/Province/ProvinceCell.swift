@@ -16,7 +16,7 @@ final class ProvinceCell: UITableViewCell,ProvinceCellProtocol {
     
     // MARK: - Typealias
     
-    typealias Model = ProvinceRepresentation
+    typealias Model = ProvinceCellViewModel
     
     // MARK: - UI Components
     
@@ -97,27 +97,21 @@ final class ProvinceCell: UITableViewCell,ProvinceCellProtocol {
     
     // MARK: Configure
     
-    func configure(with model: ProvinceRepresentation) {
+    func configure(with model: ProvinceCellViewModel) {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
-            self.provinceNameLabel.text = model.name
-            self.updateExpansionFeature(isExpanded: model.isExpanded, isEmptyArray: model.universities.isEmpty)
-            self.updateUniveristyCountLabel(universityCount: model.universities.count)
+            self.provinceNameLabel.text = model.provinceName
+            self.universityCountLabel.text = model.universityCountText
+            switch model.expansionIconState {
+            case .plus:
+                self.expandIcon.image = Constants.Icon.plus
+            case .minus:
+                self.expandIcon.image = Constants.Icon.plus
+            case .none:
+                self.expandIcon.image = nil
+            }
+            
         }
-    }
-    
-    // MARK: - Update UI
-    
-    private func updateExpansionFeature(isExpanded: Bool, isEmptyArray: Bool = false) {
-        if isEmptyArray {
-            expandIcon.image = nil
-        } else {
-            expandIcon.image = isExpanded ? Constants.Icon.minus : Constants.Icon.plus
-        }
-    }
-    
-    private func updateUniveristyCountLabel (universityCount: Int) {
-        universityCountLabel.text = universityCount > 1 ? "\(universityCount) \(Constants.Text.multipleUniversity)" : ( universityCount == 1 ? "\(universityCount) \(Constants.Text.singleUniversity)" : Constants.Text.noUniversity)
     }
     
 }

@@ -6,13 +6,12 @@
 //
 
 import UIKit
-import QuartzCore
 
 enum UniversityCellOutput {
     // MARK: Cases
-    case didSelectFavorite(UniversityRepresentation)
-    case didSelectDetail(UniversityRepresentation,UniversityRepresentation.Detail)
-    case didShareDetail(String)
+    case didSelectFavorite(UniversityCellViewModel)
+    case didSelectDetail(IndexPath,IndexPath)
+    case didShareDetail(IndexPath, IndexPath)
 }
 
 protocol UniversityCellDelegate: AnyObject {
@@ -29,12 +28,12 @@ final class UniversityCell: UITableViewCell,UniversityCellProtocol {
     
     // MARK: - Typealias
     
-    typealias Model = UniversityRepresentation
+    typealias Model = UniversityCellViewModel
     
     // MARK: - Dependency Properties
     
     weak var delegate: UniversityCellDelegate?
-    private var university: UniversityRepresentation?
+    private var university: UniversityCellViewModel?
     
     // MARK: - UI Components
     
@@ -181,33 +180,40 @@ final class UniversityCell: UITableViewCell,UniversityCellProtocol {
     
     // MARK: Configure
     
-    func configure(with model: UniversityRepresentation) {
+    func configure(with model: UniversityCellViewModel) {
         
         university = model
         
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
-            self.universityNameLabel.text = model.name
-            self.updateFavoriteFeature(isFavorite: model.isFavorite)
-            if model.details.isEmpty {
-                self.expandIcon.image = nil
-                self.hideDetails()
-            } else {
-                self.updateExpansionFeature(isExpanded: model.isExpanded)
+            self.universityNameLabel.text = model.universityName
+            switch model.favoriteIconState {
+            case .empty:
+                favoriteButton.setImage(Constants.Icon.heart, for: .normal)
+            case .filled:
+                favoriteButton.setImage(Constants.Icon.heartFill, for: .normal)
             }
+            switch model.expansionIconState {
+            case .plus:
+                self.expandIcon.image = Constants.Icon.plus
+                showDetails()
+                detailTableView.reloadData()
+            case .minus:
+                self.expandIcon.image = Constants.Icon.minus
+                showDetails()
+                detailTableView.reloadData()
+            case .none:
+                self.expandIcon.image = nil
+                hideDetails()
+            }
+            
         }
         
     }
     
     // MARK: - Update UI
     
-    private func updateExpansionFeature(isExpanded: Bool) {
-        expandIcon.image = isExpanded ? Constants.Icon.minus : Constants.Icon.plus
-        showDetails()
-        detailTableView.reloadData()
-    }
-    
-    private func updateFavoriteFeature(isFavorite: Bool) {
+    private func updateFavoriteButtonImage(isFavorite: Bool) {
         favoriteButton.setImage(isFavorite ? Constants.Icon.heartFill : Constants.Icon.heart, for: .normal)
     }
     
@@ -215,9 +221,9 @@ final class UniversityCell: UITableViewCell,UniversityCellProtocol {
     
     @objc private func favoriteButtonTapped() {
         guard let university = university else { return }
-        let isFavorite = university.isFavorite
+        self.university?.toggleFavorite()
         notify(output: .didSelectFavorite(university))
-        addFavoriteButtonAnimation(isFavorite: isFavorite)
+        addFavoriteButtonAnimation(isFavorite: university.isFavorite)
     }
     
     // MARK: Helpers
@@ -236,7 +242,7 @@ final class UniversityCell: UITableViewCell,UniversityCellProtocol {
         // finish animation run updateFavoriteFeature(isFavorite: !isFavorite)
         favoriteButton.layer.add(favoriteButtonAnimation, forKey: nil)
         DispatchQueue.main.asyncAfter(deadline: .now() + Constants.Animation.Favorite.duration) { [weak self] in
-            self?.updateFavoriteFeature(isFavorite: !isFavorite)
+            self?.updateFavoriteButtonImage(isFavorite: !isFavorite)
         }
     }
     
@@ -253,14 +259,14 @@ extension UniversityCell: UITableViewDelegate, UITableViewDataSource {
     // MARK: - UITableViewDataSource
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return university?.details.count ?? 0
+        university?.details.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let university = university, let detail = university.details[safe: indexPath.row] else { return UITableViewCell() }
         
         let cell: DetailCell = tableView.dequeueReusableCell(for: indexPath)
-        cell.configure(with: detail)
+        cell.configure(with: DetailCellViewModel(detail: detail, indexPath: indexPath))
         cell.delegate = self
         return cell
     }
@@ -268,12 +274,12 @@ extension UniversityCell: UITableViewDelegate, UITableViewDataSource {
     // MARK: - UITableViewDelegate
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return UITableView.automaticDimension
+        UITableView.automaticDimension
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard let university = university, let detail = university.details[safe: indexPath.row] else { return }
-        notify(output: .didSelectDetail(university,detail))
+        guard let university = university else { return }
+        notify(output: .didSelectDetail(university.indexPath, indexPath))
     }
 }
 
@@ -283,8 +289,9 @@ extension UniversityCell: DetailCellDelegate {
     
     func handleOutput(_ output: DetailCellOutput) {
         switch output {
-        case .didShareButton(let text):
-            notify(output: .didShareDetail(text))
+        case .didShareButton(let indexPath):
+            guard let university = university else { return }
+            notify(output: .didShareDetail(university.indexPath,indexPath))
         }
     }
     

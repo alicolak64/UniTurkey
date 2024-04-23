@@ -1,5 +1,5 @@
 //
-//  InfoButton.swift
+//  DetailCell.swift
 //  UniTurkey
 //
 //  Created by Ali Çolak on 16.04.2024.
@@ -9,7 +9,7 @@ import UIKit
 
 enum DetailCellOutput {
     // MARK: - Cases
-    case didShareButton(String)
+    case didShareButton(IndexPath)
 }
 
 protocol DetailCellDelegate: AnyObject {
@@ -26,11 +26,12 @@ final class DetailCell: UITableViewCell, DetailCellProtocol {
     
     // MARK: - Typealias
     
-    typealias Model = UniversityRepresentation.Detail
+    typealias Model = DetailCellViewModel
     
     // MARK: - Dependency Properties
     
     weak var delegate: DetailCellDelegate?
+    private var indexPath: IndexPath?
     
     // MARK: - UI Components
     
@@ -115,13 +116,13 @@ final class DetailCell: UITableViewCell, DetailCellProtocol {
     
     // MARK: - Configure
     
-    func configure(with model: Model) {
+    func configure(with model: DetailCellViewModel) {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
-            self.setIcon(with: model.category)
-            self.adjustFontSize(for: model.value)
-            
-            self.detailLabel.text = model.value
+            self.setIcon(with: model.detailIconType)
+            self.adjustFontSize(for: model.detailText)
+            self.indexPath = model.indexPath
+            self.detailLabel.text = model.detailText
             self.detailIcon.tintColor = Constants.Color.black
         }
     }
@@ -129,13 +130,13 @@ final class DetailCell: UITableViewCell, DetailCellProtocol {
     // MARK: - Actions
     
     @objc private func shareButtonTapped() {
-        guard let text = detailLabel.text else { return }
-        notify(.didShareButton(text))
+        guard let indexPath = indexPath else { return }
+        notify(.didShareButton(indexPath))
     }
     
     // MARK: Helpers
     
-    private func setIcon(with category: UniversityRepresentation.DetailCategory) {
+    private func setIcon(with category: University.DetailCategory) {
         switch category {
         case .phone:
             detailIcon.image = Constants.Icon.phone
