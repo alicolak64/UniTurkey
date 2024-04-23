@@ -53,6 +53,10 @@ enum Constants {
         static let warningNoDetailMessage = NSLocalizedString("warningNoDetailMessage", comment: "")
         static let warningNoUniversityTitle = NSLocalizedString("warningNoUniversityTitle", comment: "")
         static let warningNoUniversityMessage = NSLocalizedString("warningNoUniversityMessage", comment: "")
+        static let warningNoFavoriteTitle = NSLocalizedString("warningNoFavoriteTitle", comment: "")
+        static let warningNoFavoriteMessage = NSLocalizedString("warningNoFavoriteMessage", comment: "")
+        static let warningRemoveAllTitle = NSLocalizedString("warningRemoveAllTitle", comment: "")
+        static let warningRemoveAllMessage = NSLocalizedString("warningRemoveAllMessage", comment: "")
     }
     
     // MARK: - Color Constant
@@ -106,6 +110,7 @@ enum Constants {
         static let share = UIImage(systemName: "square.and.arrow.up")
         static let scroolTop = UIImage(systemName: "chevron.up.square.fill")
         static let scaleDown = UIImage(systemName: "arrow.down.right.and.arrow.up.left.square", withConfiguration: largeConfig)
+        static let trash = UIImage(systemName: "trash.fill")
         static let error = UIImage(named: "error")
     }
     
