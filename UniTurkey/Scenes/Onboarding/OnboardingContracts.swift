@@ -44,8 +44,6 @@ protocol OnboardingViewModelProtocol {
 
 protocol OnboardingViewProtocol: AnyObject {
     // MARK: UI Methods
-    func viewDidLoad()
-    func viewDidLayoutSubviews()
     func prepareOnboarding()
     func prepareUI()
     func prepareConstraints()
