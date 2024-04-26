@@ -24,8 +24,6 @@ enum HomeRoute {
 }
 
 protocol HomeRouterProtocol {
-    // MARK: Dependency Properties
-    var navigationController: UINavigationController? { get }
     // MARK: Methods
     func navigate(to route: HomeRoute)
 }
@@ -65,11 +63,6 @@ protocol HomeViewModelProtocol {
 }
 
 protocol HomeViewProtocol: AnyObject {
-    
-    // MARK: - Lifecycle Methods
-    func viewDidLoad()
-    func viewWillAppear(_ animated: Bool)
-    func viewDidLayoutSubviews()
     
     // MARK: - UI Preparation
     

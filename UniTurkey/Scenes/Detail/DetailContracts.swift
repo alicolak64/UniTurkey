@@ -20,8 +20,6 @@ enum DetailRoute {
 }
 
 protocol DetailRouterProtocol {
-    // MARK: Dependency Properties
-    var navigationController: UINavigationController? { get }
     // MARK: Methods
     func navigate(to route: DetailRoute)
 }
@@ -49,12 +47,7 @@ protocol DetailViewModelProtocol {
 }
 
 protocol DetailViewProtocol: AnyObject {
-    
-    // MARK: - Lifecycle Methods
-    func loadView()
-    func viewDidLoad()
-    func viewDidLayoutSubviews()
-    
+        
     func prepareWebView()
     func prepareNavigationBar(title: String)
     func prepareUI()

@@ -19,8 +19,6 @@ enum FavoriteRoute {
 }
 
 protocol FavoriteRouterProtocol {
-    // MARK: Dependency Properties
-    var navigationController: UINavigationController? { get }
     // MARK: Methods
     func navigate(to route: FavoriteRoute)
 }
@@ -54,11 +52,7 @@ protocol FavoriteViewModelProtocol {
 }
 
 protocol FavoriteViewProtocol: AnyObject {
-    
-    // MARK: - Lifecycle Methods
-    func viewDidLoad()
-    func viewDidLayoutSubviews()
-    
+        
     // MARK: - UI Preparation
     
     func prepareTableView()
