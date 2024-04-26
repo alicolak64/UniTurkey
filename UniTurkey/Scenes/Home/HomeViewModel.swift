@@ -58,35 +58,29 @@ final class HomeViewModel {
         loading = true
         universityService.fetchProvinces(page: currentPage + 1) { [weak self] result in
             guard let self = self else { return }
-            DispatchQueue.main.async { [weak self] in
-                guard let self = self else { return }
-                switch result {
-                case .success(let response):
+            switch result {
+            case .success(let response):
+                loading = false
+                currentPage = response.currentPage
+                totalPages = response.totalPages
+                let newProvinces = response.provinces.map { Province(province: $0) }
+                
+                provinces.append(contentsOf: newProvinces)
+                
+                checkFavorites()
+                
+            case .failure(let error):
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+                    guard let self = self else { return }
                     self.loading = false
-                    self.currentPage = response.currentPage
-                    self.totalPages = response.totalPages
-                    let newProvinces = response.provinces.map { Province(province: $0)
-                    }
-                    // check if university is favorite
-                    self.checkFavorites()
-                    
-                    self.provinces.append(contentsOf: newProvinces)
-                    
-                    self.delegate?.reloadTableView()
-                    
-                case .failure(let error):
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
-                        guard let self = self else { return }
-                        self.loading = false
-                        self.error = error
-                    }
+                    self.error = error
                 }
             }
         }
-        
     }
     
     private func checkFavorites() {
+        
         getFavorites()
         provinces.forEach { province in
             province.universities.forEach { university in
@@ -98,7 +92,7 @@ final class HomeViewModel {
             }
         }
         
-        if error == nil {
+        if error == nil && !provinces.isEmpty {
             delegate?.reloadTableView()
         }
         
@@ -197,8 +191,13 @@ final class HomeViewModel {
         
         // convert index array to IndexSet
         
-        delegate?.reloadSections(at: IndexSet(indexSetProvinces))
-        delegate?.reloadRows(at: indexPathsUniversities)
+        if !indexSetProvinces.isEmpty {
+            delegate?.reloadSections(at: IndexSet(indexSetProvinces))
+        }
+        
+        if !indexPathsUniversities.isEmpty {
+            delegate?.reloadRows(at: indexPathsUniversities)
+        }
         
     }
     
@@ -329,7 +328,7 @@ extension HomeViewModel: HomeViewModelProtocol {
     }
     
     func scrollViewDidScroll(contentOffset: CGPoint, contentSize: CGSize, bounds: CGRect) {
-        
+                
         contentOffset.y > 100 ? delegate?.showScrollToTopButton() : delegate?.hideScrollToTopButton()
         
         let contentHeight = contentSize.height
