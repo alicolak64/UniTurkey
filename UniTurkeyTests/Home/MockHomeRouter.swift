@@ -12,14 +12,21 @@ final class MockHomeRouter: HomeRouterProtocol {
     
     var invokedNavigate = false
     var invokedNavigateCount = 0
-    var invokedNavigateParameters: (route: UniTurkey.HomeRoute, Void)?
-    var invokedNavigateParametersList = [(route: UniTurkey.HomeRoute, Void)]()
+    var invokedNavigateParameters: (name: String, url: String)?
+    var invokedNavigateParametersList = [(name: String, url: String)]()
     
     func navigate(to route: UniTurkey.HomeRoute) {
         invokedNavigate = true
         invokedNavigateCount += 1
-        invokedNavigateParameters = (route, ())
-        invokedNavigateParametersList.append((route, ()))
+        
+        switch route {
+        case .detail(let arguments):
+            invokedNavigateParameters = (arguments.name, arguments.url)
+            invokedNavigateParametersList.append((arguments.name, arguments.url))
+        case .favorites:
+            break
+        }
+        
     }
     
     

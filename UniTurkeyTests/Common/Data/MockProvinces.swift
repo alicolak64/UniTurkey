@@ -82,9 +82,9 @@ struct MockProvincePages {
     static let page2Provinces = [province6, province7, province8, province9, province10]
     static let page3Provinces = [province11, province12, province13, province14, province15]
 
-    static let page1 = ProvincePageResponse(currentPage: 1, totalPages: 3, totalProvinces: 14, provincePerPage: 5, pageSize: 3, provinces: page1Provinces)
-    static let page2 = ProvincePageResponse(currentPage: 2, totalPages: 3, totalProvinces: 14, provincePerPage: 5, pageSize: 3, provinces: page2Provinces)
-    static let page3 = ProvincePageResponse(currentPage: 3, totalPages: 3, totalProvinces: 14, provincePerPage: 5, pageSize: 3, provinces: page3Provinces)
+    static let page1 = ProvincePageResponse(currentPage: 1, totalPages: 3, totalProvinces: 15, provincePerPage: 5, pageSize: 3, provinces: page1Provinces)
+    static let page2 = ProvincePageResponse(currentPage: 2, totalPages: 3, totalProvinces: 15, provincePerPage: 5, pageSize: 3, provinces: page2Provinces)
+    static let page3 = ProvincePageResponse(currentPage: 3, totalPages: 3, totalProvinces: 15, provincePerPage: 5, pageSize: 3, provinces: page3Provinces)
 
     static func getProvincePage(page: Page) -> ProvincePageResponse {
         switch page {
