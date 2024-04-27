@@ -142,11 +142,6 @@ extension FavoriteViewModel: FavoriteViewModelProtocol {
         navigate(to: .back)
     }
     
-    func didSelectFavorite(at indexPath: IndexPath) {
-        guard let university = university(at: indexPath.row) else { return }
-        removeFavorite(with: university)
-    }
-    
     func didSelectFavorite(university: UniversityCellViewModel) {
         guard let university = universities.first(where: { $0.name == university.universityName}) else { return }
         removeFavorite(with: university)

@@ -55,7 +55,6 @@ protocol HomeViewModelProtocol {
     func heightForRow(at indexPath: IndexPath) -> CGFloat
     func scrollViewDidScroll(contentOffset: CGPoint, contentSize: CGSize, bounds: CGRect)
     
-    func didSelectFavorite(at indexPath: IndexPath)
     func didSelectFavorite(university: UniversityCellViewModel)
     func didSelectShare(universityIndexPath: IndexPath, detailIndexPath: IndexPath)
     func didSelectDetail(universityIndexPath: IndexPath, detailIndexPath: IndexPath)

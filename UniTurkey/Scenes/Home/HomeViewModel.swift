@@ -54,7 +54,7 @@ final class HomeViewModel {
     // MARK: - Private Methods
     
     private func fetchProvinces() {
-        guard currentPage < totalPages && !loading else {  return }
+        guard currentPage < totalPages && !loading else { return }
         loading = true
         universityService.fetchProvinces(page: currentPage + 1) { [weak self] result in
             guard let self = self else { return }
@@ -196,7 +196,7 @@ final class HomeViewModel {
         }
         
         if !indexPathsUniversities.isEmpty {
-            delegate?.reloadRows(at: indexPathsUniversities)
+            delegate?.reloadRows(at: indexPathsUniversities.map({ $0.indexWithSection }))
         }
         
     }
@@ -250,11 +250,6 @@ extension HomeViewModel: HomeViewModelProtocol {
     
     func didScrollToTopButtonTapped() {
         delegate?.scrollToTop()
-    }
-    
-    func didSelectFavorite(at indexPath: IndexPath) {
-        guard let university = university(at: indexPath.indexWithoutSection) else { return }
-        toggleFavorite(with: university)
     }
     
     func didSelectFavorite(university: UniversityCellViewModel) {
@@ -349,6 +344,7 @@ extension HomeViewModel: HomeViewModelProtocol {
             lastScrollTime = now
             
         }
+        
     }
-    
+        
 }
