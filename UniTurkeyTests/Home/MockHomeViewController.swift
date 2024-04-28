@@ -1,6 +1,6 @@
 //
 //  MockHomeView.swift
-//  UniTurkeyTests
+//  HomeViewModelTests
 //
 //  Created by Ali Çolak on 21.04.2024.
 //
@@ -9,7 +9,7 @@ import Foundation
 @testable import UniTurkey
 
 final class MockHomeViewController: HomeViewProtocol {
-        
+    
     var invokedPrepareTableView = false
     var invokedPrepareTableViewCount = 0
     
@@ -20,10 +20,14 @@ final class MockHomeViewController: HomeViewProtocol {
     
     var invokedPrepareNavigationBar = false
     var invokedPrepareNavigationBarCount = 0
+    var invokedPrepareNavigationBarParameters: (title: String, Void)?
+    var invokedPrepareNavigationBarParametersList = [(title: String, Void)]()
     
     func prepareNavigationBar(title: String) {
         invokedPrepareNavigationBar = true
         invokedPrepareNavigationBarCount += 1
+        invokedPrepareNavigationBarParameters = (title, ())
+        invokedPrepareNavigationBarParametersList.append((title, ()))
     }
     
     

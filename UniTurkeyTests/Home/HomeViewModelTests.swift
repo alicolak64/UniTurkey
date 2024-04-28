@@ -1,6 +1,6 @@
 //
 //  UniTurkeyTests.swift
-//  UniTurkeyTests
+//  HomeViewModelTests
 //
 //  Created by Ali Çolak on 7.04.2024.
 //
@@ -8,7 +8,7 @@
 import XCTest
 @testable import UniTurkey
 
-final class UniTurkeyTests: XCTestCase {
+final class HomeViewModelTests: XCTestCase {
     
     // MARK: - Properties
     private var view: MockHomeViewController!
@@ -52,6 +52,7 @@ final class UniTurkeyTests: XCTestCase {
         XCTAssertFalse(view.invokedPrepareUI)
         XCTAssertFalse(view.invokedStartLoading)
         XCTAssertFalse(view.invokedStopLoading)
+        XCTAssertFalse(view.invokedReloadTableView)
         
         // When
         viewModel.viewDidLoad()
@@ -64,6 +65,9 @@ final class UniTurkeyTests: XCTestCase {
         XCTAssertEqual(view.invokedPrepareUICount, 1)
         XCTAssertEqual(view.invokedStartLoadingCount, 1)
         XCTAssertEqual(view.invokedStopLoadingCount, 1)
+        XCTAssertEqual(view.invokedReloadTableViewCount, 1)
+        
+        XCTAssertEqual( view.invokedPrepareNavigationBarParametersList.map( { $0.title } ), [Constants.Text.homeTitle] )
         
     }
     
@@ -91,7 +95,7 @@ final class UniTurkeyTests: XCTestCase {
         XCTAssertEqual(view.invokedStartLoadingCount, 1)
         
         let expectation = XCTestExpectation(description: "ViewDidLoad completed")
-                
+        
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak view] in
             guard let view = view else { XCTFail("View is nil"); return }
             XCTAssertEqual(view.invokedShowErrorCount, 1)
@@ -138,7 +142,7 @@ final class UniTurkeyTests: XCTestCase {
         XCTAssertFalse(view.invokedPrepareConstraints)
         
         // When
-        prepareViewModel()
+        viewModel.viewDidLayoutSubviews()
         
         // Then
         XCTAssertEqual(view.invokedPrepareConstraintsCount, 1)
@@ -150,12 +154,14 @@ final class UniTurkeyTests: XCTestCase {
         // Given
         XCTAssertFalse(router.invokedNavigate)
         
-        // When
         prepareViewModel()
+        
+        // When
         viewModel.didFavoriteButtonTapped()
         
         // Then
         XCTAssertEqual(router.invokedNavigateCount, 1)
+        XCTAssertTrue(router.invokedNavigateParametersList.isEmpty)
         
     }
     
@@ -165,8 +171,9 @@ final class UniTurkeyTests: XCTestCase {
         XCTAssertFalse(view.invokedReloadRows)
         XCTAssertFalse(view.invokedReloadSections)
         
-        // When
         prepareViewModel()
+        
+        // When
         viewModel.didScaleDownButtonTapped()
         
         // Then
@@ -184,8 +191,9 @@ final class UniTurkeyTests: XCTestCase {
         let provinceIndexPath = IndexPath(row: 0, section: 0) // expand province in first cell (Adana)
         let universityIndexPath = IndexPath(row: 1, section: 0) // expand university in first province cell (ADANA BİLİM VE TEKNOLOJİ ÜNİVERSİTESİ)
         
-        // When
         prepareViewModel()
+        
+        // When
         viewModel.didSelectRow(at: provinceIndexPath)
         viewModel.didSelectRow(at: universityIndexPath)
         viewModel.didScaleDownButtonTapped()
@@ -203,9 +211,9 @@ final class UniTurkeyTests: XCTestCase {
         // Given
         XCTAssertFalse(view.invokedScrollToTop)
         
+        prepareViewModel()
         
         // When
-        prepareViewModel()
         viewModel.didScrollToTopButtonTapped()
         
         // Then
@@ -228,15 +236,16 @@ final class UniTurkeyTests: XCTestCase {
         
         let university = MockProvincePages.province1.universities[0]
         
-        // When
         prepareViewModel()
+        
+        // When
         viewModel.didSelectShare(universityIndexPath: universityIndexPath, detailIndexPath: callIndexPath)
         viewModel.didSelectShare(universityIndexPath: universityIndexPath, detailIndexPath: faxIndexPath)
         viewModel.didSelectShare(universityIndexPath: universityIndexPath, detailIndexPath: websiteIndexPath)
         viewModel.didSelectShare(universityIndexPath: universityIndexPath, detailIndexPath: emailIndexPath)
         viewModel.didSelectShare(universityIndexPath: universityIndexPath, detailIndexPath: addressIndexPath)
         viewModel.didSelectShare(universityIndexPath: universityIndexPath, detailIndexPath: rectorIndexPath)
-                                 
+        
         
         // Then
         XCTAssertEqual(view.invokedShareDetailCount, 6)
@@ -271,8 +280,9 @@ final class UniTurkeyTests: XCTestCase {
         
         let university = MockProvincePages.province1.universities[0]
         
-        // When
         prepareViewModel()
+        
+        // When
         viewModel.didSelectDetail(universityIndexPath: universityIndexPath, detailIndexPath: callIndexPath)
         viewModel.didSelectDetail(universityIndexPath: universityIndexPath, detailIndexPath: faxIndexPath)
         viewModel.didSelectDetail(universityIndexPath: universityIndexPath, detailIndexPath: websiteIndexPath)
@@ -288,7 +298,7 @@ final class UniTurkeyTests: XCTestCase {
         XCTAssertEqual(view.invokedOpenMapAddressCount, 1)
         XCTAssertEqual(view.invokedSearchTextSafariCount, 1)
         XCTAssertEqual(router.invokedNavigateCount, 1)
-
+        
         XCTAssertEqual(view.invokedCallPhoneParametersList.map{ $0.with } , [university.phone])
         XCTAssertEqual(view.invokedShowAlertParametersList.map{ $0.alertMessage.message } , [university.fax])
         XCTAssertEqual(view.invokedSendEmailParametersList.map{ $0.with } , [university.email])
@@ -346,7 +356,7 @@ final class UniTurkeyTests: XCTestCase {
         }
         
         wait(for: [expectation], timeout: 2)
-                
+        
     }
     
     func test_numberOfSections_ReturnsCorrectValue() {
@@ -368,8 +378,9 @@ final class UniTurkeyTests: XCTestCase {
         let expectedValue = MockProvincePages.page1Provinces[0].universities.count + 1
         let indexPath = IndexPath(row: 0, section: 0)
         
-        // When
         prepareViewModel()
+        
+        // When
         viewModel.didSelectRow(at: indexPath)
         
         // Then
@@ -387,7 +398,7 @@ final class UniTurkeyTests: XCTestCase {
         
         // Then
         XCTAssertEqual(viewModel.numberOfRowsInSection(at: indexPath.section),expectedValue)
-
+        
     }
     
     func test_cellForRow_withSection_ReturnsCorrectValue() {
@@ -422,10 +433,12 @@ final class UniTurkeyTests: XCTestCase {
         
         // Given
         XCTAssertFalse(view.invokedReloadSections)
+        
         let indexPath = IndexPath(row: 0, section: 0)
         
-        // When
         prepareViewModel()
+        
+        // When
         viewModel.didSelectRow(at: indexPath)
         
         // Then
@@ -441,8 +454,9 @@ final class UniTurkeyTests: XCTestCase {
         
         let indexPath = IndexPath(row: 1, section: 0)
         
-        // When
         prepareViewModel()
+        
+        // When
         viewModel.didSelectRow(at: indexPath)
         
         // Then
@@ -485,8 +499,9 @@ final class UniTurkeyTests: XCTestCase {
         let expectedValue = CGFloat(Constants.UI.nonExpandCellHeight + (Constants.UI.detailCellHeight * 6))
         let indexPath = IndexPath(row: 1, section: 0)
         
-        // When
         prepareViewModel()
+        
+        // When
         viewModel.didSelectRow(at: indexPath)
         
         // Then
@@ -535,14 +550,17 @@ final class UniTurkeyTests: XCTestCase {
         XCTAssertFalse(view.invokedStopPaginationLoading)
         XCTAssertFalse(view.invokedShowError)
         XCTAssertFalse(view.invokedReloadTableView)
-                
+        
         let contentOffset = CGPoint(x: 0, y: 0)
         let contentSize = CGSize(width: 0, height: 200)
         let bounds = CGRect(x: 0, y: 0, width: 0, height: 100)
-                
-        // When
+        
+        let provinceCount = MockProvincePages.page1Provinces.count
+        
         prepareViewModel()
-                
+        
+        // When
+        
         viewModel.scrollViewDidScroll(contentOffset: contentOffset, contentSize: contentSize, bounds: bounds)
         
         // Then
@@ -551,6 +569,7 @@ final class UniTurkeyTests: XCTestCase {
         XCTAssertEqual(view.invokedStopPaginationLoadingCount, 0)
         XCTAssertEqual(view.invokedShowErrorCount, 0)
         XCTAssertEqual(view.invokedReloadTableViewCount, 2) // first call viewDidLoad, second call viewWillAppear no call pagination
+        XCTAssertEqual(viewModel.numberOfSections(), provinceCount)
         
     }
     
@@ -561,26 +580,30 @@ final class UniTurkeyTests: XCTestCase {
         XCTAssertFalse(view.invokedStopPaginationLoading)
         XCTAssertFalse(view.invokedShowError)
         XCTAssertFalse(view.invokedReloadTableView)
-                
+        
         let contentOffset = CGPoint(x: 0, y: 100)
         let contentOffset2 = CGPoint(x: 0, y: 200)
         let contentSize = CGSize(width: 0, height: 200)
         let contentSize2 = CGSize(width: 0, height: 300)
         let bounds = CGRect(x: 0, y: 0, width: 0, height: 100)
         let bounds2 = CGRect(x: 0, y: 0, width: 0, height: 200)
-                
-        // When
+        
+        let provinceCount = MockProvincePages.page1Provinces.count + MockProvincePages.page2Provinces.count
+        
         prepareViewModel()
+        
+        // When
         viewModel.scrollViewDidScroll(contentOffset: contentOffset, contentSize: contentSize, bounds: bounds)
         viewModel.scrollViewDidScroll(contentOffset: contentOffset2, contentSize: contentSize2, bounds: bounds2)
-
+        
         
         // Then
-                
+        
         XCTAssertEqual(view.invokedStartPaginationLoadingCount, 1)
         XCTAssertEqual(view.invokedStopPaginationLoadingCount, 1)
         XCTAssertEqual(view.invokedShowErrorCount, 0)
         XCTAssertEqual(view.invokedReloadTableViewCount, 3) // first call viewDidLoad, second call viewWillAppear no call pagination
+        XCTAssertEqual(viewModel.numberOfSections(), provinceCount)
         
     }
     
@@ -593,23 +616,22 @@ final class UniTurkeyTests: XCTestCase {
         XCTAssertFalse(view.invokedReloadTableView)
         
         let contentOffset = CGPoint(x: 0, y: 100)
-        let contentOffset2 = CGPoint(x: 0, y: 200)
         let contentSize = CGSize(width: 0, height: 200)
-        let contentSize2 = CGSize(width: 0, height: 300)
         let bounds = CGRect(x: 0, y: 0, width: 0, height: 100)
-        let bounds2 = CGRect(x: 0, y: 0, width: 0, height: 200)
+        
+        let provinceCount = MockProvincePages.page1Provinces.count + MockProvincePages.page2Provinces.count
+        
+        prepareViewModel()
         
         // When
-        prepareViewModel()
         viewModel.scrollViewDidScroll(contentOffset: contentOffset, contentSize: contentSize, bounds: bounds)
-        
-        
         
         // Then
         XCTAssertEqual(view.invokedStartPaginationLoadingCount, 1)
         XCTAssertEqual(view.invokedStopPaginationLoadingCount, 1)
         XCTAssertEqual(view.invokedShowErrorCount, 0)
         XCTAssertEqual(view.invokedReloadTableViewCount, 3) // first call viewDidLoad, second call viewWillAppear, third call pagination
+        XCTAssertEqual(viewModel.numberOfSections(), provinceCount)
         
     }
     
@@ -626,9 +648,12 @@ final class UniTurkeyTests: XCTestCase {
         let bounds = CGRect(x: 0, y: 0, width: 0, height: 100)
         
         let limit = Constants.UI.infinityScrollLateLimitSecond + 0.5
-
-        // When
+        
+        let provinceCount = MockProvincePages.page1Provinces.count + MockProvincePages.page2Provinces.count + MockProvincePages.page3Provinces.count
+        
         prepareViewModel()
+        
+        // When
         viewModel.scrollViewDidScroll(contentOffset: contentOffset, contentSize: contentSize, bounds: bounds)
         
         let expectation = XCTestExpectation(description: "Scroll view did scroll")
@@ -645,6 +670,7 @@ final class UniTurkeyTests: XCTestCase {
         XCTAssertEqual(view.invokedStopPaginationLoadingCount, 2)
         XCTAssertEqual(view.invokedShowErrorCount, 0)
         XCTAssertEqual(view.invokedReloadTableViewCount, 4) // first call viewDidLoad, second call viewWillAppear, third call pagination
+        XCTAssertEqual(viewModel.numberOfSections(), provinceCount)
         
     }
     
@@ -661,9 +687,12 @@ final class UniTurkeyTests: XCTestCase {
         let bounds = CGRect(x: 0, y: 0, width: 0, height: 100)
         
         let errorDescription = ServiceError.noConnectionError.localizedDescription
-
-        // When
+        
+        let provinceCount = MockProvincePages.page1Provinces.count
+        
         prepareViewModel()
+        
+        // When
         universityService.completionCase = .noConnectionError
         viewModel.scrollViewDidScroll(contentOffset: contentOffset, contentSize: contentSize, bounds: bounds)
         
@@ -674,11 +703,14 @@ final class UniTurkeyTests: XCTestCase {
         XCTAssertEqual(view.invokedStartPaginationLoadingCount, 1)
         XCTAssertEqual(view.invokedReloadTableViewCount, 2) // first call viewDidLoad, second call viewWillAppear but no call pagination
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak view] in
-            guard let view = view else { XCTFail("View is nil"); return }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
+            guard let self = self else { XCTFail("Self is nil"); return }
+            guard let view = self.view else { XCTFail("View is nil"); return }
             XCTAssertEqual(view.invokedShowErrorCount, 1)
             XCTAssertEqual(view.invokedStopPaginationLoadingCount, 1)
             XCTAssertEqual(view.invokedShowErrorParametersList.map({ $0.error.localizedDescription }), [errorDescription])
+            XCTAssertEqual(view.invokedReloadTableViewCount, 2) // first call viewDidLoad, second call viewWillAppear but no call pagination
+            XCTAssertEqual(self.viewModel.numberOfSections(), provinceCount)
             expectation.fulfill()
         }
         
@@ -708,8 +740,9 @@ final class UniTurkeyTests: XCTestCase {
         
         let provincesCount = MockProvincePages.page3.totalProvinces
         
-        // When
         prepareViewModel()
+        
+        // When
         
         viewModel.scrollViewDidScroll(contentOffset: contentOffset1, contentSize: contentSize, bounds: bounds)
         
@@ -750,9 +783,9 @@ final class UniTurkeyTests: XCTestCase {
         let university = University(university: universityResponse, provinceId: provinceResponse.id, index: indexPath.row)
         let universityCellViewModel = UniversityCellViewModel(university: university,indexPath: indexPath.indexWithSection)
         
-
-        // When
         prepareViewModel()
+        
+        // When
         viewModel.didSelectFavorite(university: universityCellViewModel)
         
         // Then
@@ -769,9 +802,9 @@ final class UniTurkeyTests: XCTestCase {
         let university = University(university: universityResponse, provinceId: provinceResponse.id, index: indexPath.row)
         let universityCellViewModel = UniversityCellViewModel(university: university,indexPath: indexPath.indexWithSection)
         
-
-        // When
         prepareViewModel()
+        
+        // When
         viewModel.didSelectFavorite(university: universityCellViewModel)
         viewModel.didSelectFavorite(university: universityCellViewModel)
         
@@ -779,7 +812,5 @@ final class UniTurkeyTests: XCTestCase {
         XCTAssertEqual(favoriteService.isFavorite(university), false)
         
     }
-    
-    
     
 }
