@@ -6,36 +6,93 @@
 //
 
 import XCTest
+@testable import UniTurkey
 
 final class UniTurkeyUITests: XCTestCase {
+    
+    private var app: XCUIApplication!
+    private var tableView: XCUIElement!
 
     override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-
-        // In UI tests it is usually best to stop immediately when a failure occurs.
+        
         continueAfterFailure = false
+        
+        app = XCUIApplication()
+        app.launch()
+        
+        tableView = app.tables["UniTurkey.HomeView.provincesTableView"]
 
-        // In UI tests it’s important to set the initial state - such as interface orientation - required for your tests before they run. The setUp method is a good place to do this.
+    
     }
 
     override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
+        app = nil
+        tableView = nil
+    }
+    
+    func test_navigationTitle() throws {
+        let navigationBarTitle = app.staticTexts["UniTurkey.HomeView.navigationTitle"]
+        XCTAssertTrue(navigationBarTitle.exists)
+        XCTAssertEqual(navigationBarTitle.label, "Universities")
+    }
+    
+    func test_favoriteNavigationBarItem_existings() throws {
+        let favoriteButton = app.buttons["UniTurkey.HomeView.favoriteNavigationBarItem"]
+        XCTAssertTrue(favoriteButton.exists)
+        XCTAssertTrue(favoriteButton.isHittable)
+    }
+    
+    func test_scaleDownNavigationBarItem_existings() throws {
+        let scaleDownButton = app.buttons["UniTurkey.HomeView.scaleDownNavigationBarItem"]
+        XCTAssertTrue(scaleDownButton.exists)
+        XCTAssertTrue(scaleDownButton.isHittable)
+    }
+    
+    func test_provincesTableView_existings() throws {
+        XCTAssertTrue(tableView.exists)
+    }
+    
+    func test_expandTableView() throws {
+        let province = tableView.cells.element(boundBy: 0)
+        let university = tableView.cells.element(boundBy: 1)
+        XCTAssertFalse(university.visible())
+        province.tap()
+        XCTAssertTrue(university.visible())
+        university.tap()
     }
 
-    func testExample() throws {
-        // UI tests must launch the application that they test.
-        let app = XCUIApplication()
-        app.launch()
+}
 
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-    }
-
-    func testLaunchPerformance() throws {
-        if #available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 7.0, *) {
-            // This measures how long it takes to launch your application.
-            measure(metrics: [XCTApplicationLaunchMetric()]) {
-                XCUIApplication().launch()
-            }
+extension XCUIElement {
+    
+    func scrollToElement(element: XCUIElement) {
+        while !element.visible() {
+            swipeUp()
         }
     }
+    
+    func visible() -> Bool {
+        guard exists && !frame.isEmpty else {
+            return false
+        }
+        return XCUIApplication().windows.element(boundBy: 0).frame.contains(frame)
+    }
+    
+    func swipeUp() {
+        let start = coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.9))
+        let finish = coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.1))
+        start.press(forDuration: 0, thenDragTo: finish)
+    }
+    
+    func swipeDown() {
+        let start = coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.1))
+        let finish = coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.9))
+        start.press(forDuration: 0, thenDragTo: finish)
+    }
+    
+    func tap() {
+        coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
+    }
+    
+    
 }

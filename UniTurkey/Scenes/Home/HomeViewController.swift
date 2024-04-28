@@ -20,6 +20,7 @@ final class HomeViewController: UIViewController {
         label.font = Constants.Font.subtitleBold
         label.textColor = Constants.Color.black
         label.text = Constants.Text.homeTitle
+        label.accessibilityIdentifier = "UniTurkey.HomeView.navigationTitle"
         return label
     }()
     
@@ -34,6 +35,8 @@ final class HomeViewController: UIViewController {
         favoriteButton.addTarget(self, action: #selector(favoriteButtonTapped), for: .touchUpInside)
         
         let favoriteButtonItem = UIBarButtonItem(customView: favoriteButton)
+        
+        favoriteButtonItem.accessibilityIdentifier = "UniTurkey.HomeView.favoriteNavigationBarItem"
         
         return favoriteButtonItem
         
@@ -52,6 +55,8 @@ final class HomeViewController: UIViewController {
         
         let scaleDownButtonItem = UIBarButtonItem(customView: scaleDownButton)
         
+        scaleDownButtonItem.accessibilityIdentifier = "UniTurkey.HomeView.scaleDownNavigationBarItem"
+        
         return scaleDownButtonItem
         
     }()
@@ -59,12 +64,14 @@ final class HomeViewController: UIViewController {
     private lazy var loadingView: LoadingView = {
         let view = LoadingView()
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.accessibilityIdentifier = "UniTurkey.HomeView.loadingView"
         return view
     }()
     
     private lazy var paginationLoadingView: LoadingView = {
         let view = LoadingView()
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.accessibilityIdentifier = "UniTurkey.HomeView.paginationLoadingView"
         return view
     }()
     
@@ -73,6 +80,7 @@ final class HomeViewController: UIViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         view.isHidden = true
         view.delegate = self
+        view.accessibilityIdentifier = "UniTurkey.HomeView.errorView"
         return view
     }()
     
@@ -82,6 +90,7 @@ final class HomeViewController: UIViewController {
         tableView.backgroundColor = Constants.Color.background
         tableView.separatorStyle = .none
         tableView.showsVerticalScrollIndicator = false
+        tableView.accessibilityIdentifier = "UniTurkey.HomeView.provincesTableView"
         return tableView
     }()
     
@@ -91,6 +100,7 @@ final class HomeViewController: UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(scrollToTopButtonTapped), for: .touchUpInside)
         button.isHidden = true
+        button.accessibilityIdentifier = "UniTurkey.HomeView.scrollTopButton"
         return button
     }()
     
