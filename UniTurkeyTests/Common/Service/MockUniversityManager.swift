@@ -22,7 +22,7 @@ final class MockUniversityManager: UniversityService {
     // MARK: - Methods
     
     func fetchProvinces(page: Int, completion: @escaping (Result<UniTurkey.ProvincePageResponse, UniTurkey.ServiceError>) -> Void) {
-                
+        
         switch completionCase {
         case .page:
             if let response = getProvinces(page: page) {
@@ -40,10 +40,12 @@ final class MockUniversityManager: UniversityService {
         
     }
     
+    // MARK: - Helper Methods
+    
     private func getProvinces(page: Int) -> ProvincePageResponse? {
         
         switch page {
-        case 1: 
+        case 1:
             return MockProvincePages.getProvincePage(page: .page1)
         case 2:
             return MockProvincePages.getProvincePage(page: .page2)
@@ -54,6 +56,5 @@ final class MockUniversityManager: UniversityService {
         }
         
     }
-
     
 }

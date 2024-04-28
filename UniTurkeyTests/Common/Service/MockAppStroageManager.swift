@@ -13,6 +13,9 @@ final class MockAppStroageManager: AppStroageService{
     // MARK: - Properties
     var onBoardingSeen: Bool = false
     
+    
+    // MARK: - Methods
+    
     func isOnBoardingSeen() -> Bool {
         return onBoardingSeen
     }

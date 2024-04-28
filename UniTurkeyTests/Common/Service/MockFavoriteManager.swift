@@ -11,7 +11,10 @@ import Foundation
 final class MockFavoriteManager: FavoriteService{
     
     // MARK: - Properties
+    
     var favorites: [UniTurkey.University] = []
+    
+    // MARK: - Methods
     
     func addFavorite(_ university: UniTurkey.University) {
         if !isFavorite(university) {
