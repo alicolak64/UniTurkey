@@ -104,7 +104,7 @@ extension OnboardingViewController: PaperOnboardingDataSource,PaperOnboardingDel
     }
     
     func onboardingItemsCount() -> Int {
-        viewModel.numberOfPage()
+        viewModel.numberOfPages()
     }
     
 }

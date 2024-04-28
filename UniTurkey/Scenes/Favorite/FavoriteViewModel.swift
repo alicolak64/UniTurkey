@@ -110,11 +110,18 @@ final class FavoriteViewModel {
     private func toggleAllExpanded() {
         let indexSet = universities.enumerated().compactMap { $0.element.isExpanded ? $0.offset : nil }
         universities.forEach { $0.isExpanded = false }
-        delegate?.reloadRows(at: indexSet.map { IndexPath(row: $0, section: 0) })
+        
+        if !indexSet.isEmpty {
+            delegate?.reloadRows(at: indexSet.map { IndexPath(row: $0, section: 0) })
+        }
+        
     }
     
     private func removeAllFavorites() {
         let indexPaths = universities.enumerated().map { IndexPath(row: $0.offset, section: 0) }
+        
+        guard !universities.isEmpty else { return }
+        
         favoriteService.removeAllFavorites(universities: universities)
         universities.removeAll()
         delegate?.deleteRows(at: indexPaths)

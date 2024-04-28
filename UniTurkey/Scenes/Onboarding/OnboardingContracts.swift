@@ -37,7 +37,7 @@ protocol OnboardingViewModelProtocol {
     
     // MARK: - Onboarding Methods
     func onboardingWillTransitonToIndex(at index: Int)
-    func numberOfPage() -> Int
+    func numberOfPages() -> Int
     func pageForItem(at index: Int) -> OnboardingItemInfo
     
 }

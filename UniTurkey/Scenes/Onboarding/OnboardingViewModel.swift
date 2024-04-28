@@ -98,7 +98,7 @@ extension OnboardingViewModel: OnboardingViewModelProtocol {
         navigate(to: .home)
     }
     
-    func numberOfPage() -> Int {
+    func numberOfPages() -> Int {
         items.count
     }
     
