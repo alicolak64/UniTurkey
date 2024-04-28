@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E6021E522BDD407700CF77F8 /* MockOnboardingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6021E512BDD407700CF77F8 /* MockOnboardingViewController.swift */; };
+		E6021E542BDD408700CF77F8 /* MockOnboardingRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6021E532BDD408700CF77F8 /* MockOnboardingRouter.swift */; };
+		E6021E562BDD40AC00CF77F8 /* OnboardingViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6021E552BDD40AC00CF77F8 /* OnboardingViewModelTests.swift */; };
 		E60699492BC21B460062333F /* HomeViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E60699482BC21B460062333F /* HomeViewModelTests.swift */; };
 		E60699532BC21B460062333F /* UniTurkeyUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E60699522BC21B460062333F /* UniTurkeyUITests.swift */; };
 		E60699552BC21B460062333F /* UniTurkeyUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E60699542BC21B460062333F /* UniTurkeyUITestsLaunchTests.swift */; };
@@ -38,6 +41,12 @@
 		E63F3D112BC21FCC0094A0D2 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E63F3D032BC21FCC0094A0D2 /* HomeViewController.swift */; };
 		E63F3D122BC21FCC0094A0D2 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E63F3D042BC21FCC0094A0D2 /* HomeViewModel.swift */; };
 		E63F3D162BC228BC0094A0D2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E63F3D152BC228BC0094A0D2 /* LaunchScreen.storyboard */; };
+		E657D7BB2BDDDDDD001BB759 /* MockFavoriteRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E657D7BA2BDDDDDD001BB759 /* MockFavoriteRouter.swift */; };
+		E657D7BD2BDDDDEC001BB759 /* MockFavoriteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E657D7BC2BDDDDEC001BB759 /* MockFavoriteViewController.swift */; };
+		E657D7BF2BDDDDFB001BB759 /* FavoriteViewModelsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E657D7BE2BDDDDFB001BB759 /* FavoriteViewModelsTests.swift */; };
+		E657D7C22BDDFEB8001BB759 /* MockDetailRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E657D7C12BDDFEB8001BB759 /* MockDetailRouter.swift */; };
+		E657D7C42BDDFF04001BB759 /* MockDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E657D7C32BDDFF04001BB759 /* MockDetailViewController.swift */; };
+		E657D7C62BDDFF14001BB759 /* DetailViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E657D7C52BDDFF14001BB759 /* DetailViewModelTests.swift */; };
 		E6833B5A2BD56D9D00A3A92A /* MockFavoriteManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6833B592BD56D9D00A3A92A /* MockFavoriteManager.swift */; };
 		E6833B5C2BD56F8500A3A92A /* MockAppStroageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6833B5B2BD56F8500A3A92A /* MockAppStroageManager.swift */; };
 		E6833B602BD57D3100A3A92A /* MockHomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6833B5F2BD57D3100A3A92A /* MockHomeViewController.swift */; };
@@ -99,6 +108,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		E6021E512BDD407700CF77F8 /* MockOnboardingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockOnboardingViewController.swift; sourceTree = "<group>"; };
+		E6021E532BDD408700CF77F8 /* MockOnboardingRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockOnboardingRouter.swift; sourceTree = "<group>"; };
+		E6021E552BDD40AC00CF77F8 /* OnboardingViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewModelTests.swift; sourceTree = "<group>"; };
 		E606992E2BC21B440062333F /* UniTurkey.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UniTurkey.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E606993F2BC21B460062333F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = UniTurkey/Resources/Info.plist; sourceTree = SOURCE_ROOT; };
 		E60699442BC21B460062333F /* UniTurkeyTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UniTurkeyTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -133,6 +145,12 @@
 		E63F3D032BC21FCC0094A0D2 /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		E63F3D042BC21FCC0094A0D2 /* HomeViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
 		E63F3D152BC228BC0094A0D2 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		E657D7BA2BDDDDDD001BB759 /* MockFavoriteRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockFavoriteRouter.swift; sourceTree = "<group>"; };
+		E657D7BC2BDDDDEC001BB759 /* MockFavoriteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockFavoriteViewController.swift; sourceTree = "<group>"; };
+		E657D7BE2BDDDDFB001BB759 /* FavoriteViewModelsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteViewModelsTests.swift; sourceTree = "<group>"; };
+		E657D7C12BDDFEB8001BB759 /* MockDetailRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockDetailRouter.swift; sourceTree = "<group>"; };
+		E657D7C32BDDFF04001BB759 /* MockDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockDetailViewController.swift; sourceTree = "<group>"; };
+		E657D7C52BDDFF14001BB759 /* DetailViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewModelTests.swift; sourceTree = "<group>"; };
 		E6833B592BD56D9D00A3A92A /* MockFavoriteManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockFavoriteManager.swift; sourceTree = "<group>"; };
 		E6833B5B2BD56F8500A3A92A /* MockAppStroageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockAppStroageManager.swift; sourceTree = "<group>"; };
 		E6833B5F2BD57D3100A3A92A /* MockHomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockHomeViewController.swift; sourceTree = "<group>"; };
@@ -203,6 +221,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		E6021E502BDD3FE400CF77F8 /* Onboarding */ = {
+			isa = PBXGroup;
+			children = (
+				E6021E532BDD408700CF77F8 /* MockOnboardingRouter.swift */,
+				E6021E512BDD407700CF77F8 /* MockOnboardingViewController.swift */,
+				E6021E552BDD40AC00CF77F8 /* OnboardingViewModelTests.swift */,
+			);
+			path = Onboarding;
+			sourceTree = "<group>";
+		};
 		E60699252BC21B440062333F = {
 			isa = PBXGroup;
 			children = (
@@ -241,7 +269,10 @@
 			isa = PBXGroup;
 			children = (
 				E6833B922BD743FA00A3A92A /* Common */,
+				E6021E502BDD3FE400CF77F8 /* Onboarding */,
 				E6833B932BD7440100A3A92A /* Home */,
+				E657D7B92BDDDDB5001BB759 /* Favorite */,
+				E657D7C02BDDFE81001BB759 /* Detail */,
 			);
 			path = UniTurkeyTests;
 			sourceTree = "<group>";
@@ -404,6 +435,26 @@
 			path = Scenes;
 			sourceTree = "<group>";
 		};
+		E657D7B92BDDDDB5001BB759 /* Favorite */ = {
+			isa = PBXGroup;
+			children = (
+				E657D7BA2BDDDDDD001BB759 /* MockFavoriteRouter.swift */,
+				E657D7BC2BDDDDEC001BB759 /* MockFavoriteViewController.swift */,
+				E657D7BE2BDDDDFB001BB759 /* FavoriteViewModelsTests.swift */,
+			);
+			path = Favorite;
+			sourceTree = "<group>";
+		};
+		E657D7C02BDDFE81001BB759 /* Detail */ = {
+			isa = PBXGroup;
+			children = (
+				E657D7C12BDDFEB8001BB759 /* MockDetailRouter.swift */,
+				E657D7C32BDDFF04001BB759 /* MockDetailViewController.swift */,
+				E657D7C52BDDFF14001BB759 /* DetailViewModelTests.swift */,
+			);
+			path = Detail;
+			sourceTree = "<group>";
+		};
 		E6833B5D2BD57CE400A3A92A /* Service */ = {
 			isa = PBXGroup;
 			children = (
@@ -461,9 +512,9 @@
 		E6833B932BD7440100A3A92A /* Home */ = {
 			isa = PBXGroup;
 			children = (
+				E6833B942BD7450700A3A92A /* MockHomeRouter.swift */,
 				E6833B5F2BD57D3100A3A92A /* MockHomeViewController.swift */,
 				E60699482BC21B460062333F /* HomeViewModelTests.swift */,
-				E6833B942BD7450700A3A92A /* MockHomeRouter.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -736,12 +787,21 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E6021E542BDD408700CF77F8 /* MockOnboardingRouter.swift in Sources */,
 				E60699492BC21B460062333F /* HomeViewModelTests.swift in Sources */,
+				E657D7C42BDDFF04001BB759 /* MockDetailViewController.swift in Sources */,
 				E6833B972BD8264100A3A92A /* MockProvinces.swift in Sources */,
 				E6833B952BD7450700A3A92A /* MockHomeRouter.swift in Sources */,
 				E6833B602BD57D3100A3A92A /* MockHomeViewController.swift in Sources */,
+				E657D7C22BDDFEB8001BB759 /* MockDetailRouter.swift in Sources */,
+				E657D7C62BDDFF14001BB759 /* DetailViewModelTests.swift in Sources */,
+				E6021E562BDD40AC00CF77F8 /* OnboardingViewModelTests.swift in Sources */,
+				E657D7BB2BDDDDDD001BB759 /* MockFavoriteRouter.swift in Sources */,
 				E6833B5C2BD56F8500A3A92A /* MockAppStroageManager.swift in Sources */,
+				E657D7BD2BDDDDEC001BB759 /* MockFavoriteViewController.swift in Sources */,
+				E6021E522BDD407700CF77F8 /* MockOnboardingViewController.swift in Sources */,
 				E6833B5A2BD56D9D00A3A92A /* MockFavoriteManager.swift in Sources */,
+				E657D7BF2BDDDDFB001BB759 /* FavoriteViewModelsTests.swift in Sources */,
 				E69BF13B2BD5586100B381E2 /* MockUniversityManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
