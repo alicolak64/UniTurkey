@@ -106,7 +106,7 @@ final class ProvinceCell: UITableViewCell,ProvinceCellProtocol {
             case .plus:
                 self.expandIcon.image = Constants.Icon.plus
             case .minus:
-                self.expandIcon.image = Constants.Icon.plus
+                self.expandIcon.image = Constants.Icon.minus
             case .none:
                 self.expandIcon.image = nil
             }
